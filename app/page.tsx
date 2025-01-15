@@ -2,6 +2,8 @@ import Image from 'next/image'
 import Link from 'next/link'
 import DivisionalStructure from '../components/DivisionalStructure'
 import Partners from '../components/Partners'
+import NavMenu from '../components/NavMenu'
+import { Fragment } from 'react'
 
 const domains = [
   {
@@ -51,77 +53,56 @@ const domains = [
   },
 ]
 
+const products = [
+  'Pompes Centrifuges',
+  'Pompes Volumetriques',
+  'Pompes vide fût',
+  'Anti incendie',
+  'Moto pompes',
+  'Anti bélier',
+  'Stations de relevage',
+  'Stations d\'épuration',
+]
+
 export default function Home() {
   return (
     <>
-      {/* Hero section */}
-      <div className="relative">
+      {/* Banner section */}
+      <div className="relative h-screen">
+        {/* Background image */}
         <div className="absolute inset-0">
           <Image
-            className="h-full w-full object-cover"
-            src="/images/hero.jpeg"
+            src="/images/hero2.jpeg"
             alt="ALPHAS POMPES"
-            width={1920}
-            height={1080}
+            fill
             priority
+            sizes="100vw"
+            className="object-cover object-center w-full h-full"
+            style={{ objectPosition: '50% 50%' }}
           />
-          <div className="absolute inset-0 bg-primary mix-blend-multiply" />
         </div>
-        <div className="relative mx-auto max-w-7xl py-24 px-6 sm:py-32 lg:px-8">
-          <h1 className="text-4xl font-bold tracking-tight text-white sm:text-5xl lg:text-6xl">
-            Solutions de pompage innovantes
-          </h1>
-          <p className="mt-6 max-w-2xl text-xl text-gray-100">
-            ALPHAS POMPES est votre partenaire de confiance pour tous vos besoins en pompes industrielles et solutions de pompage.
-          </p>
-          <div className="mt-10 flex gap-x-6">
-            <Link
-              href="/produits"
-              className="rounded-md bg-white px-3.5 py-2.5 text-sm font-semibold text-primary shadow-sm hover:bg-gray-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
-            >
-              Nos produits
-            </Link>
+
+        {/* Content */}
+        <div className="relative mx-auto max-w-7xl px-6 flex items-center justify-center h-full pb-32">
+          <div className="flex justify-center space-x-4">
             <Link
               href="/contact"
-              className="rounded-md bg-white/10 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-white/20 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+              className="rounded-md bg-primary px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-primary/80 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
             >
               Contactez-nous
+            </Link>
+            <Link
+              href="/about"
+              className="rounded-md bg-white/80 px-3.5 py-2.5 text-sm font-semibold text-gray-900 shadow-sm hover:bg-white/90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+            >
+              En savoir plus
             </Link>
           </div>
         </div>
       </div>
 
-      {/* Products Navigation */}
-      <div className="bg-primary text-white">
-        <div className="mx-auto max-w-7xl">
-          <div className="flex justify-between items-center divide-x divide-white/30">
-            <Link href="/produits/pompes-centrifuges" className="text-center px-4 py-4 hover:bg-white/10 flex-1 whitespace-nowrap">
-              Pompes Centrifuges
-            </Link>
-            <Link href="/produits/pompes-volumetriques" className="text-center px-4 py-4 hover:bg-white/10 flex-1 whitespace-nowrap">
-              Pompes Volumetriques
-            </Link>
-            <Link href="/produits/pompes-vide-fut" className="text-center px-4 py-4 hover:bg-white/10 flex-1 whitespace-nowrap">
-              Pompes vide fût
-            </Link>
-            <Link href="/produits/anti-incendie" className="text-center px-4 py-4 hover:bg-white/10 flex-1 whitespace-nowrap">
-              Anti incendie
-            </Link>
-            <Link href="/produits/moto-pompes" className="text-center px-4 py-4 hover:bg-white/10 flex-1 whitespace-nowrap">
-              Moto pompes
-            </Link>
-            <Link href="/produits/anti-belier" className="text-center px-4 py-4 hover:bg-white/10 flex-1 whitespace-nowrap">
-              Anti bélier
-            </Link>
-            <Link href="/produits/stations-relevage" className="text-center px-4 py-4 hover:bg-white/10 flex-1 whitespace-nowrap">
-              Stations de relevage
-            </Link>
-            <Link href="/produits/stations-epuration" className="text-center px-4 py-4 hover:bg-white/10 flex-1 whitespace-nowrap">
-              Stations d'épuration
-            </Link>
-          </div>
-        </div>
-      </div>
+      {/* Products navigation */}
+      <NavMenu />
 
       {/* Domaines section */}
       <div className="bg-white py-24 sm:py-32">
@@ -278,8 +259,6 @@ export default function Home() {
 
       {/* Partners section */}
       <Partners />
-
-      {/* Domaines section */}
     </>
   )
 }

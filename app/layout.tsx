@@ -1,15 +1,13 @@
 import type { Metadata } from 'next'
-import { Inter, Montserrat } from 'next/font/google'
-import Header from '../components/layout/Header'
-import Footer from '../components/layout/Footer'
+import { Inter } from 'next/font/google'
 import './globals.css'
+import Header from '../components/Header'
 
 const inter = Inter({ subsets: ['latin'] })
-const montserrat = Montserrat({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
-  title: 'ALPHAS POMPES',
-  description: 'Solutions de pompage industriel en Algérie',
+  title: 'Alphas Pompes',
+  description: 'Solutions de pompage innovantes',
 }
 
 export default function RootLayout({
@@ -19,10 +17,9 @@ export default function RootLayout({
 }) {
   return (
     <html lang="fr">
-      <body className={`${inter.className} antialiased`}>
+      <body className={inter.className}>
         <Header />
-        <main className="min-h-screen pt-20">{children}</main>
-        <Footer />
+        {children}
       </body>
     </html>
   )
