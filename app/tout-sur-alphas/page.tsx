@@ -79,7 +79,7 @@ export default function ToutSurAlphas() {
               transition={fadeIn.transition}
               className="space-y-6"
             >
-              <h3 className="text-2xl font-bold text-gray-900 mb-4">Des Objectifs Et Desambitions</h3>
+              <h3 className="text-2xl font-bold text-gray-900 mb-4">Des Objectifs Et Des ambitions</h3>
               <p className="text-gray-600 mb-6">Notre objectif est de fournir au client une solution de pompage complète avec des produits de qualité dont le prix est compétitif, livrés à temps et dont le coût du cycle de vie est le plus bas, soutenus par un service après-vente impeccable.</p>
               <ul className="space-y-4">
                 {[

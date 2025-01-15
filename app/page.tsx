@@ -92,7 +92,7 @@ export default function Home() {
               Contactez-nous
             </Link>
             <Link
-              href="/about"
+              href="/tout-sur-alphas"
               className="rounded-md bg-white/80 px-3.5 py-2.5 text-sm font-semibold text-gray-900 shadow-sm hover:bg-white/90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
             >
               En savoir plus
