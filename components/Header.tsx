@@ -8,6 +8,10 @@ import { ChevronDownIcon } from '@heroicons/react/20/solid';
 
 const menuItems = [
   {
+    name: 'Accueil',
+    href: '/',
+  },
+  {
     name: 'Domaines d\'activité',
     type: 'dropdown',
     items: [
@@ -27,11 +31,11 @@ const menuItems = [
     type: 'dropdown',
     items: [
       'Pompes centrifuges',
-      'Pompes vide fût',
-      'Anti Belier',
-      'Moto pompes',
-      'Stations d\'epuration',
-      'Station de relevage'
+      'Pompes vide-fut',
+      'Anti-belier',
+      'Moto-pompes',
+      'Stations-d-epuration',
+      'Station-de-relevage'
     ]
   },
   {
@@ -45,12 +49,12 @@ const menuItems = [
     ]
   },
   {
-    name: 'Tout sur Alphas',
-    href: '/tout-sur-alphas',
+    name: 'Alphas Service',
+    href: '/alphas-service',
   },
   {
-    name: 'Actualité',
-    href: '/actualite',
+    name: 'Tout sur Alphas',
+    href: '/tout-sur-alphas',
   },
 ];
 

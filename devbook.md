@@ -184,6 +184,7 @@
 3. Améliorer l'accessibilité
 4. Ajouter des transitions de page
 5. Implémenter le responsive design pour les petits écrans
+6. Ajouter une barre de recherche globale dans les produits
 
 ## Notes importantes
 - Couleurs principales : #0b65ac (primary), #000000 (secondary), #ffffff (white)
