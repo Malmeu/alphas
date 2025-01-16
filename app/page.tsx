@@ -73,17 +73,17 @@ export default function Home() {
   return (
     <>
       {/* Banner section */}
-      <div className="relative h-screen">
+      <div className="relative h-[calc(100vh-5rem)]">
         {/* Background image */}
         <div className="absolute inset-0">
           <Image
-            src="/images/hero2.jpeg"
+            src="/images/hero.jpeg"
             alt="ALPHAS POMPES"
             fill
             priority
             sizes="100vw"
-            className="object-cover object-center w-full h-full"
-            style={{ objectPosition: '50% 50%' }}
+            className="object-contain w-full h-full"
+            style={{ objectPosition: 'center center' }}
           />
         </div>
 
