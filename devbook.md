@@ -186,6 +186,46 @@
 5. Implémenter le responsive design pour les petits écrans
 6. Ajouter une barre de recherche globale dans les produits
 
+## Mise à jour de la Page d'Accueil - Domaines d'Activité
+
+### Modifications apportées :
+
+1. **Réorganisation des Domaines** :
+   - Ajout du domaine "Service Après-Vente" (SAV)
+   - Restructuration en 2 rangées de 5 domaines pour une meilleure présentation
+   - Ajout d'une icône spécifique pour le SAV (clé à molette)
+
+2. **Amélioration de la Grille** :
+   - Responsive design :
+     - Mobile : 1 colonne
+     - Tablette : 2 colonnes
+     - Desktop : 5 colonnes
+   - Espacement uniforme entre les éléments
+   - Transitions et animations au survol
+
+3. **Optimisation du Code** :
+   - Utilisation d'une boucle map pour les domaines
+   - SVG personnalisés pour chaque domaine
+   - Amélioration de la maintenabilité du code
+
+### Mise à jour des Liens de Navigation
+
+1. **Menu des Produits** :
+   - Correction des URLs pour pointer vers les bonnes pages de produits
+   - Structure des URLs : `/produits/[nom-du-produit]`
+   - Mise à jour des noms de produits pour plus de cohérence
+
+2. **Liens des Domaines** :
+   - Tous les domaines pointent vers leurs pages respectives
+   - Le SAV pointe vers `/alphas-service`
+
+### Prochaines Étapes Suggérées :
+
+1. Créer les pages individuelles pour chaque produit
+2. Ajouter du contenu détaillé pour chaque domaine d'activité
+3. Optimiser les images et icônes SVG
+4. Ajouter des animations de transition entre les pages
+
 ## Notes importantes
 - Couleurs principales : #0b65ac (primary), #000000 (secondary), #ffffff (white)
 - Polices : Inter pour le texte, Montserrat pour les titres

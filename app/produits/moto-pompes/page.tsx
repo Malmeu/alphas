@@ -32,7 +32,7 @@ const products = [
 export default function Motopompes() {
   return (
     <ProductPage
-      title="Motopompes"
+      title="Moto-pompes"
       description="Explorez notre gamme de motopompes, alliant autonomie et performance pour vos besoins de pompage mobile."
       bannerImage="/images/banner-motopompes.jpg"
       products={products}

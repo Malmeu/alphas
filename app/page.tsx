@@ -118,7 +118,7 @@ export default function Home() {
               Choisissez votre domaine d'activité
             </p>
             <p className="mt-6 text-lg leading-8 text-gray-600">
-              ALPHAS POMPES est fier de ses solides racines dans la fabrication et l'ingénierie. Notre usine de fabrication sophistiquée nous permet de fournir des solutions innovantes dans de multiples secteurs.
+              <b>ALPHAS POMPES</b> est fier de ses solides racines dans la fabrication et l'ingénierie. Notre usine de fabrication sophistiquée nous permet de fournir des solutions innovantes dans de multiples secteurs.
             </p>
           </div>
           <div className="mx-auto mt-16 max-w-7xl">
@@ -182,10 +182,10 @@ export default function Home() {
                 +28 ans de succès & d'innovations
               </p>
               <p className="text-lg leading-8 text-gray-600 mb-8">
-                ALPHAS POMPES célèbre plus de 28 ans de succès dans le domaine du pompage des fluides grâce à ses solutions de qualité.
+                <b>ALPHAS POMPES</b> célèbre plus de 28 ans de succès dans le domaine du pompage des fluides grâce à ses solutions de qualité.
               </p>
               <p className="text-lg leading-8 text-gray-600">
-                Fondée en 1996, ALPHAS POMPES se positionne comme un acteur majeur et dynamique dans le domaine des pompes et équipements hydromécaniques en Algérie. Notre expertise s'étend de la distribution à la conception et à la production de solutions de pompage innovantes. Nous offrons également des services de maintenance et de réparation de premier plan pour les pompes et moteurs électriques, ainsi que la réalisation de travaux hydrauliques.
+                Fondée en 1996, <b>ALPHAS POMPES</b> se positionne comme un acteur majeur et dynamique dans le domaine des pompes et équipements hydromécaniques en Algérie. Notre expertise s'étend de la distribution à la conception et à la production de solutions de pompage innovantes. Nous offrons également des services de maintenance et de réparation de premier plan pour les pompes et moteurs électriques, ainsi que la réalisation de travaux hydrauliques.
               </p>
             </div>
             <div className="relative h-[600px] rounded-2xl overflow-hidden">
