@@ -34,7 +34,9 @@ const menuItems = [
       'Pompes vide-fut',
       'Anti-belier',
       'Moto-pompes',
+      'anti-incendie',
       'Stations-d-epuration',
+      'Pompes-volumetriques',
       'Station-de-relevage'
     ]
   },
