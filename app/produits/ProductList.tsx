@@ -1,36 +1,30 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { supabase } from '@/lib/supabase/config';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
-import { Suspense } from 'react';
+import { createClient } from '@/utils/supabase/client';
 
 interface Product {
   id: string;
   nom: string;
+  description: string;
   marque: string;
   type_produit: string;
-  domaines_application: string[];
   domaines_activite: string[];
   image_principale: string;
-  description: string;
 }
 
-// Types de pompes
 const TYPES_POMPES = [
-  'Pompes centrifuges',
-  'Pompes vide-fut',
-  'Anti-belier',
-  'Moto-pompes',
-  'anti-incendie',
-  'Stations-d-epuration',
-  'Pompes-volumetriques',
-  'Station-de-relevage'
+  'Horizontal Mono-cellulaire',
+  'Horizontal Multi-cellulaire',
+  'Vertical Multi-cellulaire',
+  'À Vide',
+  'Immergée',
+  'Submersible'
 ];
 
-// Domaines d'application
 const DOMAINES_APPLICATION = [
   'Hydrocarbure',
   'Agroalimentaire',
@@ -40,12 +34,11 @@ const DOMAINES_APPLICATION = [
   'Industriel'
 ];
 
-// Marques
 const MARQUES = [
   'Oflow',
   'Orex',
-  'Al Demating',
-  'Al fire',
+  'Al-Demating',
+  'Al-fire',
   'FLUX'
 ];
 
@@ -54,100 +47,111 @@ export default function ProductList() {
   const [filteredProducts, setFilteredProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
-  const searchParams = useSearchParams();
-  
-  // Récupérer les paramètres de l'URL
-  const typeFromUrl = searchParams.get('type');
-  const marqueFromUrl = searchParams.get('marque');
-  const domaineFromUrl = searchParams.get('domaine');
-  
-  // Initialiser les filtres avec les paramètres de l'URL
   const [filters, setFilters] = useState({
-    marques: marqueFromUrl ? [marqueFromUrl] : [] as string[],
-    types: typeFromUrl ? [typeFromUrl] : [] as string[],
-    domaines: domaineFromUrl ? [domaineFromUrl] : [] as string[]
+    marques: [] as string[],
+    types: [] as string[],
+    domaines: [] as string[]
   });
 
+  const searchParams = useSearchParams();
+  const supabase = createClient();
+
   useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const { data, error } = await supabase
+          .from('produits')
+          .select('*');
+
+        if (error) {
+          console.error('Erreur lors de la récupération des produits:', error);
+          return;
+        }
+
+        setProducts(data || []);
+        setFilteredProducts(data || []);
+      } catch (error) {
+        console.error('Erreur inattendue:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
     fetchProducts();
   }, []);
 
   useEffect(() => {
-    filterProducts();
-  }, [searchQuery, filters, products]);
+    // Récupérer les paramètres de l'URL
+    const typeParam = searchParams.get('type');
+    const marqueParam = searchParams.get('marque');
+    const domaineParam = searchParams.get('domaine');
 
-  const fetchProducts = async () => {
-    try {
-      const { data, error } = await supabase
-        .from('produits')
-        .select('*')
-        .order('created_at', { ascending: false });
-
-      if (error) throw error;
-      setProducts(data || []);
-      setFilteredProducts(data || []);
-    } catch (error) {
-      console.error('Erreur lors du chargement des produits:', error);
-    } finally {
-      setLoading(false);
+    // Mettre à jour les filtres en fonction des paramètres
+    if (typeParam) {
+      setFilters(prev => ({ ...prev, types: [typeParam] }));
     }
-  };
+    if (marqueParam) {
+      setFilters(prev => ({ ...prev, marques: [marqueParam] }));
+    }
+    if (domaineParam) {
+      setFilters(prev => ({ ...prev, domaines: [domaineParam] }));
+    }
+  }, [searchParams]);
 
-  const filterProducts = () => {
+  useEffect(() => {
     let filtered = [...products];
 
-    // Filtre par recherche
-    if (searchQuery) {
-      filtered = filtered.filter(product =>
-        product.nom.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        product.description.toLowerCase().includes(searchQuery.toLowerCase())
-      );
-    }
-
-    // Filtre par marque
+    // Appliquer les filtres
     if (filters.marques.length > 0) {
-      filtered = filtered.filter(product =>
-        filters.marques.includes(product.marque)
-      );
+      filtered = filtered.filter(product => filters.marques.includes(product.marque));
     }
-
-    // Filtre par type
     if (filters.types.length > 0) {
-      filtered = filtered.filter(product =>
-        filters.types.includes(product.type_produit)
+      filtered = filtered.filter(product => filters.types.includes(product.type_produit));
+    }
+    if (filters.domaines.length > 0) {
+      filtered = filtered.filter(product => 
+        product.domaines_activite?.some(domaine => filters.domaines.includes(domaine))
       );
     }
 
-    // Filtre par domaine
-    if (filters.domaines.length > 0) {
+    // Appliquer la recherche
+    if (searchQuery) {
+      const query = searchQuery.toLowerCase();
       filtered = filtered.filter(product =>
-        product.domaines_application?.some(domaine =>
-          filters.domaines.includes(domaine)
+        product.nom.toLowerCase().includes(query) ||
+        product.description.toLowerCase().includes(query) ||
+        product.marque.toLowerCase().includes(query) ||
+        product.type_produit.toLowerCase().includes(query) ||
+        product.domaines_activite?.some(domaine => 
+          domaine.toLowerCase().includes(query)
         )
       );
     }
 
     setFilteredProducts(filtered);
-  };
+  }, [products, filters, searchQuery]);
 
-  const toggleFilter = (filterType: 'marques' | 'types' | 'domaines', value: string) => {
+  const toggleFilter = (type: 'marques' | 'types' | 'domaines', value: string) => {
     setFilters(prev => {
-      const currentFilter = prev[filterType];
-      const newFilter = currentFilter.includes(value)
-        ? currentFilter.filter(item => item !== value)
-        : [...currentFilter, value];
-
+      const currentFilters = prev[type];
+      const newFilters = currentFilters.includes(value)
+        ? currentFilters.filter(item => item !== value)
+        : [...currentFilters, value];
+      
       return {
         ...prev,
-        [filterType]: newFilter
+        [type]: newFilters
       };
     });
-  };
+  }
 
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary mx-auto"></div>
+          <p className="mt-4 text-gray-600">Chargement des produits...</p>
+        </div>
       </div>
     );
   }
