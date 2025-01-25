@@ -1,41 +1,43 @@
 'use client';
 
-import ProductPage from '../../components/ProductPage';
+import ProductPage from '@/components/ProductPage';
 
-const products = [
-  {
-    titre: 'Motopompe Essence',
-    description: 'Solution portable pour les chantiers et l\'irrigation',
-    image: '/images/pompes/motopompe-essence.jpg',
-    domaines: ['Agriculture', 'Bâtiment', 'Industriel']
-  },
-  {
-    titre: 'Motopompe Diesel',
-    description: 'Pour les applications intensives nécessitant une grande autonomie',
-    image: '/images/pompes/motopompe-diesel.jpg',
-    domaines: ['Agriculture', 'Bâtiment', 'Industriel']
-  },
-  {
-    titre: 'Motopompe Haute Pression',
-    description: 'Idéale pour l\'irrigation et le nettoyage haute pression',
-    image: '/images/pompes/motopompe-hp.jpg',
-    domaines: ['Agriculture', 'Bâtiment', 'Industriel']
-  },
-  {
-    titre: 'Motopompe Eaux Chargées',
-    description: 'Spécialement conçue pour les eaux boueuses et chargées',
-    image: '/images/pompes/motopompe-chargees.jpg',
-    domaines: ['Agriculture', 'Bâtiment', 'Industriel']
-  }
-];
+const product = {
+  id: 'moto-pompe-1',
+  nom: 'Moto-pompe Série MP',
+  marque: 'ALPHAS',
+  type_produit: 'Moto-pompe',
+  technologie: 'Diesel',
+  serie: 'MP',
+  modele: 'MP-200',
+  description: 'La moto-pompe série MP est une solution autonome idéale pour les applications mobiles nécessitant un pompage efficace. Équipée d\'un moteur diesel robuste, elle assure une performance fiable dans les conditions les plus exigeantes.',
+  domaines_activite: ['Industrie', 'Bâtiment et TP', 'Mine & Carrière'],
+  domaines_application: [
+    'Pompage de chantier',
+    'Irrigation mobile',
+    'Intervention d\'urgence',
+    'Applications temporaires'
+  ],
+  debit: '10 à 100 m³/h',
+  hauteur_refoulement: 'Jusqu\'à 40m',
+  viscosite: 'Eau claire à légèrement chargée',
+  type_entrainement: 'Moteur diesel',
+  compatibilite: 'Eau, eaux chargées',
+  image_principale: '/moto-pompes/mp-200-main.jpg',
+  images_secondaires: [
+    '/moto-pompes/mp-200-1.jpg',
+    '/moto-pompes/mp-200-2.jpg',
+    '/moto-pompes/mp-200-3.jpg'
+  ],
+  avantages: [
+    'Mobilité totale',
+    'Autonomie importante',
+    'Robustesse à toute épreuve',
+    'Maintenance simplifiée',
+    'Démarrage rapide'
+  ]
+};
 
-export default function Motopompes() {
-  return (
-    <ProductPage
-      title="Moto-pompes"
-      description="Explorez notre gamme de motopompes, alliant autonomie et performance pour vos besoins de pompage mobile."
-      bannerImage="/images/banner-motopompes.jpg"
-      products={products}
-    />
-  );
+export default function MotoPompes() {
+  return <ProductPage product={product} />;
 }

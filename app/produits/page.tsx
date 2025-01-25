@@ -1,175 +1,354 @@
-import Link from 'next/link'
-import Image from 'next/image'
+'use client';
 
-const categories = [
-  {
-    name: 'Pompes',
-    href: '/produits/pompes',
-    description: 'Large gamme de pompes pour toutes applications industrielles',
-    subcategories: [
-      'Pompes centrifuges',
-      'Pompes à engrenages',
-      'Pompes à membrane',
-      'Pompes doseuses',
-      'Pompes submersibles',
-    ],
-  },
-  {
-    name: 'Vannes',
-    href: '/produits/vannes',
-    description: 'Vannes de régulation et de contrôle',
-    subcategories: [
-      'Vannes à papillon',
-      'Vannes à boisseau',
-      'Vannes de régulation',
-      'Clapets anti-retour',
-    ],
-  },
-  {
-    name: 'Accessoires',
-    href: '/produits/accessoires',
-    description: 'Accessoires et pièces complémentaires',
-    subcategories: [
-      'Accouplements',
-      'Garnitures mécaniques',
-      'Joints',
-      'Tuyauterie',
-    ],
-  },
-]
+import { useState, useEffect } from 'react';
+import { supabase } from '@/lib/supabase/config';
+import Image from 'next/image';
+import Link from 'next/link';
+
+interface Product {
+  id: string;
+  nom: string;
+  marque: string;
+  type_produit: string;
+  domaines_application: string[];
+  domaines_activite: string[];
+  image_principale: string;
+  description: string;
+}
+
+// Types de pompes
+const TYPES_POMPES = [
+  'Pompes centrifuges',
+  'Pompes vide-fut',
+  'Anti-belier',
+  'Moto-pompes',
+  'anti-incendie',
+  'Stations-d-epuration',
+  'Pompes-volumetriques',
+  'Station-de-relevage'
+];
+
+// Domaines d'application
+const DOMAINES_APPLICATION = [
+  'Industrie',
+  'Gaz & Oil',
+  'Agriculture',
+  'Bâtiment et TP',
+  'Anti-incendies',
+  'Stations de relevage',
+  'Stations d\'épuration',
+  'Système d\'irrigation',
+  'Pharmacie et Cosmétique'
+];
+
+// Marques
+const MARQUES = [
+  'Oflow',
+  'Orex',
+  'Al Demating',
+  'Al fire'
+];
 
 export default function ProduitsPage() {
+  const [products, setProducts] = useState<Product[]>([]);
+  const [filteredProducts, setFilteredProducts] = useState<Product[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [filters, setFilters] = useState({
+    marques: [] as string[],
+    types: [] as string[],
+    domaines: [] as string[]
+  });
+
+  useEffect(() => {
+    fetchProducts();
+  }, []);
+
+  useEffect(() => {
+    filterProducts();
+  }, [products, searchQuery, filters]);
+
+  const fetchProducts = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('produits')
+        .select('*')
+        .order('created_at', { ascending: false });
+
+      if (error) throw error;
+      setProducts(data || []);
+      setFilteredProducts(data || []);
+    } catch (error) {
+      console.error('Erreur lors du chargement des produits:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const filterProducts = () => {
+    let filtered = [...products];
+
+    // Filtre par recherche
+    if (searchQuery) {
+      filtered = filtered.filter(product =>
+        product.nom.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        product.description.toLowerCase().includes(searchQuery.toLowerCase())
+      );
+    }
+
+    // Filtre par marque
+    if (filters.marques.length > 0) {
+      filtered = filtered.filter(product =>
+        filters.marques.includes(product.marque)
+      );
+    }
+
+    // Filtre par type
+    if (filters.types.length > 0) {
+      filtered = filtered.filter(product =>
+        filters.types.includes(product.type_produit)
+      );
+    }
+
+    // Filtre par domaine
+    if (filters.domaines.length > 0) {
+      filtered = filtered.filter(product =>
+        product.domaines_application.some(domaine =>
+          filters.domaines.includes(domaine)
+        )
+      );
+    }
+
+    setFilteredProducts(filtered);
+  };
+
+  const toggleFilter = (type: 'marques' | 'types' | 'domaines', value: string) => {
+    setFilters(prev => {
+      const current = prev[type];
+      const updated = current.includes(value)
+        ? current.filter(item => item !== value)
+        : [...current, value];
+      return { ...prev, [type]: updated };
+    });
+  };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+      </div>
+    );
+  }
+
   return (
-    <div className="bg-white">
-      {/* Hero section */}
-      <div className="relative isolate overflow-hidden bg-gradient-to-b from-primary/20 pt-14">
-        <div className="mx-auto max-w-7xl px-6 py-24 sm:py-32 lg:px-8">
-          <div className="mx-auto max-w-2xl text-center">
-            <h1 className="text-4xl font-bold tracking-tight text-gray-900 sm:text-6xl">
+    <div className="min-h-screen bg-gray-50">
+      {/* Hero section avec barre de recherche */}
+      <div className="bg-gradient-to-b from-primary/10 to-transparent pt-24 pb-12">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="max-w-2xl mx-auto text-center">
+            <h1 className="text-4xl font-bold text-gray-900 mb-4">
               Nos Produits
             </h1>
-            <p className="mt-6 text-lg leading-8 text-gray-600">
-              Découvrez notre gamme complète de produits de haute qualité. Des solutions innovantes pour répondre à tous vos besoins en pompage et en contrôle des fluides.
+            <p className="text-lg text-gray-600 mb-8">
+              Découvrez notre gamme complète de pompes industrielles
             </p>
+            <div className="relative max-w-lg mx-auto">
+              <input
+                type="search"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder="Rechercher un produit..."
+                className="w-full rounded-lg border border-gray-300 px-4 py-3 pl-10 focus:outline-none focus:ring-2 focus:ring-primary shadow-sm"
+              />
+              <svg
+                className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                />
+              </svg>
+            </div>
           </div>
         </div>
       </div>
 
-      {/* Categories section */}
-      <div className="mx-auto max-w-7xl px-6 lg:px-8 py-24">
-        <div className="mx-auto max-w-2xl lg:text-center">
-          <h2 className="text-base font-semibold leading-7 text-primary">Catalogue</h2>
-          <p className="mt-2 text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
-            Catégories de produits
-          </p>
-        </div>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <div className="flex flex-col lg:flex-row gap-8">
+          {/* Filtres */}
+          <div className="w-full lg:w-64 space-y-6">
+            {/* Filtre par marque */}
+            <div className="bg-white p-4 rounded-lg shadow-sm">
+              <h3 className="font-medium text-gray-900 mb-4">Marques</h3>
+              <div className="space-y-2">
+                {MARQUES.map(marque => (
+                  <label key={marque} className="flex items-center">
+                    <input
+                      type="checkbox"
+                      checked={filters.marques.includes(marque)}
+                      onChange={() => toggleFilter('marques', marque)}
+                      className="rounded border-gray-300 text-primary focus:ring-primary"
+                    />
+                    <span className="ml-2 text-sm text-gray-600">{marque}</span>
+                  </label>
+                ))}
+              </div>
+            </div>
 
-        <div className="mx-auto mt-16 max-w-7xl">
-          <div className="grid grid-cols-1 gap-x-8 gap-y-10 lg:grid-cols-3">
-            {categories.map((category) => (
-              <div key={category.name} className="group relative">
-                <Link href={category.href}>
-                  <div className="rounded-2xl bg-white p-6 shadow-lg ring-1 ring-gray-900/5 transition-all group-hover:shadow-xl">
-                    <h3 className="text-xl font-semibold leading-7 tracking-tight text-gray-900">
-                      {category.name}
-                    </h3>
-                    <p className="mt-2 text-base leading-7 text-gray-600">
-                      {category.description}
-                    </p>
-                    <ul className="mt-4 space-y-2">
-                      {category.subcategories.map((subcategory) => (
-                        <li
-                          key={subcategory}
-                          className="text-sm text-gray-600"
+            {/* Filtre par type */}
+            <div className="bg-white p-4 rounded-lg shadow-sm">
+              <h3 className="font-medium text-gray-900 mb-4">Types de pompes</h3>
+              <div className="space-y-2">
+                {TYPES_POMPES.map(type => (
+                  <label key={type} className="flex items-center">
+                    <input
+                      type="checkbox"
+                      checked={filters.types.includes(type)}
+                      onChange={() => toggleFilter('types', type)}
+                      className="rounded border-gray-300 text-primary focus:ring-primary"
+                    />
+                    <span className="ml-2 text-sm text-gray-600">{type}</span>
+                  </label>
+                ))}
+              </div>
+            </div>
+
+            {/* Filtre par domaine */}
+            <div className="bg-white p-4 rounded-lg shadow-sm">
+              <h3 className="font-medium text-gray-900 mb-4">Domaines d'application</h3>
+              <div className="space-y-2">
+                {DOMAINES_APPLICATION.map(domaine => (
+                  <label key={domaine} className="flex items-center">
+                    <input
+                      type="checkbox"
+                      checked={filters.domaines.includes(domaine)}
+                      onChange={() => toggleFilter('domaines', domaine)}
+                      className="rounded border-gray-300 text-primary focus:ring-primary"
+                    />
+                    <span className="ml-2 text-sm text-gray-600">{domaine}</span>
+                  </label>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          {/* Liste des produits */}
+          <div className="flex-1">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              {filteredProducts.map((product) => (
+                <div
+                  key={product.id}
+                  className="bg-white rounded-lg shadow-sm overflow-hidden hover:shadow-md transition-shadow duration-300"
+                >
+                  {/* Image du produit */}
+                  <div className="relative h-48 bg-gray-200">
+                    {product.image_principale ? (
+                      <Image
+                        src={`${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/images/${product.image_principale}`}
+                        alt={product.nom}
+                        fill
+                        className="object-cover"
+                      />
+                    ) : (
+                      <div className="absolute inset-0 flex items-center justify-center text-gray-400">
+                        <svg
+                          className="w-12 h-12"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
                         >
-                          • {subcategory}
-                        </li>
-                      ))}
-                    </ul>
-                    <span className="mt-4 inline-block text-sm font-medium text-primary group-hover:underline">
-                      Voir les produits →
-                    </span>
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
+                          />
+                        </svg>
+                      </div>
+                    )}
                   </div>
-                </Link>
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
 
-      {/* Features section */}
-      <div className="bg-gray-50 py-24 sm:py-32">
-        <div className="mx-auto max-w-7xl px-6 lg:px-8">
-          <div className="mx-auto max-w-2xl lg:text-center">
-            <h2 className="text-base font-semibold leading-7 text-primary">Avantages</h2>
-            <p className="mt-2 text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
-              Pourquoi choisir nos produits ?
-            </p>
-          </div>
-          <div className="mx-auto mt-16 max-w-2xl sm:mt-20 lg:mt-24 lg:max-w-none">
-            <div className="grid grid-cols-1 gap-x-8 gap-y-16 lg:grid-cols-3">
-              <div className="flex flex-col">
-                <dt className="text-base font-semibold leading-7 text-gray-900">
-                  Qualité supérieure
-                </dt>
-                <dd className="mt-1 flex flex-auto flex-col text-base leading-7 text-gray-600">
-                  <p className="flex-auto">
-                    Tous nos produits sont fabriqués selon les normes les plus strictes et testés rigoureusement.
-                  </p>
-                </dd>
-              </div>
-              <div className="flex flex-col">
-                <dt className="text-base font-semibold leading-7 text-gray-900">
-                  Support technique
-                </dt>
-                <dd className="mt-1 flex flex-auto flex-col text-base leading-7 text-gray-600">
-                  <p className="flex-auto">
-                    Une équipe d'experts à votre disposition pour vous conseiller et vous accompagner.
-                  </p>
-                </dd>
-              </div>
-              <div className="flex flex-col">
-                <dt className="text-base font-semibold leading-7 text-gray-900">
-                  Garantie étendue
-                </dt>
-                <dd className="mt-1 flex flex-auto flex-col text-base leading-7 text-gray-600">
-                  <p className="flex-auto">
-                    Tous nos produits sont couverts par une garantie étendue pour votre tranquillité d'esprit.
-                  </p>
-                </dd>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+                  {/* Informations du produit */}
+                  <div className="p-4">
+                    <h2 className="text-xl font-semibold text-gray-900 mb-2">
+                      {product.nom}
+                    </h2>
+                    
+                    <div className="space-y-2">
+                      <div className="flex items-center text-sm text-gray-600">
+                        <span className="font-medium mr-2">Marque:</span>
+                        {product.marque}
+                      </div>
+                      
+                      <div className="flex items-center text-sm text-gray-600">
+                        <span className="font-medium mr-2">Type:</span>
+                        {product.type_produit}
+                      </div>
 
-      {/* CTA section */}
-      <div className="bg-white">
-        <div className="mx-auto max-w-7xl py-24 sm:px-6 sm:py-32 lg:px-8">
-          <div className="relative isolate overflow-hidden bg-gray-900 px-6 py-24 text-center shadow-2xl sm:rounded-3xl sm:px-16">
-            <h2 className="mx-auto max-w-2xl text-3xl font-bold tracking-tight text-white sm:text-4xl">
-              Besoin d'aide pour choisir ?
-            </h2>
-            <p className="mx-auto mt-6 max-w-xl text-lg leading-8 text-gray-300">
-              Nos experts sont à votre disposition pour vous guider dans le choix de vos produits.
-            </p>
-            <div className="mt-10 flex items-center justify-center gap-x-6">
-              <Link
-                href="/contact"
-                className="rounded-md bg-white px-3.5 py-2.5 text-sm font-semibold text-gray-900 shadow-sm hover:bg-gray-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
-              >
-                Contactez-nous
-              </Link>
-              <Link
-                href="/documentation"
-                className="text-sm font-semibold leading-6 text-white"
-              >
-                Documentation technique <span aria-hidden="true">→</span>
-              </Link>
+                      <div className="mt-3">
+                        <span className="font-medium text-sm text-gray-600 block mb-2">
+                          Secteurs d'activité:
+                        </span>
+                        <div className="flex flex-wrap gap-2">
+                          {product.domaines_activite?.map((secteur, index) => (
+                            <span
+                              key={index}
+                              className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-primary-50 text-primary"
+                            >
+                              {secteur}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Description courte */}
+                    <p className="mt-4 text-sm text-gray-500 line-clamp-2">
+                      {product.description}
+                    </p>
+
+                    {/* Bouton En savoir plus */}
+                    <div className="mt-4">
+                      <Link
+                        href={`/produits/${product.id}`}
+                        className="text-primary hover:text-primary-dark font-medium text-sm inline-flex items-center"
+                      >
+                        En savoir plus
+                        <svg
+                          className="w-4 h-4 ml-1"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M9 5l7 7-7 7"
+                          />
+                        </svg>
+                      </Link>
+                    </div>
+                  </div>
+                </div>
+              ))}
             </div>
+
+            {filteredProducts.length === 0 && (
+              <div className="text-center py-12">
+                <p className="text-gray-500">
+                  Aucun produit ne correspond à vos critères de recherche.
+                </p>
+              </div>
+            )}
           </div>
         </div>
       </div>
     </div>
-  )
+  );
 }

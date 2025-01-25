@@ -1,6 +1,6 @@
 'use client';
 
-import ProductPage from '../../components/ProductPage';
+import ProductPage from '@/components/ProductPage';
 
 const products = [
   {

@@ -15,11 +15,12 @@ export default function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12">
           {/* Logo et Description */}
           <div>
-            <div className="relative w-[180px] h-[60px] mb-6">
+            <div className="relative w-32 h-12">
               <Image
                 src="/images/logo-alphas-white.png"
-                alt="ALPHAS POMPES"
+                alt="Logo ALPHAS POMPES"
                 fill
+                sizes="(max-width: 768px) 100px, 128px"
                 className="object-contain"
               />
             </div>

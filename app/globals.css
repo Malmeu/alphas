@@ -61,3 +61,42 @@ html {
 .animate-fade-in {
   animation: fadeIn 0.5s ease-out forwards;
 }
+
+/* Styles pour React-Quill */
+.ql-container {
+  @apply font-sans text-base;
+}
+
+.ql-editor {
+  @apply min-h-[200px] prose prose-sm max-w-none;
+}
+
+.ql-toolbar {
+  @apply border border-gray-300 rounded-t-md bg-white;
+}
+
+.ql-container {
+  @apply border border-gray-300 rounded-b-md bg-white;
+}
+
+.ql-editor.ql-blank::before {
+  @apply text-gray-400 font-normal not-italic;
+}
+
+/* Style des boutons de la barre d'outils */
+.ql-toolbar button {
+  @apply hover:bg-gray-100 rounded;
+}
+
+.ql-toolbar button.ql-active {
+  @apply bg-gray-100;
+}
+
+/* Style des listes */
+.ql-editor ul {
+  @apply list-disc pl-4;
+}
+
+.ql-editor ol {
+  @apply list-decimal pl-4;
+}
