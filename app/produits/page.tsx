@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { supabase } from '@/lib/supabase/config';
 import Image from 'next/image';
 import Link from 'next/link';
+import { useSearchParams } from 'next/navigation';
 
 interface Product {
   id: string;
@@ -30,15 +31,12 @@ const TYPES_POMPES = [
 
 // Domaines d'application
 const DOMAINES_APPLICATION = [
-  'Industrie',
-  'Gaz & Oil',
-  'Agriculture',
-  'Bâtiment et TP',
-  'Anti-incendies',
-  'Stations de relevage',
-  'Stations d\'épuration',
-  'Système d\'irrigation',
-  'Pharmacie et Cosmétique'
+  'Hydrocarbure',
+  'Agroalimentaire',
+  'Cosmétique',
+  'Pharmaceutique',
+  'Eau et environnement',
+  'Industriel'
 ];
 
 // Marques
@@ -46,7 +44,8 @@ const MARQUES = [
   'Oflow',
   'Orex',
   'Al Demating',
-  'Al fire'
+  'Al fire',
+  'FLUX'
 ];
 
 export default function ProduitsPage() {
@@ -54,10 +53,18 @@ export default function ProduitsPage() {
   const [filteredProducts, setFilteredProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
+  const searchParams = useSearchParams();
+  
+  // Récupérer les paramètres de l'URL
+  const typeFromUrl = searchParams.get('type');
+  const marqueFromUrl = searchParams.get('marque');
+  const domaineFromUrl = searchParams.get('domaine');
+  
+  // Initialiser les filtres avec les paramètres de l'URL
   const [filters, setFilters] = useState({
-    marques: [] as string[],
-    types: [] as string[],
-    domaines: [] as string[]
+    marques: marqueFromUrl ? [marqueFromUrl] : [] as string[],
+    types: typeFromUrl ? [typeFromUrl] : [] as string[],
+    domaines: domaineFromUrl ? [domaineFromUrl] : [] as string[]
   });
 
   useEffect(() => {
@@ -66,7 +73,7 @@ export default function ProduitsPage() {
 
   useEffect(() => {
     filterProducts();
-  }, [products, searchQuery, filters]);
+  }, [searchQuery, filters, products]);
 
   const fetchProducts = async () => {
     try {
@@ -113,7 +120,7 @@ export default function ProduitsPage() {
     // Filtre par domaine
     if (filters.domaines.length > 0) {
       filtered = filtered.filter(product =>
-        product.domaines_application.some(domaine =>
+        product.domaines_application?.some(domaine =>
           filters.domaines.includes(domaine)
         )
       );
@@ -122,13 +129,17 @@ export default function ProduitsPage() {
     setFilteredProducts(filtered);
   };
 
-  const toggleFilter = (type: 'marques' | 'types' | 'domaines', value: string) => {
+  const toggleFilter = (filterType: 'marques' | 'types' | 'domaines', value: string) => {
     setFilters(prev => {
-      const current = prev[type];
-      const updated = current.includes(value)
-        ? current.filter(item => item !== value)
-        : [...current, value];
-      return { ...prev, [type]: updated };
+      const currentFilter = prev[filterType];
+      const newFilter = currentFilter.includes(value)
+        ? currentFilter.filter(item => item !== value)
+        : [...currentFilter, value];
+
+      return {
+        ...prev,
+        [filterType]: newFilter
+      };
     });
   };
 
@@ -249,7 +260,9 @@ export default function ProduitsPage() {
                   <div className="relative h-48 bg-gray-200">
                     {product.image_principale ? (
                       <Image
-                        src={`${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/images/${product.image_principale}`}
+                        src={product.image_principale?.startsWith('/') || product.image_principale?.startsWith('http')
+                          ? product.image_principale
+                          : `/${product.image_principale}`}
                         alt={product.nom}
                         fill
                         className="object-cover"

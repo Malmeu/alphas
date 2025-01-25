@@ -6,35 +6,35 @@ import { Fragment } from 'react';
 const products = [
   {
     name: 'Pompes Centrifuges',
-    href: '/produits/pompes-centrifuges'
+    href: '/produits?type=Pompes centrifuges'
   },
   {
     name: 'Pompes Volumetriques',
-    href: '/produits/pompes-volumetriques'
+    href: '/produits?type=Pompes-volumetriques'
   },
   {
     name: 'Pompes vide-fut',
-    href: '/produits/pompes-vide-fut'
+    href: '/produits?type=Pompes vide-fut'
   },
   {
     name: 'Anti-incendie',
-    href: '/produits/anti-incendie'
+    href: '/produits?type=anti-incendie'
   },
   {
     name: 'Moto-pompes',
-    href: '/produits/moto-pompes'
+    href: '/produits?type=Moto-pompes'
   },
   {
     name: 'Anti-belier',
-    href: '/produits/anti-belier'
+    href: '/produits?type=Anti-belier'
   },
   {
     name: 'Station de relevage',
-    href: '/produits/station-de-relevage'
+    href: '/produits?type=Station-de-relevage'
   },
   {
-    name: 'Stations d-epuration',
-    href: '/produits/stations-d-epuration'
+    name: 'Stations d\'épuration',
+    href: '/produits?type=Stations-d-epuration'
   }
 ];
 
