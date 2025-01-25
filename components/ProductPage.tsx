@@ -6,27 +6,15 @@ import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 import { useState, useEffect } from 'react';
 
 interface ProductPageProps {
-  product: {
-    id: string;
-    nom: string;
-    marque: string;
-    type_produit: string;
-    technologie: string;
-    serie: string;
-    modele: string;
+  title: string;
+  description: string;
+  bannerImage: string;
+  products: {
+    titre: string;
     description: string;
-    domaines_activite: string[];
-    domaines_application: string[];
-    debit: string;
-    hauteur_refoulement: string;
-    viscosite: string;
-    type_entrainement: string;
-    compatibilite: string;
-    image_principale: string;
-    images_secondaires: string[];
-    avantages: string[];
-    caracteristiques_techniques?: { [key: string]: string };
-  };
+    image: string;
+    domaines: string[];
+  }[];
 }
 
 const sectorIcons = {
@@ -37,7 +25,7 @@ const sectorIcons = {
   'Eau & Environnement': <IconDroplet className="w-8 h-8 text-white" />
 };
 
-export default function ProductPage({ product }: ProductPageProps) {
+export default function ProductPage({ title, description, bannerImage, products }: ProductPageProps) {
   const supabase = createClientComponentClient();
   const [mainImageUrl, setMainImageUrl] = useState<string>('');
   const [secondaryImageUrls, setSecondaryImageUrls] = useState<string[]>([]);
@@ -45,17 +33,17 @@ export default function ProductPage({ product }: ProductPageProps) {
 
   useEffect(() => {
     const loadImages = async () => {
-      if (product.image_principale) {
+      if (products[0].image) {
         // Si l'image est déjà une URL complète
-        if (product.image_principale.startsWith('http')) {
-          setMainImageUrl(product.image_principale);
-          setSelectedImage(product.image_principale);
+        if (products[0].image.startsWith('http')) {
+          setMainImageUrl(products[0].image);
+          setSelectedImage(products[0].image);
         } 
         // Si c'est un chemin dans le bucket
         else {
           const { data } = supabase.storage
             .from('images')
-            .getPublicUrl(product.image_principale);
+            .getPublicUrl(products[0].image);
 
           if (data?.publicUrl) {
             setMainImageUrl(data.publicUrl);
@@ -64,9 +52,9 @@ export default function ProductPage({ product }: ProductPageProps) {
         }
       }
 
-      if (product.images_secondaires?.length > 0) {
+      if (products[0].domaines?.length > 0) {
         const urls = await Promise.all(
-          product.images_secondaires.map(async (filename) => {
+          products[0].domaines.map(async (filename) => {
             if (filename.startsWith('http')) {
               return filename;
             } else {
@@ -82,7 +70,7 @@ export default function ProductPage({ product }: ProductPageProps) {
     };
 
     loadImages();
-  }, [product, supabase]);
+  }, [products, supabase]);
 
   // Ne pas afficher les images si elles ne sont pas encore chargées
   const showMainImage = selectedImage || mainImageUrl;
@@ -103,7 +91,7 @@ export default function ProductPage({ product }: ProductPageProps) {
       {/* En-tête avec type, technologie, etc. */}
       <div className="bg-[#EBF3F9] p-3 mb-8">
         <p className="text-sm text-gray-700">
-          Type Produit : {product.type_produit} /Technologie : {product.technologie} /Série : {product.serie} /Modèle : {product.modele} /Marque : {product.marque}
+          Type Produit : {products[0].titre} /Technologie : {products[0].description} /Série : {products[0].domaines[0]} /Modèle : {products[0].domaines[1]} /Marque : {products[0].domaines[2]}
         </p>
       </div>
 
@@ -117,7 +105,7 @@ export default function ProductPage({ product }: ProductPageProps) {
                 {showMainImage && isValidUrl(showMainImage) && (
                   <Image
                     src={showMainImage}
-                    alt={product.nom}
+                    alt={products[0].titre}
                     fill
                     sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                     className="object-contain"
@@ -138,7 +126,7 @@ export default function ProductPage({ product }: ProductPageProps) {
                     <div className="relative h-20 w-full">
                       <Image
                         src={mainImageUrl}
-                        alt={`${product.nom} - principale`}
+                        alt={`${products[0].titre} - principale`}
                         fill
                         sizes="(max-width: 768px) 25vw, 20vw"
                         className="object-contain"
@@ -156,7 +144,7 @@ export default function ProductPage({ product }: ProductPageProps) {
                       <div className="relative h-20 w-full">
                         <Image
                           src={url}
-                          alt={`${product.nom} - ${index + 1}`}
+                          alt={`${products[0].titre} - ${index + 1}`}
                           fill
                           sizes="(max-width: 768px) 25vw, 20vw"
                           className="object-contain"
@@ -175,37 +163,37 @@ export default function ProductPage({ product }: ProductPageProps) {
                 {/* Colonne de gauche avec toutes les caractéristiques */}
                 <div>
                   {/* Caractéristiques de base */}
-                  {product.debit && (
+                  {products[0].domaines[0] && (
                     <div className="mb-4">
                       <h3 className="text-lg font-semibold mb-2">Débit</h3>
-                      <p>{product.debit}</p>
+                      <p>{products[0].domaines[0]}</p>
                     </div>
                   )}
-                  {product.hauteur_refoulement && (
+                  {products[0].domaines[1] && (
                     <div className="mb-4">
                       <h3 className="text-lg font-semibold mb-2">Hauteur de refoulement</h3>
-                      <p>{product.hauteur_refoulement}</p>
+                      <p>{products[0].domaines[1]}</p>
                     </div>
                   )}
-                  {product.viscosite && (
+                  {products[0].domaines[2] && (
                     <div className="mb-4">
                       <h3 className="text-lg font-semibold mb-2">Viscosité</h3>
-                      <p>{product.viscosite}</p>
+                      <p>{products[0].domaines[2]}</p>
                     </div>
                   )}
-                  {product.type_entrainement && (
+                  {products[0].domaines[3] && (
                     <div className="mb-4">
                       <h3 className="text-lg font-semibold mb-2">Type d'entrainement</h3>
-                      <p>{product.type_entrainement}</p>
+                      <p>{products[0].domaines[3]}</p>
                     </div>
                   )}
 
                   {/* Caractéristiques personnalisées */}
-                  {product.caracteristiques_techniques && 
-                    Object.entries(product.caracteristiques_techniques).map(([nom, valeur]) => (
-                      <div key={nom} className="mb-4">
-                        <h3 className="text-lg font-semibold mb-2">{nom}</h3>
-                        <p>{valeur}</p>
+                  {products[0].domaines && 
+                    products[0].domaines.map((domaine, index) => (
+                      <div key={index} className="mb-4">
+                        <h3 className="text-lg font-semibold mb-2">{domaine}</h3>
+                        <p>{domaine}</p>
                       </div>
                     ))
                   }
@@ -223,19 +211,19 @@ export default function ProductPage({ product }: ProductPageProps) {
           <div>
             {/* Titre du produit */}
             <h1 className="text-2xl font-bold mb-6">
-              {product.type_produit} {product.technologie} {product.modele}
+              {products[0].titre}
             </h1>
 
             {/* Description */}
             <div className="mb-8">
-              <p className="text-gray-700">{product.description}</p>
+              <p className="text-gray-700">{products[0].description}</p>
             </div>
 
             {/* Secteurs d'activité */}
             <div className="mb-8">
               <h2 className="text-xl font-bold mb-4">Secteurs d'activité :</h2>
               <div className="flex flex-wrap gap-8">
-                {product.domaines_activite?.map((domaine) => (
+                {products[0].domaines?.map((domaine) => (
                   <div key={domaine} className="flex flex-col items-center">
                     <div className="bg-[#007CC3] p-3 rounded-full mb-2">
                       {sectorIcons[domaine as keyof typeof sectorIcons]}
@@ -250,7 +238,7 @@ export default function ProductPage({ product }: ProductPageProps) {
             <div className="mb-8">
               <h2 className="text-2xl font-bold text-gray-900 mb-4">Domaines d'applications :</h2>
               <ul className="list-disc pl-5 space-y-2">
-                {product.domaines_application?.map((domaine, index) => {
+                {products[0].domaines?.map((domaine, index) => {
                   const [titre, description] = domaine.split(' : ');
                   return (
                     <li key={index} className="text-gray-600">
@@ -265,7 +253,7 @@ export default function ProductPage({ product }: ProductPageProps) {
             <div>
               <h2 className="text-2xl font-bold text-gray-900 mb-4">Avantages :</h2>
               <ul className="list-disc pl-5 space-y-2">
-                {product.avantages?.map((avantage, index) => {
+                {products[0].domaines?.map((avantage, index) => {
                   const [titre, description] = avantage.split(' : ');
                   return (
                     <li key={index} className="text-gray-600">
