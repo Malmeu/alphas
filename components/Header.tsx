@@ -6,7 +6,14 @@ import { Fragment } from 'react';
 import { Menu, Transition } from '@headlessui/react';
 import { ChevronDownIcon } from '@heroicons/react/20/solid';
 
-const menuItems = [
+interface MenuItem {
+  name: string;
+  href?: string;
+  type?: 'dropdown';
+  items?: string[];
+}
+
+const menuItems: MenuItem[] = [
   {
     name: 'Accueil',
     href: '/',
@@ -28,17 +35,7 @@ const menuItems = [
   },
   {
     name: 'Produits',
-    type: 'dropdown',
-    items: [
-      'Pompes centrifuges',
-      'Pompes vide-fut',
-      'Anti-belier',
-      'Moto-pompes',
-      'anti-incendie',
-      'Stations-d-epuration',
-      'Pompes-volumetriques',
-      'Station-de-relevage'
-    ]
+    href: '/produits',
   },
   {
     name: 'Marques',
@@ -111,19 +108,22 @@ export default function Header() {
                       >
                         <Menu.Items className="absolute left-0 z-10 mt-3 w-72 origin-top-left rounded-xl bg-white p-2 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
                           <div className="grid gap-1">
-                            {item.items.map((subItem) => (
+                            {item.items?.map((subItem) => (
                               <Menu.Item key={subItem}>
-                                {({ active }) => (
-                                  <Link
-                                    href={`/${item.name.toLowerCase().replace(/'/g, '').replace(/ /g, '-')}/${subItem.toLowerCase().replace(/ /g, '-').replace(/&/g, 'et')}`}
-                                    className={classNames(
-                                      active ? 'bg-primary/5 text-primary' : 'text-gray-700',
-                                      'rounded-lg px-4 py-2.5 text-sm font-medium transition-colors hover:bg-primary/5 hover:text-primary whitespace-nowrap'
-                                    )}
-                                  >
-                                    {subItem}
-                                  </Link>
-                                )}
+                                {({ active }) => {
+                                  const itemPath = `/${item.name.toLowerCase().replace(/'/g, '').replace(/ /g, '-')}/${subItem.toLowerCase().replace(/ /g, '-').replace(/&/g, 'et')}`;
+                                  return (
+                                    <Link
+                                      href={itemPath}
+                                      className={classNames(
+                                        active ? 'bg-primary/5 text-primary' : 'text-gray-700',
+                                        'rounded-lg px-4 py-2.5 text-sm font-medium transition-colors hover:bg-primary/5 hover:text-primary whitespace-nowrap'
+                                      )}
+                                    >
+                                      {subItem}
+                                    </Link>
+                                  );
+                                }}
                               </Menu.Item>
                             ))}
                           </div>
@@ -132,13 +132,17 @@ export default function Header() {
                     </>
                   )}
                 </Menu>
-              ) : (
+              ) : item.href ? (
                 <Link
                   href={item.href}
                   className="text-sm font-semibold leading-6 text-gray-900 hover:text-primary transition-colors"
                 >
                   {item.name}
                 </Link>
+              ) : (
+                <span className="text-sm font-semibold leading-6 text-gray-900">
+                  {item.name}
+                </span>
               )}
             </Fragment>
           ))}

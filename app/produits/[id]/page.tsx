@@ -78,29 +78,14 @@ export default function ProductDetails() {
           }
 
           // Construire les URLs complètes pour les images secondaires
-          const secondaryUrls = await Promise.all(data.images_secondaires?.map(async (imagePath) => {
+          const secondaryUrls = await Promise.all(data.images_secondaires?.map(async (imagePath: string) => {
             if (!imagePath) return '';
             if (imagePath.startsWith('http') || imagePath.startsWith('/')) return imagePath;
             
-            const { data: imageData } = supabase.storage
-              .from('images')
+            const { data: imageUrl } = await supabase.storage
+              .from('products')
               .getPublicUrl(imagePath);
-            const url = imageData?.publicUrl || '';
-            console.log('Secondary image URL:', url);
-
-            // Vérifier si l'image existe
-            try {
-              const response = await fetch(url);
-              console.log('Secondary image response status:', response.status);
-              if (!response.ok) {
-                console.error('Secondary image not found:', url);
-                return ''; // Image non trouvée
-              }
-              return url;
-            } catch (error) {
-              console.error('Error checking secondary image:', error);
-              return ''; // Erreur lors de la vérification
-            }
+            return imageUrl.publicUrl;
           }) || []);
 
           const processedProduct = {
