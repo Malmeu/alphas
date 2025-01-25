@@ -5,6 +5,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import { createClient } from '@/utils/supabase/client';
+import type { Database } from '@/types/supabase';
 
 interface Product {
   id: string;
@@ -68,8 +69,9 @@ export default function ProductList() {
           return;
         }
 
-        setProducts(data || []);
-        setFilteredProducts(data || []);
+        const typedData = data as Product[];
+        setProducts(typedData);
+        setFilteredProducts(typedData);
       } catch (error) {
         console.error('Erreur inattendue:', error);
       } finally {
