@@ -3,7 +3,7 @@ import Link from 'next/link'
 import DivisionalStructure from '../components/DivisionalStructure'
 import Partners from '../components/Partners'
 import ProductTypeNav from '../components/ProductTypeNav'
-import { Fragment } from 'react'
+import { Fragment, Suspense } from 'react'
 
 const domains = [
   {
@@ -107,7 +107,9 @@ export default function Home() {
       </section>
 
       {/* Product Type Navigation */}
-      <ProductTypeNav />
+      <Suspense fallback={<div className="h-12 bg-primary animate-pulse" />}>
+        <ProductTypeNav />
+      </Suspense>
 
       {/* Domaines section */}
       <section className="bg-white py-24 sm:py-32">

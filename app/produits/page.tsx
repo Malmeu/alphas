@@ -1,6 +1,7 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
+import { useSearchParams } from 'next/navigation';
 import { createClient } from '@/lib/supabase/client';
 import { MagnifyingGlassIcon } from '@heroicons/react/24/outline';
 import ProductFilters from '@/components/ProductFilters';
@@ -34,6 +35,36 @@ const SECTEURS_ACTIVITE: SecteurActivite[] = [
 ];
 
 export default function ProduitsPage() {
+  return (
+    <div className="min-h-screen bg-gray-50">
+      {/* Banner Hero */}
+      <div className="relative bg-primary">
+        <div className="absolute inset-0">
+          <img
+            src="/images/banner-produits.jpg"
+            alt="Bannière produits"
+            className="w-full h-full object-cover opacity-20"
+          />
+        </div>
+        <div className="relative max-w-7xl mx-auto py-24 px-4 sm:py-32 sm:px-6 lg:px-8">
+          <h1 className="text-4xl font-extrabold tracking-tight text-white sm:text-5xl lg:text-6xl">
+            Nos Produits
+          </h1>
+          <p className="mt-6 text-xl text-gray-100 max-w-3xl">
+            Découvrez notre gamme complète de pompes industrielles. Des solutions adaptées à tous vos besoins, 
+            avec une expertise technique et un service client de qualité.
+          </p>
+        </div>
+      </div>
+
+      <Suspense fallback={<div className="min-h-screen bg-gray-50 animate-pulse" />}>
+        <ProductList />
+      </Suspense>
+    </div>
+  );
+}
+
+function ProductList() {
   const supabase = createClient();
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
@@ -41,10 +72,11 @@ export default function ProduitsPage() {
   const [selectedMarques, setSelectedMarques] = useState<Marque[]>([]);
   const [selectedTypes, setSelectedTypes] = useState<TypePompe[]>([]);
   const [selectedSecteurs, setSelectedSecteurs] = useState<SecteurActivite[]>([]);
+  const searchParams = useSearchParams();
 
   useEffect(() => {
     fetchProducts();
-  }, [selectedMarques, selectedTypes, selectedSecteurs, searchQuery]);
+  }, [selectedMarques, selectedTypes, selectedSecteurs, searchQuery, searchParams]);
 
   const fetchProducts = async () => {
     try {
@@ -108,30 +140,7 @@ export default function ProduitsPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Banner Hero */}
-      <div className="relative bg-primary">
-        <div className="absolute inset-0">
-          <img
-            src="/images/banner-produits.jpg"
-            alt="Bannière produits"
-            className="w-full h-full object-cover opacity-20"
-          />
-        </div>
-        <div className="relative max-w-7xl mx-auto py-24 px-4 sm:py-32 sm:px-6 lg:px-8">
-          <h1 className="text-4xl font-extrabold tracking-tight text-white sm:text-5xl lg:text-6xl">
-            Nos Produits
-          </h1>
-          <p className="mt-6 text-xl text-gray-100 max-w-3xl">
-            Découvrez notre gamme complète de pompes industrielles. Des solutions adaptées à tous vos besoins, 
-            avec une expertise technique et un service client de qualité.
-          </p>
-        </div>
-      </div>
-
-      {/* Navigation des types de produits */}
-      
-
+    <>
       {/* Barre de recherche */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-8">
         <div className="relative">
@@ -248,6 +257,6 @@ export default function ProduitsPage() {
           </div>
         </div>
       </div>
-    </div>
+    </>
   );
 }

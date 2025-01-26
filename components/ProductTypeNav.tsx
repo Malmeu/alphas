@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
+import { Suspense } from 'react';
 
 const productTypes = [
   { name: 'Pompes Centrifuges', href: '/produits?type=Pompes Centrifuges' },
@@ -11,10 +12,10 @@ const productTypes = [
   { name: 'Moto-pompes', href: '/produits?type=Moto-pompes' },
   { name: 'Anti-belier', href: '/produits?type=Anti-belier' },
   { name: 'Station de relevage', href: '/produits?type=Station-de-relevage' },
-  { name: 'Stations d\'épuration', href: '/produits?type=Stations-d-epuration' },
+  { name: "Stations d'épuration", href: '/produits?type=Stations-d-epuration' },
 ];
 
-export default function ProductTypeNav() {
+function ProductTypeNavContent() {
   const searchParams = useSearchParams();
   const currentType = searchParams.get('type');
 
@@ -26,9 +27,7 @@ export default function ProductTypeNav() {
             key={type.name}
             href={type.href}
             className={`px-4 py-2 text-sm font-medium text-white hover:bg-primary-dark whitespace-nowrap ${
-              currentType === type.name.replace(' ', '-')
-                ? 'bg-primary-dark'
-                : ''
+              currentType === type.name ? 'bg-primary-dark' : ''
             }`}
           >
             {type.name}
@@ -36,5 +35,13 @@ export default function ProductTypeNav() {
         ))}
       </div>
     </nav>
+  );
+}
+
+export default function ProductTypeNav() {
+  return (
+    <Suspense fallback={<div className="h-12 bg-primary animate-pulse" />}>
+      <ProductTypeNavContent />
+    </Suspense>
   );
 }
