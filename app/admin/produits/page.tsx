@@ -40,8 +40,10 @@ export default function AdminProduitsPage() {
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState<{ type: 'success' | 'error'; content: string } | null>(null);
   const [activeTab, setActiveTab] = useState<'infos' | 'tech' | 'media'>('infos');
-
-  const initialFormData: ProductFormData = {
+  const [selectedMainImage, setSelectedMainImage] = useState<File | null>(null);
+  const [selectedSecondaryImages, setSelectedSecondaryImages] = useState<File[]>([]);
+  const [caracteristiques, setCaracteristiques] = useState<CaracteristiqueTechnique[]>([]);
+  const [formData, setFormData] = useState<ProductFormData>({
     nom: '',
     type_produit: 'Pompes Centrifuges',
     technologie: '',
@@ -49,20 +51,18 @@ export default function AdminProduitsPage() {
     modele: '',
     marque: 'Oflow',
     description: '',
-    secteurs_activite: [],
-    domaines_application: '',
     debit: '',
     hauteur_refoulement: '',
     viscosite: '',
     type_entrainement: '',
     compatibilite: '',
-    caracteristiques_supplementaires: [],
     avantages: '',
+    secteurs_activite: [],
+    domaines_application: '',
+    caracteristiques_supplementaires: [],
     image_principale: '',
     images_secondaires: []
-  };
-
-  const [formData, setFormData] = useState<ProductFormData>(initialFormData);
+  });
 
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
@@ -88,133 +88,129 @@ export default function AdminProduitsPage() {
     }));
   };
 
-  const handleImageUpload = async (file: File | null) => {
-    if (!file) return;
-    
-    try {
-      const fileExt = file.name.split('.').pop();
-      const fileName = `${Date.now()}-${Math.random().toString(36).substring(7)}.${fileExt}`;
-
-      // Upload de l'image
-      const { data: uploadData, error: uploadError } = await supabase.storage
-        .from('products')
-        .upload(fileName, file, {
-          cacheControl: '3600',
-          upsert: false
-        });
-
-      if (uploadError) {
-        console.error('Erreur upload:', uploadError);
-        throw uploadError;
-      }
-
-      // Mettre à jour le state avec le nom du fichier
-      setFormData(prev => ({
-        ...prev,
-        image_principale: fileName
-      }));
-
-      return fileName;
-    } catch (error) {
-      console.error('Erreur lors du téléchargement de l\'image:', error);
-      throw error;
-    }
-  };
-
-  const handleMultipleImageUpload = async (files: FileList | null) => {
-    if (!files) return;
-    
-    try {
-      const uploadedPaths = await Promise.all(
-        Array.from(files).map(async (file) => {
-          const fileExt = file.name.split('.').pop();
-          const fileName = `${Date.now()}-${Math.random().toString(36).substring(7)}.${fileExt}`;
-
-          const { data: uploadData, error: uploadError } = await supabase.storage
-            .from('products')
-            .upload(fileName, file, {
-              cacheControl: '3600',
-              upsert: false
-            });
-
-          if (uploadError) {
-            console.error('Erreur upload:', uploadError);
-            throw uploadError;
-          }
-
-          return fileName;
-        })
-      );
-
-      setFormData(prev => ({
-        ...prev,
-        images_secondaires: [...(prev.images_secondaires || []), ...uploadedPaths]
-      }));
-
-      return uploadedPaths;
-    } catch (error) {
-      console.error('Erreur lors du téléchargement des images:', error);
-      throw error;
-    }
-  };
-
   const handleCaracteristiqueAdd = () => {
-    setFormData((prev) => ({
-      ...prev,
-      caracteristiques_supplementaires: [
-        ...prev.caracteristiques_supplementaires,
-        { nom: '', valeur: '' }
-      ]
-    }));
+    setCaracteristiques((prev) => [...prev, { nom: '', valeur: '' }]);
   };
 
   const handleCaracteristiqueChange = (index: number, content: CaracteristiqueTechnique) => {
-    setFormData((prev) => {
-      const newCaracteristiques = [...prev.caracteristiques_supplementaires];
+    setCaracteristiques((prev) => {
+      const newCaracteristiques = [...prev];
       newCaracteristiques[index] = content;
-      return {
-        ...prev,
-        caracteristiques_supplementaires: newCaracteristiques,
-      };
+      return newCaracteristiques;
     });
   };
 
   const handleCaracteristiqueRemove = (index: number) => {
-    setFormData((prev) => ({
-      ...prev,
-      caracteristiques_supplementaires: prev.caracteristiques_supplementaires.filter((_, i) => i !== index)
-    }));
+    setCaracteristiques((prev) => prev.filter((_, i) => i !== index));
   };
 
-  const handleDomainesChange = (content: string) => {
-    setFormData((prev) => ({
-      ...prev,
-      domaines_application: content,
-    }));
-  };
-
-  const handleAvantagesChange = (content: string) => {
-    setFormData((prev) => ({
-      ...prev,
-      avantages: content,
-    }));
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoading(true);
+    setMessage(null);
 
     try {
-      const { error } = await supabase
+      // Création du produit dans la base de données
+      const { data: newProduct, error: insertError } = await supabase
         .from('products')
-        .insert([formData]);
+        .insert({
+          nom: formData.nom,
+          type_produit: formData.type_produit,
+          technologie: formData.technologie,
+          serie: formData.serie,
+          modele: formData.modele,
+          marque: formData.marque,
+          description: formData.description,
+          debit: formData.debit,
+          hauteur_refoulement: formData.hauteur_refoulement,
+          viscosite: formData.viscosite,
+          type_entrainement: formData.type_entrainement,
+          compatibilite: formData.compatibilite,
+          caracteristiques_supplementaires: caracteristiques,
+          avantages: formData.avantages
+        })
+        .select()
+        .single();
 
-      if (error) throw error;
+      if (insertError) throw insertError;
 
-      setMessage({ type: 'success', content: 'Produit ajouté avec succès!' });
-      setFormData(initialFormData);
-    } catch (error: any) {
-      setMessage({ type: 'error', content: error.message });
+      // Upload de l'image principale si elle existe
+      if (selectedMainImage && newProduct) {
+        const mainImagePath = `${newProduct.id}/${selectedMainImage.name}`;
+        const { error: uploadError } = await supabase.storage
+          .from('products')
+          .upload(mainImagePath, selectedMainImage);
+
+        if (uploadError) throw uploadError;
+
+        // Mise à jour du produit avec le chemin de l'image principale
+        const { error: updateError } = await supabase
+          .from('products')
+          .update({ image_principale: mainImagePath })
+          .eq('id', newProduct.id);
+
+        if (updateError) throw updateError;
+      }
+
+      // Upload des images secondaires si elles existent
+      if (selectedSecondaryImages.length > 0 && newProduct) {
+        const secondaryImagePaths: string[] = [];
+
+        for (const image of selectedSecondaryImages) {
+          const imagePath = `${newProduct.id}/${image.name}`;
+          const { error: uploadError } = await supabase.storage
+            .from('products')
+            .upload(imagePath, image);
+
+          if (uploadError) throw uploadError;
+          secondaryImagePaths.push(imagePath);
+        }
+
+        // Mise à jour du produit avec les chemins des images secondaires
+        const { error: updateError } = await supabase
+          .from('products')
+          .update({ images_secondaires: secondaryImagePaths })
+          .eq('id', newProduct.id);
+
+        if (updateError) throw updateError;
+      }
+
+      setMessage({
+        type: 'success',
+        content: 'Produit créé avec succès !'
+      });
+
+      // Réinitialisation du formulaire
+      setFormData({
+        nom: '',
+        type_produit: 'Pompes Centrifuges',
+        technologie: '',
+        serie: '',
+        modele: '',
+        marque: 'Oflow',
+        description: '',
+        debit: '',
+        hauteur_refoulement: '',
+        viscosite: '',
+        type_entrainement: '',
+        compatibilite: '',
+        avantages: '',
+        secteurs_activite: [],
+        domaines_application: '',
+        caracteristiques_supplementaires: [],
+        image_principale: '',
+        images_secondaires: []
+      });
+      setCaracteristiques([]);
+      setSelectedMainImage(null);
+      setSelectedSecondaryImages([]);
+
+    } catch (error) {
+      console.error('Erreur lors de la création du produit:', error);
+      setMessage({
+        type: 'error',
+        content: 'Erreur lors de la création du produit. Veuillez réessayer.'
+      });
     } finally {
       setLoading(false);
     }
@@ -388,7 +384,7 @@ export default function AdminProduitsPage() {
                   <div className="border rounded-lg overflow-hidden">
                     <Editor
                       initialContent={formData.domaines_application}
-                      onChange={(content) => handleDomainesChange(content)}
+                      onChange={(content) => handleEditorChange('domaines_application', content)}
                     />
                   </div>
                 </div>
@@ -401,7 +397,7 @@ export default function AdminProduitsPage() {
                   <div className="border rounded-lg overflow-hidden">
                     <Editor
                       initialContent={formData.avantages}
-                      onChange={(content) => handleAvantagesChange(content)}
+                      onChange={(content) => handleEditorChange('avantages', content)}
                     />
                   </div>
                 </div>
@@ -492,7 +488,7 @@ export default function AdminProduitsPage() {
                   </div>
                   
                   <div className="space-y-4">
-                    {formData.caracteristiques_supplementaires.map((carac, index) => (
+                    {caracteristiques.map((carac, index) => (
                       <div key={index} className="flex gap-4 items-start bg-white p-4 rounded-lg shadow-sm">
                         <div className="flex-1">
                           <label className="block text-sm font-medium text-gray-700">
@@ -545,7 +541,7 @@ export default function AdminProduitsPage() {
                         <input
                           type="file"
                           accept="image/*"
-                          onChange={(e) => handleImageUpload(e.target.files?.[0] || null)}
+                          onChange={(e) => setSelectedMainImage(e.target.files?.[0] || null)}
                           className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-medium file:bg-primary file:text-white hover:file:bg-primary-dark"
                         />
                       </div>
@@ -562,7 +558,7 @@ export default function AdminProduitsPage() {
                           type="file"
                           accept="image/*"
                           multiple
-                          onChange={(e) => handleMultipleImageUpload(e.target.files)}
+                          onChange={(e) => setSelectedSecondaryImages(Array.from(e.target.files || []))}
                           className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-medium file:bg-primary file:text-white hover:file:bg-primary-dark"
                         />
                       </div>
