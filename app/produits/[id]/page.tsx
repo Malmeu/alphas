@@ -71,13 +71,14 @@ export default function ProductDetail({ params }: { params: { id: string } }) {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
         {/* Galerie d'images */}
         <div>
+          {/* Image principale sélectionnée */}
           <div className="bg-white p-4 rounded-lg shadow-lg mb-4">
             {selectedImage && (
               <div className="relative aspect-square w-full">
                 <img
                   src={`${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/products/${selectedImage}`}
                   alt={product.nom}
-                  className="w-full h-full object-contain"
+                  className="w-full h-[400px] object-contain"
                   onError={(e) => {
                     console.error('Erreur de chargement de l\'image:', selectedImage);
                     e.currentTarget.src = '/images/placeholder.png';
@@ -86,7 +87,10 @@ export default function ProductDetail({ params }: { params: { id: string } }) {
               </div>
             )}
           </div>
-          <div className="grid grid-cols-4 gap-2">
+
+          {/* Miniatures des images */}
+          <div className="grid grid-cols-5 gap-2">
+            {/* Image principale */}
             {product.image_principale && (
               <button
                 onClick={() => setSelectedImage(product.image_principale)}
@@ -97,7 +101,7 @@ export default function ProductDetail({ params }: { params: { id: string } }) {
                 <img
                   src={`${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/products/${product.image_principale}`}
                   alt={product.nom}
-                  className="w-full h-full object-cover"
+                  className="w-full h-[80px] object-contain bg-gray-50"
                   onError={(e) => {
                     console.error('Erreur de chargement de l\'image principale:', product.image_principale);
                     e.currentTarget.src = '/images/placeholder.png';
@@ -105,7 +109,9 @@ export default function ProductDetail({ params }: { params: { id: string } }) {
                 />
               </button>
             )}
-            {product.images_secondaires?.map((image, index) => (
+
+            {/* Images secondaires */}
+            {Array.isArray(product.images_secondaires) && product.images_secondaires.map((image, index) => (
               <button
                 key={index}
                 onClick={() => setSelectedImage(image)}
@@ -116,7 +122,7 @@ export default function ProductDetail({ params }: { params: { id: string } }) {
                 <img
                   src={`${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/products/${image}`}
                   alt={`${product.nom} - Image ${index + 1}`}
-                  className="w-full h-full object-cover"
+                  className="w-full h-[80px] object-contain bg-gray-50"
                   onError={(e) => {
                     console.error('Erreur de chargement de l\'image secondaire:', image);
                     e.currentTarget.src = '/images/placeholder.png';

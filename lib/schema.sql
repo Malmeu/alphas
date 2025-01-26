@@ -72,6 +72,31 @@ FOR ALL
 USING (true)
 WITH CHECK (true);
 
+-- Mise à jour de la table products pour les images
+ALTER TABLE products 
+ADD COLUMN IF NOT EXISTS image_principale text,
+ADD COLUMN IF NOT EXISTS images_secondaires text[] DEFAULT '{}';
+
+-- Création des politiques de stockage pour les images
+CREATE POLICY "Accès public aux images de produits"
+ON storage.objects FOR SELECT
+USING (bucket_id = 'products');
+
+CREATE POLICY "Upload d'images pour utilisateurs authentifiés"
+ON storage.objects FOR INSERT
+TO authenticated
+WITH CHECK (bucket_id = 'products');
+
+CREATE POLICY "Mise à jour d'images pour utilisateurs authentifiés"
+ON storage.objects FOR UPDATE
+TO authenticated
+USING (bucket_id = 'products');
+
+CREATE POLICY "Suppression d'images pour utilisateurs authentifiés"
+ON storage.objects FOR DELETE
+TO authenticated
+USING (bucket_id = 'products');
+
 -- Suppression du bucket s'il existe
 DO $$
 BEGIN
@@ -82,23 +107,3 @@ END $$;
 INSERT INTO storage.buckets (id, name, public)
 VALUES ('products', 'products', true)
 ON CONFLICT (id) DO NOTHING;
-
--- Création des politiques de stockage
-CREATE POLICY "allow_public_select"
-ON storage.objects FOR SELECT
-USING ( bucket_id = 'products' );
-
-CREATE POLICY "allow_authenticated_insert"
-ON storage.objects FOR INSERT
-TO authenticated
-WITH CHECK ( bucket_id = 'products' );
-
-CREATE POLICY "allow_authenticated_update"
-ON storage.objects FOR UPDATE
-TO authenticated
-USING ( bucket_id = 'products' );
-
-CREATE POLICY "allow_authenticated_delete"
-ON storage.objects FOR DELETE
-TO authenticated
-USING ( bucket_id = 'products' );

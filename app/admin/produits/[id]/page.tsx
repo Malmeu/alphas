@@ -5,6 +5,7 @@ import { createClient } from '@/lib/supabase/client';
 import type { Product, TypePompe, Marque, SecteurActivite } from '@/types/product';
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 
 const Editor = dynamic(() => import('@/components/Editor'), { ssr: false });
 
@@ -39,6 +40,8 @@ export default function EditProduct({ params }: { params: { id: string } }) {
   };
 
   const [formData, setFormData] = useState<ProductFormData>(initialFormData);
+  const [selectedMainImage, setSelectedMainImage] = useState<File | null>(null);
+  const [selectedSecondaryImages, setSelectedSecondaryImages] = useState<File[]>([]);
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -110,7 +113,7 @@ export default function EditProduct({ params }: { params: { id: string } }) {
     setFormData((prev) => ({ ...prev, [name]: content }));
   };
 
-  const handleImageUpload = async (file: File | null) => {
+  const handleMainImageUpload = async (file: File | null) => {
     if (!file) return;
     
     try {
@@ -128,40 +131,23 @@ export default function EditProduct({ params }: { params: { id: string } }) {
         image_principale: fileName
       }));
 
-      return fileName;
+      setSelectedMainImage(file);
     } catch (error) {
       console.error('Erreur lors du téléchargement de l\'image:', error);
       throw error;
     }
   };
 
-  const handleMultipleImageUpload = async (files: FileList | null) => {
-    if (!files) return;
-    
-    try {
-      const uploadedPaths = await Promise.all(
-        Array.from(files).map(async (file) => {
-          const fileExt = file.name.split('.').pop();
-          const fileName = `${Date.now()}-${Math.random().toString(36).substring(7)}.${fileExt}`;
-
-          const { error: uploadError } = await supabase.storage
-            .from('products')
-            .upload(fileName, file);
-
-          if (uploadError) throw uploadError;
-
-          return fileName;
-        })
-      );
-
-      setFormData(prev => ({
-        ...prev,
-        images_secondaires: [...(prev.images_secondaires || []), ...uploadedPaths]
-      }));
-    } catch (error) {
-      console.error('Erreur lors du téléchargement des images:', error);
-      throw error;
+  const handleSecondaryImagesChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = Array.from(e.target.files || []);
+    if (files.length > 4) {
+      setMessage({
+        type: 'error',
+        content: 'Vous ne pouvez sélectionner que 4 images secondaires maximum'
+      });
+      return;
     }
+    setSelectedSecondaryImages(files);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -180,20 +166,113 @@ export default function EditProduct({ params }: { params: { id: string } }) {
 
         if (insertError) throw insertError;
 
-        setMessage({
-          type: 'success',
-          content: 'Produit créé avec succès!'
-        });
-        
-        // Redirection vers la page d'édition du nouveau produit
         if (newProduct) {
-          router.push(`/admin/produits/${newProduct.id}`);
+          // Upload de l'image principale
+          if (selectedMainImage) {
+            const mainImagePath = `${newProduct.id}/${selectedMainImage.name}`;
+            const { error: uploadError } = await supabase.storage
+              .from('products')
+              .upload(mainImagePath, selectedMainImage);
+
+            if (uploadError) throw uploadError;
+
+            // Mise à jour du produit avec le chemin de l'image principale
+            const { error: updateError } = await supabase
+              .from('products')
+              .update({ image_principale: mainImagePath })
+              .eq('id', newProduct.id);
+
+            if (updateError) throw updateError;
+          }
+
+          // Upload des images secondaires
+          if (selectedSecondaryImages.length > 0) {
+            const secondaryImagePaths: string[] = [];
+
+            // Upload de chaque image secondaire
+            for (const image of selectedSecondaryImages) {
+              const imagePath = `${newProduct.id}/${image.name}`;
+              const { error: uploadError } = await supabase.storage
+                .from('products')
+                .upload(imagePath, image);
+
+              if (uploadError) {
+                console.error('Erreur upload image secondaire:', uploadError);
+                continue;
+              }
+
+              secondaryImagePaths.push(imagePath);
+            }
+
+            // Mise à jour du produit avec les chemins des images secondaires
+            if (secondaryImagePaths.length > 0) {
+              const { error: updateError } = await supabase
+                .from('products')
+                .update({ images_secondaires: secondaryImagePaths })
+                .eq('id', newProduct.id);
+
+              if (updateError) throw updateError;
+            }
+          }
+
+          setMessage({
+            type: 'success',
+            content: 'Produit créé avec succès! Vous pouvez en ajouter un autre.'
+          });
+
+          // Réinitialisation du formulaire
+          setFormData(initialFormData);
+          setSelectedMainImage(null);
+          setSelectedSecondaryImages([]);
+          
+          // Rester sur la même page pour ajouter un autre produit
+          router.push('/admin/produits/nouveau');
         }
       } else {
         // Mise à jour d'un produit existant
+        let updatedData = { ...formData };
+
+        // Upload de la nouvelle image principale si elle existe
+        if (selectedMainImage) {
+          const mainImagePath = `${params.id}/${selectedMainImage.name}`;
+          const { error: uploadError } = await supabase.storage
+            .from('products')
+            .upload(mainImagePath, selectedMainImage);
+
+          if (uploadError) throw uploadError;
+          updatedData.image_principale = mainImagePath;
+        }
+
+        // Upload des nouvelles images secondaires si elles existent
+        if (selectedSecondaryImages.length > 0) {
+          const newSecondaryImagePaths: string[] = [];
+
+          // Upload de chaque nouvelle image secondaire
+          for (const image of selectedSecondaryImages) {
+            const imagePath = `${params.id}/${image.name}`;
+            const { error: uploadError } = await supabase.storage
+              .from('products')
+              .upload(imagePath, image);
+
+            if (uploadError) {
+              console.error('Erreur upload image secondaire:', uploadError);
+              continue;
+            }
+
+            newSecondaryImagePaths.push(imagePath);
+          }
+
+          // Combiner les anciennes et les nouvelles images secondaires
+          updatedData.images_secondaires = [
+            ...(formData.images_secondaires || []),
+            ...newSecondaryImagePaths
+          ];
+        }
+
+        // Mise à jour du produit
         const { error: updateError } = await supabase
           .from('products')
-          .update(formData)
+          .update(updatedData)
           .eq('id', params.id);
 
         if (updateError) throw updateError;
@@ -216,7 +295,27 @@ export default function EditProduct({ params }: { params: { id: string } }) {
 
   return (
     <div className="container mx-auto px-4 py-8">
-      <h1 className="text-2xl font-bold mb-8">Modifier le produit</h1>
+      <div className="flex justify-between items-center mb-8">
+        <h1 className="text-2xl font-bold">
+          {params.id === 'nouveau' ? 'Ajouter un produit' : 'Modifier le produit'}
+        </h1>
+        <Link
+          href="/admin/produits/nouveau"
+          className="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-primary hover:bg-primary-dark focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary"
+        >
+          Ajouter un nouveau produit
+        </Link>
+      </div>
+
+      {message && (
+        <div
+          className={`p-4 mb-4 rounded-md ${
+            message.type === 'success' ? 'bg-green-50 text-green-800' : 'bg-red-50 text-red-800'
+          }`}
+        >
+          {message.content}
+        </div>
+      )}
 
       <div className="bg-white rounded-lg shadow">
         <div className="border-b border-gray-200">
@@ -242,16 +341,6 @@ export default function EditProduct({ params }: { params: { id: string } }) {
         </div>
 
         <form onSubmit={handleSubmit} className="p-6">
-          {message && (
-            <div
-              className={`mb-4 p-4 rounded ${
-                message.type === 'success' ? 'bg-green-50 text-green-800' : 'bg-red-50 text-red-800'
-              }`}
-            >
-              {message.content}
-            </div>
-          )}
-
           {/* Contenu des onglets */}
           <div className={activeTab === 'infos' ? 'block' : 'hidden'}>
             {/* Informations générales */}
@@ -532,7 +621,7 @@ export default function EditProduct({ params }: { params: { id: string } }) {
                 <input
                   type="file"
                   accept="image/*"
-                  onChange={(e) => handleImageUpload(e.target.files?.[0] || null)}
+                  onChange={(e) => handleMainImageUpload(e.target.files?.[0] || null)}
                   className="mt-1 block w-full"
                 />
                 {formData.image_principale && (
@@ -545,14 +634,19 @@ export default function EditProduct({ params }: { params: { id: string } }) {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700">Images secondaires</label>
+                <label className="block text-sm font-medium text-gray-700">
+                  Images secondaires (maximum 4)
+                </label>
                 <input
                   type="file"
                   accept="image/*"
                   multiple
-                  onChange={(e) => handleMultipleImageUpload(e.target.files)}
-                  className="mt-1 block w-full"
+                  onChange={handleSecondaryImagesChange}
+                  className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-medium file:bg-primary file:text-white hover:file:bg-primary-dark"
                 />
+                <p className="text-sm text-gray-500">
+                  Sélectionnez jusqu'à 4 images supplémentaires pour votre produit
+                </p>
                 <div className="mt-2 grid grid-cols-4 gap-4">
                   {formData.images_secondaires?.map((image, index) => (
                     <img
@@ -567,20 +661,21 @@ export default function EditProduct({ params }: { params: { id: string } }) {
             </div>
           </div>
 
-          <div className="mt-6 flex justify-end space-x-3">
-            <button
-              type="button"
-              onClick={() => router.push('/admin/produits')}
-              className="px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary"
+          <div className="flex justify-between mt-8">
+            <Link
+              href="/admin/produits"
+              className="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary"
             >
-              Annuler
-            </button>
+              Retour à la liste
+            </Link>
             <button
               type="submit"
               disabled={loading}
-              className="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-primary hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary"
+              className={`inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-primary hover:bg-primary-dark focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary ${
+                loading ? 'opacity-50 cursor-not-allowed' : ''
+              }`}
             >
-              {loading ? 'Enregistrement...' : 'Enregistrer les modifications'}
+              {loading ? 'Enregistrement...' : 'Enregistrer'}
             </button>
           </div>
         </form>

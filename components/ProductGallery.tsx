@@ -30,7 +30,7 @@ export default function ProductGallery({ imagePrincipale, imagesSecondaires }: P
           <img
             src={`${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/products/${imagePrincipale}`}
             alt="Image principale du produit"
-            className="h-full w-full object-cover object-center cursor-pointer hover:opacity-90 transition-opacity"
+            className="h-[300px] w-full object-contain bg-gray-100 cursor-pointer hover:opacity-90 transition-opacity"
             onClick={() => {
               setCurrentImageIndex(0);
               setIsModalOpen(true);
@@ -40,12 +40,12 @@ export default function ProductGallery({ imagePrincipale, imagesSecondaires }: P
 
         {/* Grid d'images secondaires */}
         <div className="grid grid-cols-2 gap-4">
-          {imagesSecondaires.slice(0, 4).map((image, index) => (
+          {imagesSecondaires.map((image, index) => (
             <div key={index} className="aspect-w-4 aspect-h-3 overflow-hidden rounded-lg">
               <img
                 src={`${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/products/${image}`}
                 alt={`Image ${index + 1} du produit`}
-                className="h-full w-full object-cover object-center cursor-pointer hover:opacity-90 transition-opacity"
+                className="h-[140px] w-full object-contain bg-gray-100 cursor-pointer hover:opacity-90 transition-opacity"
                 onClick={() => {
                   setCurrentImageIndex(index + 1);
                   setIsModalOpen(true);
@@ -53,26 +53,6 @@ export default function ProductGallery({ imagePrincipale, imagesSecondaires }: P
               />
             </div>
           ))}
-          {imagesSecondaires.length > 4 && (
-            <div
-              className="aspect-w-4 aspect-h-3 overflow-hidden rounded-lg relative cursor-pointer"
-              onClick={() => {
-                setCurrentImageIndex(4);
-                setIsModalOpen(true);
-              }}
-            >
-              <img
-                src={`${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/products/${imagesSecondaires[4]}`}
-                alt="Plus d'images"
-                className="h-full w-full object-cover object-center opacity-50"
-              />
-              <div className="absolute inset-0 flex items-center justify-center">
-                <span className="text-white text-xl font-semibold">
-                  +{imagesSecondaires.length - 4}
-                </span>
-              </div>
-            </div>
-          )}
         </div>
       </div>
 
