@@ -54,7 +54,7 @@ const menuItems: MenuItem[] = [
   },
   {
     name: 'Tout sur Alphas',
-    href: '/a-propos',
+    href: '/tout-sur-alphas',
     type: 'link'
   },
   {
