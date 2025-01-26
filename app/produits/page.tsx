@@ -1,363 +1,248 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { supabase } from '@/lib/supabase/config';
-import Image from 'next/image';
-import Link from 'next/link';
-import { useSearchParams } from 'next/navigation';
-import { Suspense } from 'react';
+import { createClient } from '@/lib/supabase/client';
+import { MagnifyingGlassIcon } from '@heroicons/react/24/outline';
+import ProductFilters from '@/components/ProductFilters';
 
-interface Product {
-  id: string;
-  nom: string;
-  marque: string;
-  type_produit: string;
-  domaines_application: string[];
-  domaines_activite: string[];
-  image_principale: string;
-  description: string;
-}
+import type { Product, Marque, TypePompe, SecteurActivite } from '@/types/product';
 
-// Types de pompes
-const TYPES_POMPES = [
-  'Pompes centrifuges',
+const MARQUES: Marque[] = ['Oflow', 'Orex', 'Al Demating', 'Al fire', 'FLUX'];
+
+const TYPES_POMPE: TypePompe[] = [
+  'Pompes Centrifuges',
+  'Pompes Volumetriques',
   'Pompes vide-fut',
-  'Anti-belier',
+  'Anti-incendie',
   'Moto-pompes',
-  'anti-incendie',
-  'Stations-d-epuration',
-  'Pompes-volumetriques',
-  'Station-de-relevage'
+  'Anti-belier',
+  'Station de relevage',
+  "Stations d'épuration"
 ];
 
-// Domaines d'application
-const DOMAINES_APPLICATION = [
-  'Hydrocarbure',
+const SECTEURS_ACTIVITE: SecteurActivite[] = [
+  'Industrie',
+  'Pharmacies & Cosmetique',
+  'Anti-incendie',
   'Agroalimentaire',
-  'Cosmétique',
-  'Pharmaceutique',
-  'Eau et environnement',
-  'Industriel'
+  'Agriculture & Irrigation',
+  'Eau & Environnement',
+  'Mines & Carriere',
+  'Batiment & TP',
+  'Gaz & Oil',
+  'Service Après-Vente'
 ];
 
-// Marques
-const MARQUES = [
-  'Oflow',
-  'Orex',
-  'Al Demating',
-  'Al fire',
-  'FLUX'
-];
-
-export default function ProductList() {
+export default function ProduitsPage() {
+  const supabase = createClient();
   const [products, setProducts] = useState<Product[]>([]);
-  const [filteredProducts, setFilteredProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
-  const searchParams = useSearchParams();
-  
-  // Récupérer les paramètres de l'URL
-  const typeFromUrl = searchParams.get('type');
-  const marqueFromUrl = searchParams.get('marque');
-  const domaineFromUrl = searchParams.get('domaine');
-  
-  // Initialiser les filtres avec les paramètres de l'URL
-  const [filters, setFilters] = useState({
-    marques: marqueFromUrl ? [marqueFromUrl] : [] as string[],
-    types: typeFromUrl ? [typeFromUrl] : [] as string[],
-    domaines: domaineFromUrl ? [domaineFromUrl] : [] as string[]
-  });
+  const [selectedMarques, setSelectedMarques] = useState<Marque[]>([]);
+  const [selectedTypes, setSelectedTypes] = useState<TypePompe[]>([]);
+  const [selectedSecteurs, setSelectedSecteurs] = useState<SecteurActivite[]>([]);
 
   useEffect(() => {
     fetchProducts();
-  }, []);
-
-  useEffect(() => {
-    filterProducts();
-  }, [searchQuery, filters, products]);
+  }, [selectedMarques, selectedTypes, selectedSecteurs, searchQuery]);
 
   const fetchProducts = async () => {
     try {
-      const { data, error } = await supabase
-        .from('produits')
-        .select('*')
-        .order('created_at', { ascending: false });
+      let query = supabase
+        .from('products')
+        .select('*');
+
+      // Filtrage par marque
+      if (selectedMarques.length > 0) {
+        query = query.in('marque', selectedMarques);
+      }
+
+      // Filtrage par type
+      if (selectedTypes.length > 0) {
+        query = query.in('type_produit', selectedTypes);
+      }
+
+      // Filtrage par secteur d'activité
+      if (selectedSecteurs.length > 0) {
+        query = query.overlaps('secteurs_activite', selectedSecteurs);
+      }
+
+      // Recherche textuelle
+      if (searchQuery) {
+        query = query.or(`nom.ilike.%${searchQuery}%,description.ilike.%${searchQuery}%`);
+      }
+
+      const { data, error } = await query;
 
       if (error) throw error;
       setProducts(data || []);
-      setFilteredProducts(data || []);
     } catch (error) {
-      console.error('Erreur lors du chargement des produits:', error);
+      console.error('Erreur lors de la récupération des produits:', error);
     } finally {
       setLoading(false);
     }
   };
 
-  const filterProducts = () => {
-    let filtered = [...products];
-
-    // Filtre par recherche
-    if (searchQuery) {
-      filtered = filtered.filter(product =>
-        product.nom.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        product.description.toLowerCase().includes(searchQuery.toLowerCase())
-      );
-    }
-
-    // Filtre par marque
-    if (filters.marques.length > 0) {
-      filtered = filtered.filter(product =>
-        filters.marques.includes(product.marque)
-      );
-    }
-
-    // Filtre par type
-    if (filters.types.length > 0) {
-      filtered = filtered.filter(product =>
-        filters.types.includes(product.type_produit)
-      );
-    }
-
-    // Filtre par domaine
-    if (filters.domaines.length > 0) {
-      filtered = filtered.filter(product =>
-        product.domaines_application?.some(domaine =>
-          filters.domaines.includes(domaine)
-        )
-      );
-    }
-
-    setFilteredProducts(filtered);
-  };
-
-  const toggleFilter = (filterType: 'marques' | 'types' | 'domaines', value: string) => {
-    setFilters(prev => {
-      const currentFilter = prev[filterType];
-      const newFilter = currentFilter.includes(value)
-        ? currentFilter.filter(item => item !== value)
-        : [...currentFilter, value];
-
-      return {
-        ...prev,
-        [filterType]: newFilter
-      };
-    });
-  };
-
-  if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
-      </div>
+  const handleMarqueChange = (marque: Marque) => {
+    setSelectedMarques(prev =>
+      prev.includes(marque)
+        ? prev.filter(m => m !== marque)
+        : [...prev, marque]
     );
-  }
+  };
+
+  const handleTypeChange = (type: TypePompe) => {
+    setSelectedTypes(prev =>
+      prev.includes(type)
+        ? prev.filter(t => t !== type)
+        : [...prev, type]
+    );
+  };
+
+  const handleSecteurChange = (secteur: SecteurActivite) => {
+    setSelectedSecteurs(prev =>
+      prev.includes(secteur)
+        ? prev.filter(s => s !== secteur)
+        : [...prev, secteur]
+    );
+  };
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Hero section avec barre de recherche */}
-      <div className="bg-gradient-to-b from-primary/10 to-transparent pt-24 pb-12">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="max-w-2xl mx-auto text-center">
-            <h1 className="text-4xl font-bold text-gray-900 mb-4">
-              Nos Produits
-            </h1>
-            <p className="text-lg text-gray-600 mb-8">
-              Découvrez notre gamme complète de pompes industrielles
-            </p>
-            <div className="relative max-w-lg mx-auto">
-              <input
-                type="search"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Rechercher un produit..."
-                className="w-full rounded-lg border border-gray-300 px-4 py-3 pl-10 focus:outline-none focus:ring-2 focus:ring-primary shadow-sm"
-              />
-              <svg
-                className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-                />
-              </svg>
-            </div>
-          </div>
+      {/* Banner Hero */}
+      <div className="relative bg-primary">
+        <div className="absolute inset-0">
+          <img
+            src="/images/banner-produits.jpg"
+            alt="Bannière produits"
+            className="w-full h-full object-cover opacity-20"
+          />
+        </div>
+        <div className="relative max-w-7xl mx-auto py-24 px-4 sm:py-32 sm:px-6 lg:px-8">
+          <h1 className="text-4xl font-extrabold tracking-tight text-white sm:text-5xl lg:text-6xl">
+            Nos Produits
+          </h1>
+          <p className="mt-6 text-xl text-gray-100 max-w-3xl">
+            Découvrez notre gamme complète de pompes industrielles. Des solutions adaptées à tous vos besoins, 
+            avec une expertise technique et un service client de qualité.
+          </p>
         </div>
       </div>
 
+      {/* Navigation des types de produits */}
+      
+
+      {/* Barre de recherche */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-8">
+        <div className="relative">
+          <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+            <MagnifyingGlassIcon className="h-5 w-5 text-gray-400" />
+          </div>
+          <input
+            type="text"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="block w-full pl-10 pr-3 py-4 border border-gray-300 rounded-lg leading-5 bg-white shadow-lg placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:ring-1 focus:ring-primary focus:border-primary sm:text-sm"
+            placeholder="Rechercher un produit..."
+          />
+        </div>
+      </div>
+
+      {/* Contenu principal */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="flex flex-col lg:flex-row gap-8">
+        <div className="grid grid-cols-1 gap-8 lg:grid-cols-4">
           {/* Filtres */}
-          <div className="w-full lg:w-64 space-y-6">
-            {/* Filtre par marque */}
-            <div className="bg-white p-4 rounded-lg shadow-sm">
-              <h3 className="font-medium text-gray-900 mb-4">Marques</h3>
-              <div className="space-y-2">
-                {MARQUES.map(marque => (
-                  <label key={marque} className="flex items-center">
-                    <input
-                      type="checkbox"
-                      checked={filters.marques.includes(marque)}
-                      onChange={() => toggleFilter('marques', marque)}
-                      className="rounded border-gray-300 text-primary focus:ring-primary"
-                    />
-                    <span className="ml-2 text-sm text-gray-600">{marque}</span>
-                  </label>
-                ))}
-              </div>
-            </div>
-
-            {/* Filtre par type */}
-            <div className="bg-white p-4 rounded-lg shadow-sm">
-              <h3 className="font-medium text-gray-900 mb-4">Types de pompes</h3>
-              <div className="space-y-2">
-                {TYPES_POMPES.map(type => (
-                  <label key={type} className="flex items-center">
-                    <input
-                      type="checkbox"
-                      checked={filters.types.includes(type)}
-                      onChange={() => toggleFilter('types', type)}
-                      className="rounded border-gray-300 text-primary focus:ring-primary"
-                    />
-                    <span className="ml-2 text-sm text-gray-600">{type}</span>
-                  </label>
-                ))}
-              </div>
-            </div>
-
-            {/* Filtre par domaine */}
-            <div className="bg-white p-4 rounded-lg shadow-sm">
-              <h3 className="font-medium text-gray-900 mb-4">Domaines d'application</h3>
-              <div className="space-y-2">
-                {DOMAINES_APPLICATION.map(domaine => (
-                  <label key={domaine} className="flex items-center">
-                    <input
-                      type="checkbox"
-                      checked={filters.domaines.includes(domaine)}
-                      onChange={() => toggleFilter('domaines', domaine)}
-                      className="rounded border-gray-300 text-primary focus:ring-primary"
-                    />
-                    <span className="ml-2 text-sm text-gray-600">{domaine}</span>
-                  </label>
-                ))}
-              </div>
-            </div>
+          <div className="lg:col-span-1">
+            <ProductFilters
+              marques={MARQUES}
+              typesPompe={TYPES_POMPE}
+              secteursActivite={SECTEURS_ACTIVITE}
+              selectedMarques={selectedMarques}
+              selectedTypes={selectedTypes}
+              selectedSecteurs={selectedSecteurs}
+              onMarqueChange={handleMarqueChange}
+              onTypeChange={handleTypeChange}
+              onSecteurChange={handleSecteurChange}
+            />
           </div>
 
           {/* Liste des produits */}
-          <div className="flex-1">
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-              {filteredProducts.map((product) => (
-                <div
-                  key={product.id}
-                  className="bg-white rounded-lg shadow-sm overflow-hidden hover:shadow-md transition-shadow duration-300"
-                >
-                  {/* Image du produit */}
-                  <div className="relative h-48 bg-gray-200">
-                    {product.image_principale ? (
-                      <Image
-                        src={product.image_principale?.startsWith('/') || product.image_principale?.startsWith('http')
-                          ? product.image_principale
-                          : `/${product.image_principale}`}
-                        alt={product.nom}
-                        fill
-                        className="object-cover"
-                      />
-                    ) : (
-                      <div className="absolute inset-0 flex items-center justify-center text-gray-400">
-                        <svg
-                          className="w-12 h-12"
-                          fill="none"
-                          stroke="currentColor"
-                          viewBox="0 0 24 24"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
-                          />
-                        </svg>
-                      </div>
-                    )}
-                  </div>
-
-                  {/* Informations du produit */}
-                  <div className="p-4">
-                    <h2 className="text-xl font-semibold text-gray-900 mb-2">
-                      {product.nom}
-                    </h2>
-                    
-                    <div className="space-y-2">
-                      <div className="flex items-center text-sm text-gray-600">
-                        <span className="font-medium mr-2">Marque:</span>
-                        {product.marque}
-                      </div>
+          <div className="lg:col-span-3">
+            {loading ? (
+              <div className="flex justify-center items-center h-64">
+                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+              </div>
+            ) : products.length === 0 ? (
+              <div className="text-center py-12">
+                <p className="text-gray-500 text-lg">
+                  Aucun produit ne correspond à vos critères de recherche.
+                </p>
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+                {products.map((product) => (
+                  <div
+                    key={product.id}
+                    className="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300"
+                  >
+                    <div className="relative aspect-w-4 aspect-h-3">
+                      {product.image_principale ? (
+                        <img
+                          src={`${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/products/${product.image_principale}`}
+                          alt={product.nom}
+                          className="w-full h-48 object-cover"
+                          onError={(e) => {
+                            const target = e.target as HTMLImageElement;
+                            target.src = '/images/placeholder.jpg';
+                          }}
+                        />
+                      ) : (
+                        <div className="w-full h-48 bg-gray-100 flex items-center justify-center">
+                          <span className="text-gray-400">Pas d'image</span>
+                        </div>
+                      )}
+                    </div>
+                    <div className="p-6">
+                      <h3 className="text-xl font-bold text-gray-900 mb-3">
+                        {product.nom}
+                      </h3>
                       
-                      <div className="flex items-center text-sm text-gray-600">
-                        <span className="font-medium mr-2">Type:</span>
-                        {product.type_produit}
-                      </div>
-
-                      <div className="mt-3">
-                        <span className="font-medium text-sm text-gray-600 block mb-2">
-                          Secteurs d'activité:
-                        </span>
+                      {/* Secteurs d'activité */}
+                      <div className="mb-4">
                         <div className="flex flex-wrap gap-2">
-                          {product.domaines_activite?.map((secteur, index) => (
+                          {product.secteurs_activite?.slice(0, 3).map((secteur, index) => (
                             <span
                               key={index}
-                              className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-primary-50 text-primary"
+                              className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800"
                             >
                               {secteur}
                             </span>
                           ))}
+                          {product.secteurs_activite?.length > 3 && (
+                            <span className="text-xs text-gray-500">
+                              +{product.secteurs_activite.length - 3}
+                            </span>
+                          )}
                         </div>
                       </div>
-                    </div>
 
-                    {/* Description courte */}
-                    <p className="mt-4 text-sm text-gray-500 line-clamp-2">
-                      {product.description}
-                    </p>
-
-                    {/* Bouton En savoir plus */}
-                    <div className="mt-4">
-                      <Link
-                        href={`/produits/${product.id}`}
-                        className="text-primary hover:text-primary-dark font-medium text-sm inline-flex items-center"
-                      >
-                        En savoir plus
-                        <svg
-                          className="w-4 h-4 ml-1"
-                          fill="none"
-                          stroke="currentColor"
-                          viewBox="0 0 24 24"
+                      {/* Marque et bouton détails */}
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center">
+                          <span className="text-sm font-semibold text-primary">
+                            {product.marque}
+                          </span>
+                        </div>
+                        <a
+                          href={`/produits/${product.id}`}
+                          className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-primary hover:bg-primary-dark focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary"
                         >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M9 5l7 7-7 7"
-                          />
-                        </svg>
-                      </Link>
+                          Voir détails
+                        </a>
+                      </div>
                     </div>
                   </div>
-                </div>
-              ))}
-            </div>
-
-            {filteredProducts.length === 0 && (
-              <div className="text-center py-12">
-                <p className="text-gray-500">
-                  Aucun produit ne correspond à vos critères de recherche.
-                </p>
+                ))}
               </div>
             )}
           </div>

@@ -2,7 +2,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import DivisionalStructure from '../components/DivisionalStructure'
 import Partners from '../components/Partners'
-import NavMenu from '../components/NavMenu'
+import ProductTypeNav from '../components/ProductTypeNav'
 import { Fragment } from 'react'
 
 const domains = [
@@ -71,9 +71,9 @@ const products = [
 
 export default function Home() {
   return (
-    <>
+    <main className="flex min-h-screen flex-col">
       {/* Banner section */}
-      <div className="relative h-[calc(100vh-5rem)]">
+      <section className="relative h-[calc(100vh-5rem)]">
         {/* Background image */}
         <div className="absolute inset-0">
           <Image
@@ -104,13 +104,13 @@ export default function Home() {
             </Link>
           </div>
         </div>
-      </div>
+      </section>
 
-      {/* Products navigation */}
-      <NavMenu />
+      {/* Product Type Navigation */}
+      <ProductTypeNav />
 
       {/* Domaines section */}
-      <div className="bg-white py-24 sm:py-32">
+      <section className="bg-white py-24 sm:py-32">
         <div className="mx-auto max-w-7xl px-6 lg:px-8">
           <div className="mx-auto max-w-2xl lg:text-center">
             <h2 className="text-base font-semibold leading-7 text-primary">Expertise multisectorielle</h2>
@@ -168,10 +168,10 @@ export default function Home() {
             </div>
           </div>
         </div>
-      </div>
+      </section>
 
       {/* Histoire section */}
-      <div className="bg-gray-50 py-24 sm:py-32">
+      <section className="bg-gray-50 py-24 sm:py-32">
         <div className="mx-auto max-w-7xl px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             <div>
@@ -199,13 +199,13 @@ export default function Home() {
             </div>
           </div>
         </div>
-      </div>
+      </section>
 
       {/* Structure Divisionnelle section */}
       <DivisionalStructure />
 
       {/* Partners section */}
       <Partners />
-    </>
+    </main>
   )
 }
