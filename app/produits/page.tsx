@@ -8,7 +8,16 @@ import ProductFilters from '@/components/ProductFilters';
 
 import type { Product, Marque, TypePompe, SecteurActivite } from '@/types/product';
 
-const MARQUES: Marque[] = ['Oflow', 'Orex', 'Al Demating', 'Al fire', 'FLUX'];
+const MARQUES: Marque[] = [
+  'OFLOW',
+  'AL DEWATERING',
+  'AL FIRE',
+  'FLUX',
+  'VERDER',
+  'SOMEFLU',
+  'FLOWSERVE',
+  'PCM'
+];
 
 const TYPES_POMPE: TypePompe[] = [
   'Pompes Centrifuges',

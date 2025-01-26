@@ -11,6 +11,17 @@ const Editor = dynamic(() => import('@/components/Editor'), { ssr: false });
 
 type ProductFormData = Omit<Product, 'id' | 'created_at' | 'updated_at'>;
 
+const MARQUES: Marque[] = [
+  'OFLOW',
+  'AL DEWATERING',
+  'AL FIRE',
+  'FLUX',
+  'VERDER',
+  'SOMEFLU',
+  'FLOWSERVE',
+  'PCM'
+];
+
 export default function EditProduct({ params }: { params: { id: string } }) {
   const router = useRouter();
   const supabase = createClient();
@@ -24,7 +35,7 @@ export default function EditProduct({ params }: { params: { id: string } }) {
     technologie: '',
     serie: '',
     modele: '',
-    marque: 'Oflow',
+    marque: MARQUES[0],
     description: '',
     secteurs_activite: [],
     domaines_application: '',
@@ -383,11 +394,11 @@ export default function EditProduct({ params }: { params: { id: string } }) {
                   onChange={handleInputChange}
                   className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary sm:text-sm"
                 >
-                  <option value="Oflow">Oflow</option>
-                  <option value="Orex">Orex</option>
-                  <option value="Al Demating">Al Demating</option>
-                  <option value="Al fire">Al fire</option>
-                  <option value="FLUX">FLUX</option>
+                  {MARQUES.map((marque) => (
+                    <option key={marque} value={marque}>
+                      {marque}
+                    </option>
+                  ))}
                 </select>
               </div>
 

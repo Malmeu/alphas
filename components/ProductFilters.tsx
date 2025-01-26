@@ -32,8 +32,18 @@ interface FilterSectionProps<T extends string> {
   toggleSection: (section: keyof OpenSections) => void;
 }
 
+const MARQUES: Marque[] = [
+  'OFLOW',
+  'AL DEWATERING',
+  'AL FIRE',
+  'FLUX',
+  'VERDER',
+  'SOMEFLU',
+  'FLOWSERVE',
+  'PCM'
+];
+
 export default function ProductFilters({
-  marques,
   typesPompe,
   secteursActivite,
   selectedMarques,
@@ -101,7 +111,7 @@ export default function ProductFilters({
       
       <FilterSection<Marque>
         title="Marques"
-        items={marques}
+        items={MARQUES}
         selectedItems={selectedMarques}
         onItemChange={onMarqueChange}
         section="marques"

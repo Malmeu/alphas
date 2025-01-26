@@ -20,7 +20,16 @@ const TYPES_POMPE: TypePompe[] = [
   "Stations d'épuration"
 ];
 
-const MARQUES: Marque[] = ['Oflow', 'Orex', 'Al Demating', 'Al fire', 'FLUX'];
+const MARQUES: Marque[] = [
+  'OFLOW',
+  'AL DEWATERING',
+  'AL FIRE',
+  'FLUX',
+  'VERDER',
+  'SOMEFLU',
+  'FLOWSERVE',
+  'PCM'
+];
 
 const SECTEURS_ACTIVITE: SecteurActivite[] = [
   'Industrie',
@@ -49,7 +58,7 @@ export default function AdminProduitsPage() {
     technologie: '',
     serie: '',
     modele: '',
-    marque: 'Oflow',
+    marque: 'OFLOW',
     description: '',
     debit: '',
     hauteur_refoulement: '',
@@ -187,7 +196,7 @@ export default function AdminProduitsPage() {
         technologie: '',
         serie: '',
         modele: '',
-        marque: 'Oflow',
+        marque: 'OFLOW',
         description: '',
         debit: '',
         hauteur_refoulement: '',

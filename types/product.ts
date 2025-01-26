@@ -10,7 +10,15 @@ export type SecteurActivite =
   | 'Gaz & Oil'
   | 'Service Après-Vente';
 
-export type Marque = 'Oflow' | 'Orex' | 'Al Demating' | 'Al fire' | 'FLUX';
+export type Marque = 
+  | 'OFLOW'
+  | 'AL DEWATERING'
+  | 'AL FIRE'
+  | 'FLUX'
+  | 'VERDER'
+  | 'SOMEFLU'
+  | 'FLOWSERVE'
+  | 'PCM';
 
 export type TypePompe =
   | 'Pompes Centrifuges'

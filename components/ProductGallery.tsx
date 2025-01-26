@@ -8,11 +8,12 @@ interface ProductGalleryProps {
   imagesSecondaires: string[];
 }
 
-export default function ProductGallery({ imagePrincipale, imagesSecondaires }: ProductGalleryProps) {
+export default function ProductGallery({ imagePrincipale, imagesSecondaires = [] }: ProductGalleryProps) {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [isModalOpen, setIsModalOpen] = useState(false);
   
   const allImages = [imagePrincipale, ...imagesSecondaires];
+  const [selectedImage, setSelectedImage] = useState(imagePrincipale);
 
   const nextImage = () => {
     setCurrentImageIndex((prev) => (prev + 1) % allImages.length);
@@ -23,37 +24,43 @@ export default function ProductGallery({ imagePrincipale, imagesSecondaires }: P
   };
 
   return (
-    <>
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-        {/* Image principale */}
-        <div className="aspect-w-4 aspect-h-3 overflow-hidden rounded-lg">
-          <img
-            src={`${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/products/${imagePrincipale}`}
-            alt="Image principale du produit"
-            className="h-[300px] w-full object-contain bg-gray-100 cursor-pointer hover:opacity-90 transition-opacity"
-            onClick={() => {
-              setCurrentImageIndex(0);
-              setIsModalOpen(true);
-            }}
-          />
-        </div>
+    <div className="flex flex-col gap-4">
+      {/* Image principale */}
+      <div className="w-full overflow-hidden rounded-lg bg-white">
+        <img
+          src={`${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/products/${selectedImage}`}
+          alt="Image principale du produit"
+          className="h-[400px] w-full object-contain cursor-pointer hover:opacity-90 transition-opacity"
+          onClick={() => {
+            setCurrentImageIndex(allImages.indexOf(selectedImage));
+            setIsModalOpen(true);
+          }}
+          onError={(e) => {
+            e.currentTarget.src = '/images/placeholder.png';
+          }}
+        />
+      </div>
 
-        {/* Grid d'images secondaires */}
-        <div className="grid grid-cols-2 gap-4">
-          {imagesSecondaires.map((image, index) => (
-            <div key={index} className="aspect-w-4 aspect-h-3 overflow-hidden rounded-lg">
-              <img
-                src={`${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/products/${image}`}
-                alt={`Image ${index + 1} du produit`}
-                className="h-[140px] w-full object-contain bg-gray-100 cursor-pointer hover:opacity-90 transition-opacity"
-                onClick={() => {
-                  setCurrentImageIndex(index + 1);
-                  setIsModalOpen(true);
-                }}
-              />
-            </div>
-          ))}
-        </div>
+      {/* Miniatures */}
+      <div className="flex gap-4 overflow-x-auto pb-2">
+        {allImages.map((image, index) => (
+          <button
+            key={index}
+            onClick={() => setSelectedImage(image)}
+            className={`flex-shrink-0 rounded-lg overflow-hidden border-2 ${
+              selectedImage === image ? 'border-primary' : 'border-transparent'
+            }`}
+          >
+            <img
+              src={`${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/products/${image}`}
+              alt={`Image ${index + 1} du produit`}
+              className="h-20 w-20 object-contain bg-white"
+              onError={(e) => {
+                e.currentTarget.src = '/images/placeholder.png';
+              }}
+            />
+          </button>
+        ))}
       </div>
 
       {/* Modal de galerie plein écran */}
@@ -77,6 +84,9 @@ export default function ProductGallery({ imagePrincipale, imagesSecondaires }: P
             src={`${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/products/${allImages[currentImageIndex]}`}
             alt={`Image ${currentImageIndex + 1}`}
             className="max-h-[90vh] max-w-[90vw] object-contain"
+            onError={(e) => {
+              e.currentTarget.src = '/images/placeholder.png';
+            }}
           />
           
           <button
@@ -87,6 +97,6 @@ export default function ProductGallery({ imagePrincipale, imagesSecondaires }: P
           </button>
         </div>
       )}
-    </>
+    </div>
   );
 }

@@ -77,6 +77,12 @@ ALTER TABLE products
 ADD COLUMN IF NOT EXISTS image_principale text,
 ADD COLUMN IF NOT EXISTS images_secondaires text[] DEFAULT '{}';
 
+-- Suppression des politiques existantes
+DROP POLICY IF EXISTS "Accès public aux images de produits" ON storage.objects;
+DROP POLICY IF EXISTS "Upload d'images pour utilisateurs authentifiés" ON storage.objects;
+DROP POLICY IF EXISTS "Mise à jour d'images pour utilisateurs authentifiés" ON storage.objects;
+DROP POLICY IF EXISTS "Suppression d'images pour utilisateurs authentifiés" ON storage.objects;
+
 -- Création des politiques de stockage pour les images
 CREATE POLICY "Accès public aux images de produits"
 ON storage.objects FOR SELECT
@@ -97,13 +103,51 @@ ON storage.objects FOR DELETE
 TO authenticated
 USING (bucket_id = 'products');
 
--- Suppression du bucket s'il existe
-DO $$
-BEGIN
-    DELETE FROM storage.buckets WHERE id = 'products';
-END $$;
-
--- Création du bucket products s'il n'existe pas
+-- Création du bucket products s'il n'existe pas (sans essayer de le supprimer)
 INSERT INTO storage.buckets (id, name, public)
 VALUES ('products', 'products', true)
-ON CONFLICT (id) DO NOTHING;
+ON CONFLICT (id) DO UPDATE 
+SET public = true;
+
+-- Mise à jour des marques existantes
+UPDATE products 
+SET marque = 'OFLOW' 
+WHERE marque = 'Oflow';
+
+UPDATE products 
+SET marque = 'AL DEWATERING' 
+WHERE marque = 'Al Demating';
+
+UPDATE products 
+SET marque = 'AL FIRE' 
+WHERE marque = 'Al fire';
+
+-- Suppression des produits avec des marques obsolètes
+DELETE FROM products 
+WHERE marque NOT IN (
+  'OFLOW',
+  'AL DEWATERING',
+  'AL FIRE',
+  'FLUX',
+  'VERDER',
+  'SOMEFLU',
+  'FLOWSERVE',
+  'PCM'
+);
+
+-- Ajout d'une contrainte pour les marques valides
+ALTER TABLE products
+DROP CONSTRAINT IF EXISTS valid_marques;
+
+ALTER TABLE products
+ADD CONSTRAINT valid_marques
+CHECK (marque IN (
+  'OFLOW',
+  'AL DEWATERING',
+  'AL FIRE',
+  'FLUX',
+  'VERDER',
+  'SOMEFLU',
+  'FLOWSERVE',
+  'PCM'
+));
