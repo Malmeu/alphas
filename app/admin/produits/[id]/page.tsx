@@ -42,6 +42,11 @@ export default function EditProduct({ params }: { params: { id: string } }) {
 
   useEffect(() => {
     const fetchProduct = async () => {
+      // Si l'ID est "nouveau", on ne charge pas de produit
+      if (params.id === 'nouveau') {
+        return;
+      }
+
       try {
         const { data: product, error } = await supabase
           .from('products')
@@ -165,23 +170,44 @@ export default function EditProduct({ params }: { params: { id: string } }) {
     setMessage(null);
 
     try {
-      const { error } = await supabase
-        .from('products')
-        .update(formData)
-        .eq('id', params.id);
+      if (params.id === 'nouveau') {
+        // Création d'un nouveau produit
+        const { data: newProduct, error: insertError } = await supabase
+          .from('products')
+          .insert([formData])
+          .select()
+          .single();
 
-      if (error) throw error;
+        if (insertError) throw insertError;
 
-      setMessage({
-        type: 'success',
-        content: 'Produit mis à jour avec succès!'
-      });
-      
-      router.push('/admin/produits');
+        setMessage({
+          type: 'success',
+          content: 'Produit créé avec succès!'
+        });
+        
+        // Redirection vers la page d'édition du nouveau produit
+        if (newProduct) {
+          router.push(`/admin/produits/${newProduct.id}`);
+        }
+      } else {
+        // Mise à jour d'un produit existant
+        const { error: updateError } = await supabase
+          .from('products')
+          .update(formData)
+          .eq('id', params.id);
+
+        if (updateError) throw updateError;
+
+        setMessage({
+          type: 'success',
+          content: 'Produit mis à jour avec succès!'
+        });
+      }
     } catch (error: any) {
+      console.error('Erreur:', error);
       setMessage({
         type: 'error',
-        content: error.message || 'Erreur lors de la mise à jour du produit'
+        content: error.message || 'Une erreur est survenue'
       });
     } finally {
       setLoading(false);
