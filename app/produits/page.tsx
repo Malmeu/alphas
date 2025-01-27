@@ -50,7 +50,7 @@ export default function ProduitsPage() {
       <div className="relative bg-primary">
         <div className="absolute inset-0">
           <img
-            src="/images/banner-produits.jpg"
+            src="/images/banner-produits.jpeg"
             alt="Bannière produits"
             className="w-full h-full object-cover opacity-20"
           />
@@ -110,7 +110,12 @@ function ProductList() {
 
       // Recherche textuelle
       if (searchQuery) {
-        query = query.or(`nom.ilike.%${searchQuery}%,description.ilike.%${searchQuery}%`);
+        query = query.or(
+          `nom.ilike.%${searchQuery}%,` +
+          `description.ilike.%${searchQuery}%,` +
+          `type_produit.ilike.%${searchQuery}%,` +
+          `marque.ilike.%${searchQuery}%`
+        );
       }
 
       const { data, error } = await query;
@@ -197,71 +202,83 @@ function ProductList() {
                 </p>
               </div>
             ) : (
-              <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-                {products.map((product) => (
-                  <div
-                    key={product.id}
-                    className="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300"
-                  >
-                    <div className="relative aspect-w-4 aspect-h-3">
-                      {product.image_principale ? (
-                        <img
-                          src={`${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/products/${product.image_principale}`}
-                          alt={product.nom}
-                          className="w-full h-48 object-cover"
-                          onError={(e) => {
-                            const target = e.target as HTMLImageElement;
-                            target.src = '/images/placeholder.jpg';
-                          }}
-                        />
-                      ) : (
-                        <div className="w-full h-48 bg-gray-100 flex items-center justify-center">
-                          <span className="text-gray-400">Pas d'image</span>
-                        </div>
-                      )}
-                    </div>
-                    <div className="p-6">
-                      <h3 className="text-xl font-bold text-gray-900 mb-3">
-                        {product.nom}
-                      </h3>
-                      
-                      {/* Secteurs d'activité */}
-                      <div className="mb-4">
-                        <div className="flex flex-wrap gap-2">
-                          {product.secteurs_activite?.slice(0, 3).map((secteur, index) => (
-                            <span
-                              key={index}
-                              className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800"
-                            >
-                              {secteur}
-                            </span>
-                          ))}
-                          {product.secteurs_activite?.length > 3 && (
-                            <span className="text-xs text-gray-500">
-                              +{product.secteurs_activite.length - 3}
-                            </span>
-                          )}
-                        </div>
-                      </div>
-
-                      {/* Marque et bouton détails */}
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center">
-                          <span className="text-sm font-semibold text-primary">
-                            {product.marque}
-                          </span>
-                        </div>
-                        <a
-                          href={`/produits/${product.id}`}
-                          className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-primary hover:bg-primary-dark focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary"
-                        >
-                          Voir détails
-                        </a>
-                      </div>
-                    </div>
+              <>
+                {searchQuery && (
+                  <div className="mb-6">
+                    <h2 className="text-xl font-semibold text-gray-900">
+                      Résultats de recherche pour "{searchQuery}"
+                      <span className="ml-2 text-sm font-normal text-gray-500">
+                        ({products.length} résultat{products.length > 1 ? 's' : ''})
+                      </span>
+                    </h2>
                   </div>
-                ))}
-              </div>
+                )}
+                <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+                  {products.map((product) => (
+                    <div
+                      key={product.id}
+                      className="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300"
+                    >
+                      <div className="relative aspect-w-4 aspect-h-3">
+                        {product.image_principale ? (
+                          <img
+                            src={`${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/products/${product.image_principale}`}
+                            alt={product.nom}
+                            className="w-full h-48 object-cover"
+                            onError={(e) => {
+                              const target = e.target as HTMLImageElement;
+                              target.src = '/images/placeholder.jpg';
+                            }}
+                          />
+                        ) : (
+                          <div className="w-full h-48 bg-gray-100 flex items-center justify-center">
+                            <span className="text-gray-400">Pas d'image</span>
+                          </div>
+                        )}
+                      </div>
+                      <div className="p-6">
+                        <h3 className="text-xl font-bold text-gray-900 mb-3">
+                          {product.nom}
+                        </h3>
+                        
+                        {/* Secteurs d'activité */}
+                        <div className="mb-4">
+                          <div className="flex flex-wrap gap-2">
+                            {product.secteurs_activite?.slice(0, 3).map((secteur, index) => (
+                              <span
+                                key={index}
+                                className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800"
+                              >
+                                {secteur}
+                              </span>
+                            ))}
+                            {product.secteurs_activite?.length > 3 && (
+                              <span className="text-xs text-gray-500">
+                                +{product.secteurs_activite.length - 3}
+                              </span>
+                            )}
+                          </div>
+                        </div>
+
+                        {/* Marque et bouton détails */}
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center">
+                            <span className="text-sm font-semibold text-primary">
+                              {product.marque}
+                            </span>
+                          </div>
+                          <a
+                            href={`/produits/${product.id}`}
+                            className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-primary hover:bg-primary-dark focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary"
+                          >
+                            Voir détails
+                          </a>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </>
             )}
           </div>
         </div>

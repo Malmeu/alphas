@@ -17,19 +17,23 @@ function CollapsibleSection({ title, children, defaultOpen = false }: Collapsibl
   const [isOpen, setIsOpen] = useState(defaultOpen);
 
   return (
-    <div className="border rounded-lg mb-6">
+    <div className="border border-gray-200 rounded-xl overflow-hidden transition-shadow duration-300 hover:shadow-md">
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="w-full flex justify-between items-center p-4 bg-gray-50 hover:bg-gray-100 rounded-t-lg"
+        className="w-full flex justify-between items-center p-5 bg-white hover:bg-gray-50 transition-colors duration-200"
       >
-        <h2 className="text-xl font-semibold">{title}</h2>
-        {isOpen ? (
-          <ChevronUpIcon className="h-6 w-6 text-gray-500" />
-        ) : (
+        <h2 className="text-xl font-semibold text-gray-900">{title}</h2>
+        <div className={`transform transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`}>
           <ChevronDownIcon className="h-6 w-6 text-gray-500" />
-        )}
+        </div>
       </button>
-      {isOpen && <div className="p-4">{children}</div>}
+      <div
+        className={`transition-all duration-200 ${
+          isOpen ? 'max-h-[2000px] opacity-100' : 'max-h-0 opacity-0'
+        } overflow-hidden`}
+      >
+        <div className="p-5 border-t border-gray-200">{children}</div>
+      </div>
     </div>
   );
 }
@@ -73,41 +77,50 @@ export default function ProductDetail({ params }: { params: { id: string } }) {
   ];
 
   return (
-    <div className="bg-white">
-      <div className="container mx-auto px-4 py-8">
-        {/* En-tête avec les informations de base */}
-        <div className="bg-blue-50 p-4 rounded-lg mb-8">
-          <p className="text-sm text-gray-600">
-            <span className="font-semibold">Type Produit :</span> {product.type_produit} /{' '}
-            <span className="font-semibold">Technologie :</span> {product.technologie} /{' '}
-            <span className="font-semibold">Série :</span> {product.serie} /{' '}
-            <span className="font-semibold">Modèle :</span> {product.modele} /{' '}
-            <span className="font-semibold">Marque :</span> {product.marque}
-          </p>
+    <div className="bg-white min-h-screen">
+      {/* Header avec gradient */}
+      <div className="bg-gradient-to-b from-blue-50 to-white">
+        <div className="container mx-auto px-4 py-8">
+          {/* Fil d'Ariane */}
+          <nav className="mb-6">
+            <ol className="flex flex-wrap space-x-2">
+              {breadcrumbs.map((item, index) => (
+                <li key={item.name} className="flex items-center">
+                  {index > 0 && <span className="mx-2 text-gray-400">/</span>}
+                  {item.href === '#' ? (
+                    <span className="text-gray-500">{item.name}</span>
+                  ) : (
+                    <Link href={item.href} className="text-primary hover:text-primary-dark">
+                      {item.name}
+                    </Link>
+                  )}
+                </li>
+              ))}
+            </ol>
+          </nav>
+
+          {/* En-tête avec les informations de base */}
+          <div className="bg-white shadow-sm rounded-xl p-4 mb-8 border border-gray-100">
+            <p className="text-sm text-gray-600 flex flex-wrap gap-2">
+              <span><span className="font-medium text-gray-800">Type Produit :</span> {product.type_produit}</span>
+              <span className="text-gray-300">|</span>
+              <span><span className="font-medium text-gray-800">Technologie :</span> {product.technologie}</span>
+              <span className="text-gray-300">|</span>
+              <span><span className="font-medium text-gray-800">Série :</span> {product.serie}</span>
+              <span className="text-gray-300">|</span>
+              <span><span className="font-medium text-gray-800">Modèle :</span> {product.modele}</span>
+              <span className="text-gray-300">|</span>
+              <span><span className="font-medium text-gray-800">Marque :</span> {product.marque}</span>
+            </p>
+          </div>
         </div>
+      </div>
 
-        {/* Fil d'Ariane */}
-        <nav className="mb-8">
-          <ol className="flex space-x-2">
-            {breadcrumbs.map((item, index) => (
-              <li key={item.name} className="flex items-center">
-                {index > 0 && <span className="mx-2 text-gray-400">/</span>}
-                {item.href === '#' ? (
-                  <span className="text-gray-500">{item.name}</span>
-                ) : (
-                  <Link href={item.href} className="text-primary hover:text-primary-dark">
-                    {item.name}
-                  </Link>
-                )}
-              </li>
-            ))}
-          </ol>
-        </nav>
-
-        {/* Contenu principal */}
+      {/* Contenu principal */}
+      <div className="container mx-auto px-4 py-8">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
           {/* Galerie d'images */}
-          <div>
+          <div className="lg:sticky lg:top-4 lg:self-start">
             <ProductGallery
               imagePrincipale={product.image_principale || ''}
               imagesSecondaires={product.images_secondaires || []}
@@ -116,20 +129,20 @@ export default function ProductDetail({ params }: { params: { id: string } }) {
 
           {/* Informations produit */}
           <div>
-            <h1 className="text-3xl font-bold mb-6">{product.nom}</h1>
+            <h1 className="text-4xl font-bold mb-6 text-gray-900">{product.nom}</h1>
             
             <div className="prose max-w-none mb-8">
-              <p>{product.description}</p>
+              <p className="text-gray-600 whitespace-pre-line break-words">{product.description}</p>
             </div>
 
             {/* Secteurs d'activité */}
             <div className="mb-8">
-              <h2 className="text-xl font-semibold mb-4">Secteurs d'activité</h2>
+              <h2 className="text-2xl font-semibold mb-4 text-gray-900">Secteurs d'activité</h2>
               <div className="flex flex-wrap gap-2">
                 {product.secteurs_activite?.map((secteur, index) => (
                   <span
                     key={index}
-                    className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-blue-100 text-blue-800"
+                    className="inline-flex items-center px-4 py-2 rounded-lg text-sm font-medium bg-blue-50 text-blue-700 border border-blue-100 transition-colors hover:bg-blue-100"
                   >
                     {secteur}
                   </span>
@@ -137,60 +150,79 @@ export default function ProductDetail({ params }: { params: { id: string } }) {
               </div>
             </div>
 
-            {/* Domaines d'application */}
-            <CollapsibleSection title="Domaines d'applications">
-              <div className="prose max-w-none" dangerouslySetInnerHTML={{ __html: product.domaines_application || '' }} />
-            </CollapsibleSection>
-
-            {/* Fiche technique */}
-            <CollapsibleSection title="Fiche Technique">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {product.debit && (
-                  <div>
-                    <span className="font-semibold">Débit :</span> {product.debit}
-                  </div>
-                )}
-                {product.hauteur_refoulement && (
-                  <div>
-                    <span className="font-semibold">Hauteur de refoulement :</span> {product.hauteur_refoulement}
-                  </div>
-                )}
-                {product.viscosite && (
-                  <div>
-                    <span className="font-semibold">Viscosité :</span> {product.viscosite}
-                  </div>
-                )}
-                {product.type_entrainement && (
-                  <div>
-                    <span className="font-semibold">Type d'entraînement :</span> {product.type_entrainement}
-                  </div>
-                )}
-                {product.compatibilite && (
-                  <div>
-                    <span className="font-semibold">Compatibilité :</span> {product.compatibilite}
-                  </div>
-                )}
-              </div>
-              {(product.caracteristiques_supplementaires?.length || 0) > 0 && (
-                <div className="mt-4">
-                  <h3 className="font-semibold mb-2">Caractéristiques supplémentaires :</h3>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    {product.caracteristiques_supplementaires?.map((carac, index) => (
-                      <div key={index}>
-                        <span className="font-semibold">{carac.nom} :</span> {carac.valeur}
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
-            </CollapsibleSection>
-
-            {/* Avantages */}
-            {product.avantages && (
-              <CollapsibleSection title="Avantages">
-                <div className="prose max-w-none" dangerouslySetInnerHTML={{ __html: product.avantages }} />
+            {/* Sections rétractables avec style amélioré */}
+            <div className="space-y-6">
+              <CollapsibleSection title="Domaines d'applications">
+                <div 
+                  className="prose max-w-none text-gray-600"
+                  style={{ whiteSpace: 'pre-line', wordBreak: 'break-word' }}
+                  dangerouslySetInnerHTML={{ 
+                    __html: product.domaines_application?.replace(/<br\s*\/?>/g, '\n') || '' 
+                  }} 
+                />
               </CollapsibleSection>
-            )}
+
+              <CollapsibleSection title="Fiche Technique">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  {product.debit && (
+                    <div className="bg-gray-50 p-4 rounded-lg">
+                      <span className="font-medium text-gray-800">Débit :</span>
+                      <span className="text-gray-600 ml-2">{product.debit}</span>
+                    </div>
+                  )}
+                  {product.hauteur_refoulement && (
+                    <div className="bg-gray-50 p-4 rounded-lg">
+                      <span className="font-medium text-gray-800">Hauteur de refoulement :</span>
+                      <span className="text-gray-600 ml-2">{product.hauteur_refoulement}</span>
+                    </div>
+                  )}
+                  {product.viscosite && (
+                    <div className="bg-gray-50 p-4 rounded-lg">
+                      <span className="font-medium text-gray-800">Viscosité :</span>
+                      <span className="text-gray-600 ml-2">{product.viscosite}</span>
+                    </div>
+                  )}
+                  {product.type_entrainement && (
+                    <div className="bg-gray-50 p-4 rounded-lg">
+                      <span className="font-medium text-gray-800">Type d'entraînement :</span>
+                      <span className="text-gray-600 ml-2">{product.type_entrainement}</span>
+                    </div>
+                  )}
+                  {product.compatibilite && (
+                    <div className="bg-gray-50 p-4 rounded-lg">
+                      <span className="font-medium text-gray-800">Compatibilité :</span>
+                      <span className="text-gray-600 ml-2">{product.compatibilite}</span>
+                    </div>
+                  )}
+                </div>
+                {(product.caracteristiques_supplementaires?.length || 0) > 0 && (
+                  <div className="mt-4">
+                    <h3 className="font-semibold mb-2">Caractéristiques supplémentaires :</h3>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      {product.caracteristiques_supplementaires?.map((carac, index) => (
+                        <div key={index} className="bg-gray-50 p-4 rounded-lg">
+                          <span className="font-medium text-gray-800">{carac.nom} :</span>
+                          <span className="text-gray-600 ml-2">{carac.valeur}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </CollapsibleSection>
+
+              {/* Avantages */}
+              {product.avantages && (
+                <CollapsibleSection title="Avantages">
+                  <div 
+                    className="prose max-w-none text-gray-600"
+                    style={{ whiteSpace: 'pre-line', wordBreak: 'break-word' }}
+                    dangerouslySetInnerHTML={{ 
+                      __html: product.avantages?.replace(/<br\s*\/?>/g, '\n') || '' 
+                    }} 
+                  />
+                </CollapsibleSection>
+              )}
+            </div>
           </div>
         </div>
       </div>
