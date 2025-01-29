@@ -20,7 +20,7 @@ const contactInfo = [
   {
     name: 'Adresse',
     description: 'Venez nous rendre visite',
-    address: 'Zone Industrielle de Oued Smar, Lot N° 55, Alger, Algérie',
+    address: 'Cité 112 logements cité seghir BT 03 , Bejaia, Algérie',
     icon: MapPinIcon,
   },
 ];
@@ -239,7 +239,7 @@ export default function Contact() {
       {/* Google Maps */}
       <div className="h-[400px] w-full bg-gray-200">
         <iframe
-          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3197.2107635073776!2d3.1821416!3d36.7234567!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMzbCsDQzJzI0LjQiTiAzwrAxMCc1NS43IkU!5e0!3m2!1sfr!2sdz!4v1625581234567!5m2!1sfr!2sdz"
+          src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d25581.29978849982!2d5.0305649!3d36.7306667!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x128d334d3c5b8853%3A0xad693cb681b4daba!2sAlphas!5e0!3m2!1sfr!2sdz!4v1738163208896!5m2!1sfr!2sdz"
           width="100%"
           height="100%"
           style={{ border: 0 }}

@@ -4,8 +4,8 @@ import DivisionalStructure from '../components/DivisionalStructure'
 import Partners from '../components/Partners'
 import ProductTypeNav from '../components/ProductTypeNav'
 import BrandCarousel from '../components/BrandCarousel'
-import DevisForm from '@/components/DevisForm';
 import { Fragment, Suspense } from 'react'
+import { ArrowRightIcon } from '../components/icons/ArrowRightIcon'
 
 const domains = [
   {
@@ -186,14 +186,34 @@ export default function Home() {
         <BrandCarousel />
       </section>
 
-      {/* Formulaire de devis */}
-      <DevisForm />
-
       {/* Structure Divisionnelle */}
       <DivisionalStructure />
 
       {/* Partenaires */}
       <Partners />
+
+      {/* Bannière Devis */}
+      <section className="bg-primary py-16">
+        <div className="max-w-7xl mx-auto px-6">
+          <div className="flex flex-col md:flex-row items-center justify-between gap-8">
+            <div className="text-white text-center md:text-left">
+              <h2 className="text-3xl font-bold">
+                Besoin d'un devis personnalisé ?
+              </h2>
+              <p className="mt-2 text-lg text-white/90">
+                Nos experts sont à votre disposition pour étudier votre projet
+              </p>
+            </div>
+            <Link
+              href="/contact"
+              className="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-primary bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-primary focus:ring-white transition-colors duration-200"
+            >
+              Demander un devis
+              <ArrowRightIcon className="ml-2 -mr-1 h-5 w-5" aria-hidden="true" />
+            </Link>
+          </div>
+        </div>
+      </section>
     </main>
   );
 }
