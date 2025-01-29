@@ -6,7 +6,7 @@ import ProductCard from '@/components/ProductCard';
 import { Product, TypePompe } from '@/types/product';
 import { createClient } from '@/lib/supabase/client';
 
-export default function EauEtEnvironnement() {
+export default function AntiIncendie() {
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
@@ -22,7 +22,7 @@ export default function EauEtEnvironnement() {
       const { data, error } = await supabase
         .from('products')
         .select('*')
-        .contains('secteurs_activite', ['Industrie']);
+        .contains('secteurs_activite', ['Anti incendie']);
 
       if (error) {
         console.error('Erreur lors de la récupération des produits:', error);
@@ -47,8 +47,8 @@ export default function EauEtEnvironnement() {
       {/* Banner Hero */}
       <div className="relative h-[400px] w-full">
         <Image
-          src="/image_domaine/indu.png"
-          alt="Industrie"
+          src="/image_domaine/incendie.png"
+          alt="Anti-incendie"
           fill
           className="object-cover"
           priority
@@ -57,7 +57,7 @@ export default function EauEtEnvironnement() {
           <div className="max-w-7xl mx-auto px-6 h-full flex items-center justify-center">
             <div className="text-white text-center">
               <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold">
-              
+                
               </h1>
             </div>
           </div>
@@ -69,14 +69,13 @@ export default function EauEtEnvironnement() {
         <div className="max-w-7xl mx-auto px-6">
           <div className="max-w-3xl mx-auto text-center">
             <h2 className="text-3xl font-bold text-gray-900">
-              Solutions Durables pour l'industie
+              Protection Incendie de Pointe
             </h2>
             <p className="mt-6 text-lg text-gray-600">
-              La gestion durable de l'eau est un enjeu majeur pour notre environnement. 
-              Nos solutions de pompage sont conçues pour optimiser le traitement des eaux, 
-              qu'il s'agisse d'eau potable, d'eaux usées ou d'applications environnementales. 
-              Nous proposons des équipements performants et économes en énergie pour répondre 
-              aux défis de la préservation des ressources hydriques.
+              La sécurité incendie exige des équipements fiables et performants. Nos systèmes de pompage 
+              anti-incendie sont conçus pour répondre aux normes les plus strictes et garantir une 
+              protection optimale. Certifiés selon les standards internationaux, nos équipements assurent 
+              une réponse rapide et efficace en cas d'urgence.
             </p>
           </div>
         </div>
@@ -87,7 +86,7 @@ export default function EauEtEnvironnement() {
         <div className="max-w-7xl mx-auto px-6">
           <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-12">
             <h2 className="text-2xl font-bold text-gray-900">
-              Nos Solutions pour l'Eau et l'Environnement
+              Nos Solutions Anti-incendie
             </h2>
             
             {/* Filter */}

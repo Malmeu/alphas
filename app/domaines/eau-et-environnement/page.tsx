@@ -22,7 +22,7 @@ export default function EauEtEnvironnement() {
       const { data, error } = await supabase
         .from('products')
         .select('*')
-        .contains('secteurs_activite', ['Industrie']);
+        .contains('secteurs_activite', ['Eau et environnement']);
 
       if (error) {
         console.error('Erreur lors de la récupération des produits:', error);
@@ -47,8 +47,8 @@ export default function EauEtEnvironnement() {
       {/* Banner Hero */}
       <div className="relative h-[400px] w-full">
         <Image
-          src="/image_domaine/indu.png"
-          alt="Industrie"
+          src="/image_domaine/eau.png"
+          alt="Eau et Environnement"
           fill
           className="object-cover"
           priority
@@ -57,7 +57,7 @@ export default function EauEtEnvironnement() {
           <div className="max-w-7xl mx-auto px-6 h-full flex items-center justify-center">
             <div className="text-white text-center">
               <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold">
-              
+               
               </h1>
             </div>
           </div>
@@ -69,7 +69,7 @@ export default function EauEtEnvironnement() {
         <div className="max-w-7xl mx-auto px-6">
           <div className="max-w-3xl mx-auto text-center">
             <h2 className="text-3xl font-bold text-gray-900">
-              Solutions Durables pour l'industie
+              Solutions Durables pour la Gestion de l'Eau
             </h2>
             <p className="mt-6 text-lg text-gray-600">
               La gestion durable de l'eau est un enjeu majeur pour notre environnement. 

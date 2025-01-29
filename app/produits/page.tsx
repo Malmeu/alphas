@@ -44,40 +44,86 @@ const SECTEURS_ACTIVITE: SecteurActivite[] = [
 ];
 
 export default function ProduitsPage() {
+  const [searchQuery, setSearchQuery] = useState('');
+
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Banner Hero */}
-      <div className="relative bg-primary">
+      {/* Banner Hero avec design moderne */}
+      <div className="relative bg-gradient-to-br from-primary via-primary-dark to-blue-900 overflow-hidden">
+        {/* Motif de fond */}
+        <div className="absolute inset-0 opacity-10">
+          <div className="absolute inset-0" style={{ 
+            backgroundImage: 'radial-gradient(circle at 2px 2px, rgba(255,255,255,0.15) 1px, transparent 0)',
+            backgroundSize: '40px 40px' 
+          }}></div>
+        </div>
+        
+        {/* Image de fond avec effet parallaxe */}
         <div className="absolute inset-0">
           <img
             src="/images/banner-produits.jpeg"
             alt="Bannière produits"
-            className="w-full h-full object-cover opacity-20"
+            className="w-full h-full object-cover opacity-10 transform scale-105"
+            style={{ 
+              transform: 'scale(1.1)',
+              transition: 'transform 0.3s ease-out'
+            }}
           />
         </div>
-        <div className="relative max-w-7xl mx-auto py-24 px-4 sm:py-32 sm:px-6 lg:px-8">
-          <h1 className="text-4xl font-extrabold tracking-tight text-white sm:text-5xl lg:text-6xl">
-            Nos Produits
-          </h1>
-          <p className="mt-6 text-xl text-gray-100 max-w-3xl">
-            Découvrez notre gamme complète de pompes industrielles. Des solutions adaptées à tous vos besoins, 
-            avec une expertise technique et un service client de qualité.
-          </p>
+
+        {/* Contenu du header */}
+        <div className="relative max-w-7xl mx-auto py-16 px-4 sm:py-24 sm:px-6 lg:px-8">
+          <div className="text-center">
+            <h1 className="text-4xl font-extrabold tracking-tight text-white sm:text-5xl lg:text-6xl mb-6">
+              Nos Produits
+              <div className="h-1 w-24 bg-white mx-auto mt-4 rounded-full"></div>
+            </h1>
+            <p className="mt-6 text-xl text-gray-100 max-w-3xl mx-auto leading-relaxed">
+              Découvrez notre gamme complète de pompes industrielles. Des solutions adaptées à tous vos besoins, 
+              avec une expertise technique et un service client de qualité.
+            </p>
+          </div>
+
+          {/* Barre de recherche modernisée */}
+          <div className="max-w-3xl mx-auto mt-12">
+            <div className="relative">
+              <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                <MagnifyingGlassIcon className="h-5 w-5 text-gray-400" />
+              </div>
+              <input
+                type="text"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="block w-full pl-12 pr-4 py-4 border-0 rounded-lg leading-5 bg-white shadow-lg placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all duration-200"
+                placeholder="Rechercher un produit..."
+              />
+            </div>
+          </div>
+        </div>
+
+        {/* Vague décorative en bas */}
+        <div className="absolute bottom-0 left-0 right-0 transform translate-y-1/2">
+          <svg className="w-full h-24 fill-current text-gray-50" viewBox="0 0 1440 74" xmlns="http://www.w3.org/2000/svg">
+            <path d="M0,32L80,37.3C160,43,320,53,480,58.7C640,64,800,64,960,56C1120,48,1280,32,1360,24L1440,16L1440,74L1360,74C1280,74,1120,74,960,74C800,74,640,74,480,74C320,74,160,74,80,74L0,74Z"></path>
+          </svg>
         </div>
       </div>
 
       <Suspense fallback={<div className="min-h-screen bg-gray-50 animate-pulse" />}>
-        <ProductList />
+        <ProductList searchQuery={searchQuery} />
       </Suspense>
     </div>
   );
 }
 
-function ProductList() {
+interface ProductListProps {
+  searchQuery: string;
+}
+
+function ProductList({ searchQuery }: ProductListProps) {
   const supabase = createClient();
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
-  const [searchQuery, setSearchQuery] = useState('');
   const [selectedMarques, setSelectedMarques] = useState<Marque[]>([]);
   const [selectedTypes, setSelectedTypes] = useState<TypePompe[]>([]);
   const [selectedSecteurs, setSelectedSecteurs] = useState<SecteurActivite[]>([]);
@@ -155,22 +201,6 @@ function ProductList() {
 
   return (
     <>
-      {/* Barre de recherche */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-8">
-        <div className="relative">
-          <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-            <MagnifyingGlassIcon className="h-5 w-5 text-gray-400" />
-          </div>
-          <input
-            type="text"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="block w-full pl-10 pr-3 py-4 border border-gray-300 rounded-lg leading-5 bg-white shadow-lg placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:ring-1 focus:ring-primary focus:border-primary sm:text-sm"
-            placeholder="Rechercher un produit..."
-          />
-        </div>
-      </div>
-
       {/* Contenu principal */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="grid grid-cols-1 gap-8 lg:grid-cols-4">

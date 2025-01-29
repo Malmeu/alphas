@@ -75,29 +75,36 @@ export default function ProductFilters({
     openSections,
     toggleSection
   }: FilterSectionProps<T>) => (
-    <div className="border-b border-gray-200 py-4">
+    <div className="border-b border-gray-100 last:border-b-0">
       <button
         onClick={() => toggleSection(section)}
-        className="flex w-full items-center justify-between text-lg font-medium text-gray-900 hover:text-primary"
+        className="flex w-full items-center justify-between px-4 py-4 text-base font-medium text-gray-900 hover:bg-gray-50 transition-colors duration-200"
       >
         <span>{title}</span>
         <ChevronDownIcon
-          className={`h-5 w-5 transform transition-transform ${
+          className={`h-5 w-5 text-gray-500 transform transition-transform duration-200 ${
             openSections[section] ? 'rotate-180' : ''
           }`}
         />
       </button>
       {openSections[section] && (
-        <div className="mt-4 space-y-2">
+        <div className="px-4 pb-4 space-y-3">
           {items.map((item) => (
-            <label key={item} className="flex items-center">
-              <input
-                type="checkbox"
-                checked={selectedItems.includes(item)}
-                onChange={() => onItemChange(item)}
-                className="h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary"
-              />
-              <span className="ml-2 text-sm text-gray-700">{item}</span>
+            <label 
+              key={item} 
+              className="flex items-center group cursor-pointer hover:bg-gray-50 p-2 rounded-lg transition-colors duration-200"
+            >
+              <div className="relative flex items-center">
+                <input
+                  type="checkbox"
+                  checked={selectedItems.includes(item)}
+                  onChange={() => onItemChange(item)}
+                  className="peer h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary/30 transition-colors duration-200"
+                />
+                <span className="ml-3 text-sm text-gray-700 group-hover:text-gray-900 transition-colors duration-200">
+                  {item}
+                </span>
+              </div>
             </label>
           ))}
         </div>
@@ -106,38 +113,40 @@ export default function ProductFilters({
   );
 
   return (
-    <div className="bg-white rounded-lg shadow-lg p-6">
-      <h2 className="text-xl font-bold text-gray-900 mb-6">Filtres</h2>
-      
-      <FilterSection<Marque>
-        title="Marques"
-        items={MARQUES}
-        selectedItems={selectedMarques}
-        onItemChange={onMarqueChange}
-        section="marques"
-        openSections={openSections}
-        toggleSection={toggleSection}
-      />
+    <div className="bg-white rounded-xl shadow-sm border border-gray-100">
+      <div className="p-4 border-b border-gray-100">
+        <h2 className="text-lg font-semibold text-gray-900">Filtres</h2>
+      </div>
 
-      <FilterSection<TypePompe>
-        title="Types de pompes"
-        items={typesPompe}
-        selectedItems={selectedTypes}
-        onItemChange={onTypeChange}
-        section="types"
-        openSections={openSections}
-        toggleSection={toggleSection}
-      />
-
-      <FilterSection<SecteurActivite>
-        title="Secteurs d'activité"
-        items={secteursActivite}
-        selectedItems={selectedSecteurs}
-        onItemChange={onSecteurChange}
-        section="secteurs"
-        openSections={openSections}
-        toggleSection={toggleSection}
-      />
+      <div className="divide-y divide-gray-100">
+        <FilterSection
+          title="Marques"
+          items={MARQUES}
+          selectedItems={selectedMarques}
+          onItemChange={onMarqueChange}
+          section="marques"
+          openSections={openSections}
+          toggleSection={toggleSection}
+        />
+        <FilterSection
+          title="Types de pompe"
+          items={typesPompe}
+          selectedItems={selectedTypes}
+          onItemChange={onTypeChange}
+          section="types"
+          openSections={openSections}
+          toggleSection={toggleSection}
+        />
+        <FilterSection
+          title="Secteurs d'activité"
+          items={secteursActivite}
+          selectedItems={selectedSecteurs}
+          onItemChange={onSecteurChange}
+          section="secteurs"
+          openSections={openSections}
+          toggleSection={toggleSection}
+        />
+      </div>
     </div>
   );
 }

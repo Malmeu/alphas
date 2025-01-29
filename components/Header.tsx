@@ -28,23 +28,29 @@ const menuItems: MenuItem[] = [
     name: 'Marques',
     type: 'dropdown',
     items: [
-      { name: 'Oflow', href: '/produits?marque=Oflow' },
-      { name: 'Orex', href: '/produits?marque=Orex' },
-      { name: 'Al Demating', href: '/produits?marque=Al-Demating' },
-      { name: 'Al fire', href: '/produits?marque=Al-fire' },
-      { name: 'FLUX', href: '/produits?marque=FLUX' }
+      { name: 'Oflow', href: '/marques/oflow' },
+      { name: 'Al dewatering', href: '/marques/al-dewatering' },
+      { name: 'Al fire', href: '/marques/al-fire' },
+      { name: 'Flux', href: '/marques/flux' },
+      { name: 'Verder', href: '/marques/verder' },
+      { name: 'Someflu', href: '/marques/someflu' },
+      { name: 'Flowserve', href: '/marques/flowserve' },
+      { name: 'PCM', href: '/marques/pcm' }
     ]
   },
   {
-    name: "Domaines d'activité",
+    name: "Domaines d'activités",
     type: 'dropdown',
     items: [
-      { name: 'Hydrocarbure', href: '/produits?domaine=Hydrocarbure' },
-      { name: 'Agroalimentaire', href: '/produits?domaine=Agroalimentaire' },
-      { name: 'Cosmétique', href: '/produits?domaine=Cosmetique' },
-      { name: 'Pharmaceutique', href: '/produits?domaine=Pharmaceutique' },
-      { name: 'Eau et environnement', href: '/produits?domaine=Eau-et-environnement' },
-      { name: 'Industriel', href: '/produits?domaine=Industriel' }
+      { name: 'Mine et carriere', href: '/domaines/mine-et-carriere' },
+      { name: 'Batiement et TP', href: '/domaines/batiment-et-tp' },
+      { name: 'Gaz et oil', href: '/domaines/gaz-et-oil' },
+      { name: 'Anti incendie', href: '/domaines/anti-incendie' },
+      { name: 'Agroalimentaire', href: '/domaines/agroalimentaire' },
+      { name: 'Pharmacies & Cosmetique', href: '/domaines/pharmacie-cosmetique' },
+      { name: 'Eau et environnement', href: '/domaines/eau-et-environnement' },
+      { name: 'Industrie', href: '/domaines/industrie' },
+      { name: 'Agriculture & Irrigation', href: '/domaines/agriculture-et-irrigation' }
     ]
   },
   {
@@ -72,7 +78,7 @@ export default function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   return (
-    <header className="bg-white shadow-md fixed w-full top-0 z-50">
+    <header className="bg-white shadow-sm fixed w-full top-0 z-50">
       <nav className="mx-auto flex max-w-7xl items-center justify-between p-4 lg:px-8" aria-label="Global">
         <div className="flex lg:flex-1">
           <Link href="/" className="-m-1.5 p-1.5">
@@ -92,7 +98,7 @@ export default function Header() {
         <div className="flex lg:hidden">
           <button
             type="button"
-            className="-m-2.5 inline-flex items-center justify-center rounded-md p-2.5 text-gray-700"
+            className="-m-2.5 inline-flex items-center justify-center rounded-md p-2.5 text-gray-700 hover:bg-gray-50 transition-colors"
             onClick={() => setMobileMenuOpen(true)}
           >
             <span className="sr-only">Ouvrir le menu principal</span>
@@ -100,18 +106,18 @@ export default function Header() {
           </button>
         </div>
         
-        <div className="hidden lg:flex gap-x-8">
+        <div className="hidden lg:flex items-center gap-x-1">
           {menuItems.map((item) => (
             <Fragment key={item.name}>
               {item.type === 'dropdown' ? (
                 <Menu as="div" className="relative">
                   {({ open }) => (
                     <>
-                      <Menu.Button className="group flex items-center gap-x-1 text-sm font-semibold leading-6 text-gray-900 hover:text-primary">
+                      <Menu.Button className="group flex items-center gap-x-1 rounded-lg px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 hover:text-primary transition-all">
                         {item.name}
                         <ChevronDownIcon 
                           className={classNames(
-                            "h-5 w-5 transition-transform duration-200",
+                            "h-5 w-5 text-gray-400 group-hover:text-primary transition-all duration-200",
                             open ? "rotate-180" : ""
                           )} 
                           aria-hidden="true" 
@@ -126,7 +132,7 @@ export default function Header() {
                         leaveFrom="opacity-100 translate-y-0"
                         leaveTo="opacity-0 translate-y-1"
                       >
-                        <Menu.Items className="absolute left-0 z-10 mt-3 w-72 origin-top-left rounded-xl bg-white p-2 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+                        <Menu.Items className="absolute left-0 z-10 mt-2 w-72 origin-top-left rounded-xl bg-white p-2 shadow-lg ring-1 ring-black/5 focus:outline-none">
                           <div className="grid gap-1">
                             {item.items?.map((subItem) => (
                               <Menu.Item key={subItem.name}>
@@ -134,8 +140,8 @@ export default function Header() {
                                   <Link
                                     href={subItem.href}
                                     className={classNames(
-                                      active ? 'bg-primary/5 text-primary' : 'text-gray-700',
-                                      'rounded-lg px-4 py-2.5 text-sm font-medium transition-colors hover:bg-primary/5 hover:text-primary whitespace-nowrap'
+                                      active ? 'bg-gray-50 text-primary' : 'text-gray-700',
+                                      'flex items-center rounded-lg px-4 py-2.5 text-sm font-medium transition-colors hover:bg-gray-50 hover:text-primary'
                                     )}
                                   >
                                     {subItem.name}
@@ -152,7 +158,7 @@ export default function Header() {
               ) : item.href ? (
                 <Link
                   href={item.href}
-                  className="text-sm font-semibold leading-6 text-gray-900 hover:text-primary transition-colors"
+                  className="rounded-lg px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 hover:text-primary transition-colors"
                 >
                   {item.name}
                 </Link>
@@ -163,20 +169,20 @@ export default function Header() {
 
         <div className="hidden lg:flex lg:flex-1 lg:justify-end">
           <Link
-            href="/contact"
-            className="rounded-lg bg-primary px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-primary/90 transition-colors focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
+            href="/DevisForm"
+            className="inline-flex items-center justify-center rounded-lg bg-primary px-4 py-2.5 text-sm font-medium text-white shadow-sm hover:bg-primary-dark transition-colors focus:outline-none focus:ring-2 focus:ring-primary/50 focus:ring-offset-2"
           >
-            Contact
+            Demandez un devis
           </Link>
         </div>
       </nav>
 
       {/* Menu mobile */}
       <Dialog as="div" className="lg:hidden" open={mobileMenuOpen} onClose={setMobileMenuOpen}>
-        <div className="fixed inset-0 z-10" />
+        <div className="fixed inset-0 z-10 bg-black/10 backdrop-blur-sm" />
         <Dialog.Panel className="fixed inset-y-0 right-0 z-10 w-full overflow-y-auto bg-white px-6 py-6 sm:max-w-sm sm:ring-1 sm:ring-gray-900/10">
           <div className="flex items-center justify-between">
-            <Link href="/" className="-m-1.5 p-1.5">
+            <Link href="/" className="-m-1.5 p-1.5" onClick={() => setMobileMenuOpen(false)}>
               <span className="sr-only">Alphas</span>
               <div className="relative w-[140px] h-[45px]">
                 <Image
@@ -190,7 +196,7 @@ export default function Header() {
             </Link>
             <button
               type="button"
-              className="-m-2.5 rounded-md p-2.5 text-gray-700"
+              className="-m-2.5 rounded-md p-2.5 text-gray-700 hover:bg-gray-50 transition-colors"
               onClick={() => setMobileMenuOpen(false)}
             >
               <span className="sr-only">Fermer le menu</span>
@@ -198,30 +204,31 @@ export default function Header() {
             </button>
           </div>
           <div className="mt-6 flow-root">
-            <div className="-my-6 divide-y divide-gray-500/10">
-              <div className="space-y-2 py-6">
+            <div className="-my-6">
+              <div className="space-y-1 py-6">
                 {menuItems.map((item) => (
                   <div key={item.name}>
                     {item.type === 'dropdown' ? (
                       <Disclosure>
                         {({ open }) => (
                           <>
-                            <Disclosure.Button className="flex w-full items-center justify-between rounded-lg py-2 pl-3 pr-3.5 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50">
+                            <Disclosure.Button className="flex w-full items-center justify-between rounded-lg py-2 px-3 text-base font-medium text-gray-700 hover:bg-gray-50 hover:text-primary transition-colors">
                               {item.name}
                               <ChevronDownIcon
                                 className={classNames(
-                                  open ? 'rotate-180' : '',
-                                  'h-5 w-5 flex-none'
+                                  open ? 'rotate-180 text-primary' : 'text-gray-400',
+                                  'h-5 w-5 flex-none transition-all duration-200'
                                 )}
                                 aria-hidden="true"
                               />
                             </Disclosure.Button>
-                            <Disclosure.Panel className="mt-2 space-y-2">
+                            <Disclosure.Panel className="mt-1 space-y-1">
                               {item.items?.map((subItem) => (
                                 <Link
                                   key={subItem.name}
                                   href={subItem.href}
-                                  className="block rounded-lg py-2 pl-6 pr-3 text-sm font-semibold leading-7 text-gray-900 hover:bg-gray-50"
+                                  onClick={() => setMobileMenuOpen(false)}
+                                  className="block rounded-lg py-2 pl-8 pr-3 text-sm font-medium text-gray-700 hover:bg-gray-50 hover:text-primary transition-colors"
                                 >
                                   {subItem.name}
                                 </Link>
@@ -233,7 +240,8 @@ export default function Header() {
                     ) : (
                       <Link
                         href={item.href || '/'}
-                        className="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50"
+                        onClick={() => setMobileMenuOpen(false)}
+                        className="block rounded-lg px-3 py-2 text-base font-medium text-gray-700 hover:bg-gray-50 hover:text-primary transition-colors"
                       >
                         {item.name}
                       </Link>
