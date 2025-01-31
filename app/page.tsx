@@ -197,7 +197,7 @@ export default function Home() {
                   >
                     <div className="flex flex-col items-center text-center">
                       <div className="h-16 w-16 bg-blue-50 rounded-xl text-blue-600 flex items-center justify-center mb-4 group-hover:scale-110 group-hover:bg-blue-100 transition-all duration-300">
-                        <span className="text-4xl">{domain.icon}</span>
+                        <span className="text-[32px] leading-none">{domain.icon}</span>
                       </div>
                       <h3 className="text-lg font-semibold text-gray-900 group-hover:text-blue-600 transition-colors duration-300">
                         {domain.name}
