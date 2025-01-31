@@ -465,6 +465,47 @@ export default function AlphasService() {
           </div>
         </div>
       </section>
+
+      {/* Section Téléchargement Brochure */}
+      <section className="bg-gradient-to-r from-blue-900 to-blue-700 py-16">
+        <div className="container mx-auto px-6">
+          <div className="flex flex-col md:flex-row items-center justify-between">
+            <div className="mb-8 md:mb-0 text-center md:text-left">
+              <h2 className="text-3xl font-bold text-white mb-4">
+                Téléchargez notre brochure
+              </h2>
+              <p className="text-blue-100 text-lg">
+                Découvrez en détail tous nos services et notre expertise
+              </p>
+            </div>
+            <motion.div
+              whileHover={{ scale: 1.05 }}
+              className="flex items-center"
+            >
+              <a
+                href="/alphas-services.pdf"
+                download
+                className="inline-flex items-center px-8 py-4 bg-white text-blue-900 rounded-full font-semibold hover:bg-blue-50 transition-colors duration-300"
+              >
+                <svg
+                  className="w-6 h-6 mr-3"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"
+                  />
+                </svg>
+                Télécharger la brochure
+              </a>
+            </motion.div>
+          </div>
+        </div>
+      </section>
     </main>
   );
 }
