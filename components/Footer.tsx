@@ -17,7 +17,7 @@ export default function Footer() {
           <div>
             <div className="relative w-32 h-12">
               <Image
-                src="/images/logo-alphas-white.png"
+                src="/images/logo-alphas.png"
                 alt="Logo ALPHAS POMPES"
                 fill
                 sizes="(max-width: 768px) 100px, 128px"
@@ -105,13 +105,13 @@ export default function Footer() {
               <li className="flex items-center space-x-3">
                 <FaEnvelope className="text-primary" />
                 <a href="mailto:contact@alphaspompes.ma" className="hover:text-primary transition-colors">
-                  contact@alphaspompes.dz
+                 contact@alphas-pompes.com
                 </a>
               </li>
               <li className="flex items-start space-x-3">
                 <FaMapMarkerAlt className="text-primary mt-1" />
                 <span>
-                  Zone Industrielle de Bejaia,<br />
+                Cité 112 logements cité seghir BT 03 ,<br />
                   bejaia - Algeria.
                 </span>
               </li>

@@ -1,3 +1,5 @@
+'use client';
+
 import Image from 'next/image'
 import Link from 'next/link'
 import DivisionalStructure from '../components/DivisionalStructure'
@@ -5,7 +7,14 @@ import Partners from '../components/Partners'
 import ProductTypeNav from '../components/ProductTypeNav'
 import BrandCarousel from '../components/BrandCarousel'
 import { Fragment, Suspense } from 'react'
+import { motion } from 'framer-motion';
 import { ArrowRightIcon } from '../components/icons/ArrowRightIcon'
+
+const fadeIn = {
+  initial: { opacity: 0, y: 20 },
+  whileInView: { opacity: 1, y: 0 },
+  transition: { duration: 0.6 }
+};
 
 const domains = [
   {
@@ -75,7 +84,7 @@ export default function Home() {
   return (
     <main className="flex min-h-screen flex-col">
       {/* Hero section avec overlay gradient */}
-      <section className="relative h-[calc(100vh-5rem)] bg-gray-900">
+      <section className="relative h-[calc(100vh-4rem)] bg-gray-900">
         {/* Background image avec overlay */}
         <div className="absolute inset-0">
           <Image
@@ -84,46 +93,66 @@ export default function Home() {
             fill
             priority
             sizes="100vw"
-            className="object-cover w-full h-full opacity-70"
+            className="object-cover w-full h-full"
           />
-          <div className="absolute inset-0 bg-gradient-to-r from-gray-900/70 via-gray-900/50 to-gray-900/70" />
+          <div className="absolute inset-0 bg-gradient-to-r from-blue-900/90 via-blue-900/80 to-blue-900/90" />
         </div>
 
         {/* Contenu Hero */}
         <div className="relative h-full">
           <div className="mx-auto max-w-7xl px-6 py-24 sm:py-32 lg:py-40 h-full flex flex-col justify-center">
-            <div className="text-center">
-              <h1 className="text-4xl font-bold tracking-tight text-white sm:text-6xl lg:text-7xl">
-                Solutions de pompage innovantes
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8 }}
+              className="text-center"
+            >
+              <h1 className="text-5xl font-bold tracking-tight text-white sm:text-6xl lg:text-7xl mb-8">
+                Solutions de pompage
+                <span className="block text-blue-400 mt-2">innovantes et fiables</span>
               </h1>
-              <p className="mt-6 text-lg leading-8 text-gray-300 max-w-3xl mx-auto">
+              <p className="mt-6 text-xl leading-8 text-blue-100 max-w-3xl mx-auto">
                 Découvrez notre gamme complète de pompes industrielles. Des solutions sur mesure pour tous vos besoins, 
                 avec une expertise technique inégalée et un service client de qualité.
               </p>
-              <div className="mt-10 flex gap-x-6 justify-center">
-                <Link
-                  href="/contact"
-                  className="rounded-lg bg-primary px-5 py-3 text-base font-medium text-white shadow-lg hover:bg-primary-dark transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:ring-offset-2 focus:ring-offset-gray-900"
-                >
-                  Contactez-nous
-                </Link>
-                <Link
-                  href="/tout-sur-alphas"
-                  className="rounded-lg bg-white/10 backdrop-blur-sm px-5 py-3 text-base font-medium text-white hover:bg-white/20 transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-white/50 focus:ring-offset-2 focus:ring-offset-gray-900"
-                >
-                  En savoir plus
-                </Link>
+              <div className="mt-12 flex gap-x-6 justify-center">
+                <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                  <Link
+                    href="/contact"
+                    className="rounded-full bg-white px-8 py-4 text-lg font-semibold text-blue-900 shadow-lg hover:bg-blue-50 transition-colors duration-300"
+                  >
+                    Contactez-nous
+                  </Link>
+                </motion.div>
+                <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                  <Link
+                    href="/tout-sur-alphas"
+                    className="rounded-full bg-blue-700/30 backdrop-blur-sm px-8 py-4 text-lg font-semibold text-white hover:bg-blue-700/40 transition-colors duration-300"
+                  >
+                    En savoir plus
+                  </Link>
+                </motion.div>
               </div>
-            </div>
+            </motion.div>
           </div>
 
           {/* Scroll indicator */}
-          <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 flex flex-col items-center animate-bounce">
-            <span className="text-white text-sm mb-2">Découvrir</span>
-            <svg className="w-6 h-6 text-white" fill="none" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" viewBox="0 0 24 24" stroke="currentColor">
-              <path d="M19 14l-7 7m0 0l-7-7m7 7V3"></path>
-            </svg>
-          </div>
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 1, duration: 0.8 }}
+            className="absolute bottom-8 left-1/2 transform -translate-x-1/2 flex flex-col items-center"
+          >
+            <motion.div
+              animate={{ y: [0, 10, 0] }}
+              transition={{ repeat: Infinity, duration: 2 }}
+            >
+              <span className="text-blue-200 text-sm mb-2">Découvrir</span>
+              <svg className="w-6 h-6 text-blue-200" fill="none" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" viewBox="0 0 24 24" stroke="currentColor">
+                <path d="M19 14l-7 7m0 0l-7-7m7 7V3"></path>
+              </svg>
+            </motion.div>
+          </motion.div>
         </div>
       </section>
 
@@ -133,36 +162,49 @@ export default function Home() {
       </Suspense>
 
       {/* Section Domaines d'activité */}
-      <section className="bg-white py-24 sm:py-32">
+      <section className="bg-gradient-to-b from-white to-gray-50 py-24 sm:py-32">
         <div className="mx-auto max-w-7xl px-6 lg:px-8">
-          <div className="mx-auto max-w-2xl lg:text-center">
-            <h2 className="text-base font-medium text-primary uppercase tracking-wide">Expertise multisectorielle</h2>
+          <motion.div
+            initial={fadeIn.initial}
+            whileInView={fadeIn.whileInView}
+            viewport={{ once: true }}
+            transition={fadeIn.transition}
+            className="mx-auto max-w-2xl lg:text-center"
+          >
+            <h2 className="text-base font-semibold text-blue-600 uppercase tracking-wide">Expertise multisectorielle</h2>
             <p className="mt-2 text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl lg:text-5xl">
               Choisissez votre domaine d'activité
             </p>
-            <p className="mt-6 text-lg leading-8 text-gray-600">
+            <p className="mt-6 text-xl leading-8 text-gray-600">
               <span className="font-semibold">ALPHAS POMPES</span> est fier de ses solides racines dans la fabrication et l'ingénierie. 
               Notre usine de fabrication sophistiquée nous permet de fournir des solutions innovantes dans de multiples secteurs.
             </p>
-          </div>
+          </motion.div>
 
           <div className="mx-auto mt-16 max-w-7xl">
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-8">
-              {domains.map((domain) => (
-                <Link 
-                  key={domain.name} 
-                  href={domain.href} 
-                  className="group relative bg-white rounded-xl shadow-sm border border-gray-200 p-6 hover:shadow-md hover:border-primary/20 transition-all duration-300"
+              {domains.map((domain, index) => (
+                <motion.div
+                  key={domain.name}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: index * 0.1 }}
                 >
-                  <div className="flex flex-col items-center text-center">
-                    <div className="h-12 w-12 text-primary flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300">
-                      <span className="text-3xl">{domain.icon}</span>
+                  <Link 
+                    href={domain.href} 
+                    className="group relative bg-white rounded-2xl shadow-lg hover:shadow-xl border-2 border-gray-100 p-6 hover:border-blue-200 transition-all duration-300 block"
+                  >
+                    <div className="flex flex-col items-center text-center">
+                      <div className="h-16 w-16 bg-blue-50 rounded-xl text-blue-600 flex items-center justify-center mb-4 group-hover:scale-110 group-hover:bg-blue-100 transition-all duration-300">
+                        <span className="text-4xl">{domain.icon}</span>
+                      </div>
+                      <h3 className="text-lg font-semibold text-gray-900 group-hover:text-blue-600 transition-colors duration-300">
+                        {domain.name}
+                      </h3>
                     </div>
-                    <h3 className="text-base font-medium text-gray-900 group-hover:text-primary transition-colors duration-300">
-                      {domain.name}
-                    </h3>
-                  </div>
-                </Link>
+                  </Link>
+                </motion.div>
               ))}
             </div>
           </div>
@@ -170,18 +212,24 @@ export default function Home() {
       </section>
 
       {/* Section Marques */}
-      <section className="bg-gray-50 py-24">
-        <div className="max-w-7xl mx-auto px-6 lg:px-8">
+      <section className="bg-white py-24">
+        <motion.div
+          initial={fadeIn.initial}
+          whileInView={fadeIn.whileInView}
+          viewport={{ once: true }}
+          transition={fadeIn.transition}
+          className="max-w-7xl mx-auto px-6 lg:px-8"
+        >
           <div className="text-center">
-            <h2 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
+            <h2 className="text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl mb-8">
               Nos Marques Partenaires
             </h2>
-            <p className="mt-4 text-lg leading-8 text-gray-600 max-w-2xl mx-auto">
+            <p className="text-xl leading-8 text-gray-600 max-w-3xl mx-auto">
               Découvrez notre sélection de marques leaders dans le domaine des pompes industrielles, 
               choisies pour leur qualité et leur fiabilité exceptionnelles.
             </p>
           </div>
-        </div>
+        </motion.div>
         
         <BrandCarousel />
       </section>
@@ -193,24 +241,43 @@ export default function Home() {
       <Partners />
 
       {/* Bannière Devis */}
-      <section className="bg-primary py-16">
+      <section className="bg-gradient-to-r from-blue-900 to-blue-800 py-20">
         <div className="max-w-7xl mx-auto px-6">
-          <div className="flex flex-col md:flex-row items-center justify-between gap-8">
+          <div className="flex flex-col md:flex-row items-center justify-between gap-12">
             <div className="text-white text-center md:text-left">
-              <h2 className="text-3xl font-bold">
+              <motion.h2
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                className="text-4xl font-bold mb-4"
+              >
                 Besoin d'un devis personnalisé ?
-              </h2>
-              <p className="mt-2 text-lg text-white/90">
-                Nos experts sont à votre disposition pour étudier votre projet
-              </p>
+              </motion.h2>
+              <motion.p
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: 0.2 }}
+                className="text-xl text-blue-100"
+              >
+                Notre équipe d'experts est là pour vous accompagner dans votre projet
+              </motion.p>
             </div>
-            <Link
-              href="/contact"
-              className="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-primary bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-primary focus:ring-white transition-colors duration-200"
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              viewport={{ once: true }}
+              whileHover={{ scale: 1.05 }}
+              className="flex-shrink-0"
             >
-              Demander un devis
-              <ArrowRightIcon className="ml-2 -mr-1 h-5 w-5" aria-hidden="true" />
-            </Link>
+              <Link
+                href="/contact"
+                className="inline-flex items-center px-8 py-4 bg-white text-blue-900 rounded-full text-lg font-semibold hover:bg-blue-50 transition-colors duration-300"
+              >
+                Demander un devis
+                <ArrowRightIcon className="ml-2 h-5 w-5" />
+              </Link>
+            </motion.div>
           </div>
         </div>
       </section>
