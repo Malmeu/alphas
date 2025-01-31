@@ -6,14 +6,14 @@ import Link from 'next/link';
 import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/24/outline';
 
 const brands = [
-  { name: 'Marque 1', image: '/image_marques/F427.png', href: '/marques/verder' },
-  { name: 'Marque 2', image: '/image_marques/F427 (2).png', href: '/marques/someflu' },
-  { name: 'Marque 3', image: '/image_marques/F427 (3).png', href: '/marques/pcm' },
-  { name: 'Marque 4', image: '/image_marques/F427 (4).png', href: '/marques/flowserve' },
-  { name: 'Marque 5', image: '/image_marques/F427 (5).png', href: '/marques/flux' },
-  { name: 'Marque 6', image: '/image_marques/F427 (6).png', href: '/marques/oflow' },
-  { name: 'Marque 7', image: '/image_marques/F427 (7).png', href: '/marques/al-dewatering' },
-  { name: 'Marque 8', image: '/image_marques/F427 (8).png', href: '/marques/al-fire' },
+  { name: 'Marque 1', image: '/image_marques/verder.png', href: '/marques/verder' },
+  { name: 'Marque 2', image: '/image_marques/someflu.png', href: '/marques/someflu' },
+  { name: 'Marque 3', image: '/image_marques/pcm.png', href: '/marques/pcm' },
+  { name: 'Marque 4', image: '/image_marques/flowserve.png', href: '/marques/flowserve' },
+  { name: 'Marque 5', image: '/image_marques/flux.png', href: '/marques/flux' },
+  { name: 'Marque 6', image: '/image_marques/oflow.png', href: '/marques/oflow' },
+  { name: 'Marque 7', image: '/image_marques/al dewatering.png', href: '/marques/al-dewatering' },
+  { name: 'Marque 8', image: '/image_marques/al fire.png', href: '/marques/al-fire' },
 ];
 
 export default function BrandCarousel() {
