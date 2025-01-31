@@ -26,7 +26,7 @@ const domains = [
   {
     name: 'Agroalimentaire',
     href: '/domaines/agroalimentaire',
-    icon: '🏭',
+    icon: '🍃',
   },
   {
     name: 'Agriculture & Irrigation',
