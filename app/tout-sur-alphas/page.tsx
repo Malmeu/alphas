@@ -12,7 +12,7 @@ const fadeIn = {
 
 export default function ToutSurAlphas() {
   return (
-    <main className="min-h-screen bg-gray-50 pt-24">
+    <main className="min-h-screen bg-gray-50">
       {/* Section 1 - Hero */}
       <section className="relative h-[60vh] bg-primary text-white flex items-center justify-center text-center">
         <div className="absolute inset-0">
