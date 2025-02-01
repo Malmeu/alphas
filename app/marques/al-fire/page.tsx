@@ -21,7 +21,7 @@ export default function AlFirePage() {
       const { data, error } = await supabase
         .from('products')
         .select('*')
-        .eq('marque', 'Al fire');
+        .eq('marque', 'AL FIRE');
 
       if (error) {
         console.error('Erreur lors de la récupération des produits:', error);
@@ -44,7 +44,7 @@ export default function AlFirePage() {
           <div className="flex flex-col items-center justify-center">
             <div className="relative w-72 h-40">
               <Image
-                src="/image_marques/al-fire.png"
+                src="/image_marques/al fire.png"
                 alt="Al Fire"
                 fill
                 className="object-contain"

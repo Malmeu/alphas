@@ -21,7 +21,7 @@ export default function AlDewateringPage() {
       const { data, error } = await supabase
         .from('products')
         .select('*')
-        .eq('marque', 'Al dewatering');
+        .eq('marque', 'AL DEWATERING');
 
       if (error) {
         console.error('Erreur lors de la récupération des produits:', error);
@@ -44,7 +44,7 @@ export default function AlDewateringPage() {
           <div className="flex flex-col items-center justify-center">
             <div className="relative w-72 h-40">
               <Image
-                src="/image_marques/al-dewatering.png"
+                src="/image_marques/al dewatering.png"
                 alt="Al Dewatering"
                 fill
                 className="object-contain"

@@ -21,7 +21,7 @@ export default function SomefluPage() {
       const { data, error } = await supabase
         .from('products')
         .select('*')
-        .eq('marque', 'Someflu');
+        .eq('marque', 'SOMEFLU');
 
       if (error) {
         console.error('Erreur lors de la récupération des produits:', error);

@@ -21,7 +21,7 @@ export default function FlowservePage() {
       const { data, error } = await supabase
         .from('products')
         .select('*')
-        .eq('marque', 'Flowserve');
+        .eq('marque', 'FLOWSERVE');
 
       if (error) {
         console.error('Erreur lors de la récupération des produits:', error);

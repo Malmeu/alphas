@@ -43,8 +43,28 @@ const SECTEURS_ACTIVITE: SecteurActivite[] = [
   'Service Après-Vente'
 ];
 
+const SEARCH_SUGGESTIONS = [
+  'Pompe centrifuge',
+  'Station de relevage',
+  'Pompe anti incendie',
+  'Station d\'épuration',
+  'Pompe vide fut',
+  'Oflow, Verder, Flux',
+];
+
 export default function ProduitsPage() {
   const [searchQuery, setSearchQuery] = useState('');
+  const [currentPlaceholder, setCurrentPlaceholder] = useState(SEARCH_SUGGESTIONS[0]);
+
+  useEffect(() => {
+    let currentIndex = 0;
+    const interval = setInterval(() => {
+      currentIndex = (currentIndex + 1) % SEARCH_SUGGESTIONS.length;
+      setCurrentPlaceholder(SEARCH_SUGGESTIONS[currentIndex]);
+    }, 3000); // Change toutes les 3 secondes
+
+    return () => clearInterval(interval);
+  }, []);
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -95,7 +115,7 @@ export default function ProduitsPage() {
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="block w-full pl-12 pr-4 py-4 border-0 rounded-lg leading-5 bg-white shadow-lg placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all duration-200"
-                placeholder="Rechercher un produit..."
+                placeholder={`Rechercher un produit... (ex: ${currentPlaceholder})`}
               />
             </div>
           </div>
