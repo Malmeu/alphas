@@ -166,7 +166,7 @@ export default function ProductDetail({ params }: { params: { id: string } }) {
             <div className="space-y-6">
               <CollapsibleSection title="Domaines d'applications">
                 <div 
-                  className="prose max-w-none text-gray-600"
+                  className="prose max-w-none text-gray-600 leading-tight text-sm"
                   style={{ whiteSpace: 'pre-line', wordBreak: 'break-word' }}
                   dangerouslySetInnerHTML={{ 
                     __html: product.domaines_application?.replace(/<br\s*\/?>/g, '\n') || '' 
@@ -250,7 +250,6 @@ export default function ProductDetail({ params }: { params: { id: string } }) {
                 </div>
                 {(product.caracteristiques_supplementaires?.length || 0) > 0 && (
                   <div className="mt-8">
-                    <h3 className="text-lg font-semibold text-gray-900 mb-4">Caractéristiques supplémentaires</h3>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                       {product.caracteristiques_supplementaires.map((carac, index) => (
                         <div
@@ -278,7 +277,7 @@ export default function ProductDetail({ params }: { params: { id: string } }) {
               {product.avantages && (
                 <CollapsibleSection title="Avantages">
                   <div 
-                    className="prose max-w-none text-gray-600"
+                    className="prose max-w-none text-gray-600 leading-tight text-sm"
                     style={{ whiteSpace: 'pre-line', wordBreak: 'break-word' }}
                     dangerouslySetInnerHTML={{ 
                       __html: product.avantages?.replace(/<br\s*\/?>/g, '\n') || '' 
