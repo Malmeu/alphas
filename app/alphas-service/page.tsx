@@ -7,461 +7,356 @@ import { Link as ScrollLink } from 'react-scroll';
 const fadeIn = {
   initial: { opacity: 0, y: 20 },
   animate: { opacity: 1, y: 0 },
-  transition: { duration: 0.6 }
+  transition: { duration: 0.8 }
 };
 
+const navigationItems = [
+  { id: 'pompes', name: 'Maintenance Pompes' },
+  { id: 'moteurs', name: 'Maintenance Moteurs' },
+  { id: 'hydro', name: 'Installation Hydromécanique' },
+  { id: 'autres', name: 'Autres Services' },
+];
+
+const typePompes = [
+  { name: 'Pompes centrifuges' },
+  { name: 'Pompes volumétriques' },
+  { name: 'Pompes de relevage' },
+  { name: 'Pompes immergées' },
+  { name: 'Pompes à vide' },
+  { name: 'Pompes doseuses' },
+];
+
+const typeMoteurs = [
+  { name: 'Moteurs électriques' },
+  { name: 'Moteurs diesel' },
+  { name: 'Motoréducteurs' },
+  { name: 'Variateurs de vitesse' },
+];
+
+const typeInstallations = [
+  { name: 'Installation de stations de pompage' },
+  { name: 'Installation de stations de surpression' },
+  { name: 'Installation de stations de relevage' },
+  { name: 'Installation de systèmes anti-incendie' },
+  { name: 'Travaux de tuyauterie industrielle' },
+];
+
+const autresServices = [
+  { name: 'Audit et diagnostic' },
+  { name: 'Contrats de maintenance' },
+  { name: 'Formation technique' },
+  { name: 'Assistance technique' },
+];
+
 export default function AlphasService() {
-  const typePompes = [
-    { name: 'Pompe centrifuge' },
-    { name: 'Pompe a plan de joint' },
-    { name: 'Pompe a vide' },
-    { name: 'Pompe a engrenage' },
-    { name: 'Pompe a membrane' },
-    { name: 'Pompe a palette' },
-    { name: 'Pompe a vis' },
-    { name: 'Pompe de transfert GPL' },
-    { name: 'Compresseur GPL' },
-    { name: 'Motopompes' }
-  ];
-
-  const typeMoteurs = [
-    { name: 'Moteurs brushless' },
-    { name: 'Moteurs asynchrones' },
-    { name: 'Moteurs de frein' },
-    { name: 'Moteurs atex' },
-    { name: 'Generatrices' },
-    { name: 'Rotors a bague' },
-    { name: 'Rotors bobines' }
-  ];
-
-  const typeInstallations = [
-    { name: 'Montage et maintenance des installations en milieux pétroliers' },
-    { name: 'Montage et maintenance des réseaux anti-incendies' },
-    { name: 'Montage et maintenance des réseaux AEP' },
-    { name: 'Installation et maintenance des stations d\'épuration et de relevage' }
-  ];
-
-  const autresServices = [
-    { name: 'Alignement laser' },
-    { name: 'Analyse vibratoire' },
-    { name: 'Thermographie' },
-    { name: 'Contrôle d\'isolement' },
-    { name: 'Usinage' },
-    { name: 'Équilibrage roues, arbres, rotors...' },
-    { name: 'Assistance à la mise en service' },
-    { name: 'Mise en service des installations' }
-  ];
-
-  const navigationItems = [
-    { id: 'pompes', name: 'Maintenance Pompes' },
-    { id: 'moteurs', name: 'Maintenance Moteurs' },
-    { id: 'hydro', name: 'Installation Hydraulique' },
-    { id: 'autres', name: 'Services Spécialisés' }
-  ];
-
   return (
-    <main className="min-h-screen bg-gray-50">
-      {/* Hero Section */}
-      <section className="relative h-[80vh] bg-primary text-white">
+    <main className="flex min-h-screen flex-col">
+      {/* Hero section avec overlay gradient */}
+      <section className="relative h-[calc(100vh-4rem)] bg-gray-900">
         <div className="absolute inset-0">
           <Image
             src="/images/banner-service.jpg"
-            alt="Alphas Services"
+            alt="ALPHAS Services"
             fill
             priority
-            className="object-cover"
+            sizes="100vw"
+            className="object-cover w-full h-full"
           />
-          <div className="absolute inset-0 bg-black/50"></div>
+          <div className="absolute inset-0 bg-gradient-to-r from-blue-900/90 via-blue-900/80 to-blue-900/90" />
         </div>
-        <div className="container mx-auto px-6 relative z-10 h-full flex flex-col items-center justify-center">
-          <motion.div
-            initial={fadeIn.initial}
-            animate={fadeIn.animate}
-            transition={fadeIn.transition}
-            className="text-center max-w-4xl"
-          >
-            <h1 className="text-6xl font-bold mb-6">Alphas Services</h1>
-            <p className="text-xl mb-12">
-              ALPHAS SERVICES est une entreprise spécialisée dans la maintenance, la réparation de pompes industrielles, ainsi que le rebobinage de moteurs. Grâce à l'expertise de ces technicien(nes), elle se propose également de piloter les installations des équipements en milieu industriel ou collectivités locale (adduction, relevage, épuration). L'expérience de nos équipes combinée avec la qualité de nos moyens matériels, nous permettent de fournir des solutions fiables.
-            </p>
-            <div className="flex flex-wrap justify-center gap-4">
-              {navigationItems.map((item) => (
-                <ScrollLink
-                  key={item.id}
-                  to={item.id}
-                  smooth={true}
-                  duration={500}
-                  offset={-100}
-                  className="px-6 py-3 bg-white/10 hover:bg-white/20 rounded-full text-white cursor-pointer transition-colors duration-300"
-                >
-                  {item.name}
-                </ScrollLink>
-              ))}
-            </div>
-          </motion.div>
-        </div>
-      </section>
 
-      {/* Service Maintenance et réparation pompes */}
-      <section id="pompes" className="py-20 bg-white relative">
-        <div className="absolute inset-0 bg-gradient-to-b from-gray-900/90 to-gray-900/90">
-          <Image
-            src="/image_pompe/34.jpg"
-            alt="Background Maintenance"
-            fill
-            className="object-cover mix-blend-overlay"
-          />
-        </div>
-        <div className="container mx-auto px-6 relative">
-          <motion.div
-            initial={fadeIn.initial}
-            whileInView={fadeIn.animate}
-            viewport={{ once: true }}
-            transition={fadeIn.transition}
-            className="mb-16 text-center"
-          >
-            <h2 className="text-6xl font-bold text-white mb-12">
-              MAINTENANCE<br />
-              ET RÉPARATION<br />
-              DE POMPES
-            </h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-y-4 gap-x-16 text-lg max-w-4xl mx-auto">
-              {typePompes.map((pompe, index) => (
-                <motion.div
-                  key={pompe.name}
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: index * 0.1 }}
-                  className="flex items-center space-x-3"
-                >
-                  <svg className="w-5 h-5 text-blue-400 flex-shrink-0" viewBox="0 0 20 20" fill="currentColor">
-                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                  </svg>
-                  <span className="text-white uppercase">{pompe.name}</span>
-                </motion.div>
-              ))}
-            </div>
-          </motion.div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        {/* Contenu Hero */}
+        <div className="relative h-full">
+          <div className="mx-auto max-w-7xl px-6 py-24 sm:py-32 lg:py-40 h-full flex flex-col justify-center">
             <motion.div
-              initial={{ opacity: 0 }}
-              whileInView={{ opacity: 1 }}
-              viewport={{ once: true }}
-              className="relative aspect-[4/3] rounded-lg overflow-hidden"
-              style={{ borderRadius: '20px', border: '4px solid #3B82F6' }}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8 }}
+              className="text-center"
             >
-              <Image
-                src="/image_pompe/35.jpg"
-                alt="Maintenance pompe 1"
-                fill
-                className="object-cover"
-              />
-            </motion.div>
-            <motion.div
-              initial={{ opacity: 0 }}
-              whileInView={{ opacity: 1 }}
-              viewport={{ once: true }}
-              transition={{ delay: 0.2 }}
-              className="relative aspect-[4/3] rounded-lg overflow-hidden"
-              style={{ borderRadius: '20px', border: '4px solid #3B82F6' }}
-            >
-              <Image
-                src="/image_pompe/36.jpg"
-                alt="Maintenance pompe 2"
-                fill
-                className="object-cover"
-              />
-            </motion.div>
-            <motion.div
-              initial={{ opacity: 0 }}
-              whileInView={{ opacity: 1 }}
-              viewport={{ once: true }}
-              transition={{ delay: 0.4 }}
-              className="relative aspect-[4/3] rounded-lg overflow-hidden"
-              style={{ borderRadius: '20px', border: '4px solid #3B82F6' }}
-            >
-              <Image
-                src="/image_pompe/37.jpg"
-                alt="Maintenance pompe 3"
-                fill
-                className="object-cover"
-              />
+              <h1 className="text-5xl font-bold tracking-tight text-white sm:text-6xl lg:text-7xl mb-8">
+                Service et maintenance
+                <span className="block text-blue-400 mt-2">expertise technique</span>
+              </h1>
+              <p className="mt-6 text-xl leading-8 text-blue-100 max-w-3xl mx-auto">
+                ALPHAS SERVICES est votre partenaire de confiance pour la maintenance, la réparation et l'installation 
+                d'équipements de pompage. Notre expertise technique et notre engagement qualité garantissent des solutions 
+                fiables et durables.
+              </p>
+              <div className="mt-12 flex flex-wrap gap-4 justify-center">
+                {navigationItems.map((item) => (
+                  <ScrollLink
+                    key={item.id}
+                    to={item.id}
+                    smooth={true}
+                    duration={500}
+                    offset={-100}
+                    className="rounded-full bg-blue-700/30 backdrop-blur-sm px-8 py-4 text-lg font-semibold text-white hover:bg-blue-700/40 transition-colors duration-300"
+                  >
+                    {item.name}
+                  </ScrollLink>
+                ))}
+              </div>
             </motion.div>
           </div>
+
+          {/* Scroll indicator */}
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 1, duration: 0.8 }}
+            className="absolute bottom-8 left-1/2 transform -translate-x-1/2 flex flex-col items-center"
+          >
+            <motion.div
+              animate={{ y: [0, 10, 0] }}
+              transition={{ repeat: Infinity, duration: 2 }}
+            >
+              <span className="text-blue-200 text-sm mb-2">Découvrir</span>
+              <svg className="w-6 h-6 text-blue-200" fill="none" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" viewBox="0 0 24 24" stroke="currentColor">
+                <path d="M19 14l-7 7m0 0l-7-7m7 7V3"></path>
+              </svg>
+            </motion.div>
+          </motion.div>
         </div>
       </section>
 
-      {/* Séparateur */}
-      <div className="h-px bg-gradient-to-r from-transparent via-gray-300 to-transparent" />
-
-      {/* Service Maintenance et réparation moteurs */}
-      <section id="moteurs" className="py-20 bg-white relative">
-        <div className="absolute inset-0 bg-gradient-to-b from-gray-900/90 to-gray-900/90">
-          <Image
-            src="/image_moteur/29.jpg"
-            alt="Background Maintenance Moteurs"
-            fill
-            className="object-cover mix-blend-overlay"
-          />
-        </div>
-        <div className="container mx-auto px-6 relative">
-          <motion.div
-            initial={fadeIn.initial}
-            whileInView={fadeIn.animate}
-            viewport={{ once: true }}
-            transition={fadeIn.transition}
-            className="mb-16 text-center"
-          >
-            <h2 className="text-6xl font-bold text-white mb-12">
-              MAINTENANCE<br />
-              ET RÉPARATION<br />
-              DE MOTEURS
-            </h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-y-4 gap-x-16 text-lg max-w-4xl mx-auto">
-              {typeMoteurs.map((moteur, index) => (
+      {/* Section Services */}
+      <section className="py-16">
+        <div className="container mx-auto px-6">
+          {/* Maintenance Pompes */}
+          <div className="mb-16">
+            <div className="text-center mb-10">
+              <span className="text-blue-600 font-semibold text-lg mb-2 block">Services</span>
+              <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Maintenance Pompes</h2>
+              <p className="text-lg text-gray-600 max-w-3xl mx-auto">
+                Notre expertise en maintenance de pompes garantit la performance et la longévité de vos équipements.
+              </p>
+            </div>
+            <div className="grid md:grid-cols-3 gap-6">
+              {[
+                {
+                  title: "Pompes Centrifuges",
+                  description: "Maintenance préventive et corrective des pompes centrifuges mono et multi-étagées."
+                },
+                {
+                  title: "Pompes à Vide",
+                  description: "Entretien et réparation des systèmes de pompage sous vide."
+                },
+                {
+                  title: "Pompes Volumétriques",
+                  description: "Service complet pour pompes à engrenages, à lobes et à vis."
+                }
+              ].map((service, index) => (
                 <motion.div
-                  key={moteur.name}
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
+                  key={index}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
                   transition={{ delay: index * 0.1 }}
-                  className="flex items-center space-x-3"
+                  className="bg-white p-6 rounded-2xl shadow-lg hover:shadow-xl transition-shadow border border-gray-100 group"
                 >
-                  <div className="w-3 h-3 rounded-full bg-green-400 flex-shrink-0"></div>
-                  <span className="text-white uppercase">{moteur.name}</span>
+                  <div className="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center mb-4 group-hover:bg-blue-600 transition-colors">
+                    <svg className="w-6 h-6 text-blue-600 group-hover:text-white transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                    </svg>
+                  </div>
+                  <h3 className="text-xl font-bold text-gray-900 mb-2">{service.title}</h3>
+                  <p className="text-gray-600">{service.description}</p>
                 </motion.div>
               ))}
             </div>
-          </motion.div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <motion.div
-              initial={{ opacity: 0 }}
-              whileInView={{ opacity: 1 }}
-              viewport={{ once: true }}
-              className="relative aspect-[4/3] rounded-lg overflow-hidden"
-              style={{ borderRadius: '20px', border: '4px solid #F97316' }}
-            >
-              <Image
-                src="/image_moteur/30.jpg"
-                alt="Maintenance moteur 1"
-                fill
-                className="object-cover"
-              />
-            </motion.div>
-            <motion.div
-              initial={{ opacity: 0 }}
-              whileInView={{ opacity: 1 }}
-              viewport={{ once: true }}
-              transition={{ delay: 0.2 }}
-              className="relative aspect-[4/3] rounded-lg overflow-hidden"
-              style={{ borderRadius: '20px', border: '4px solid #F97316' }}
-            >
-              <Image
-                src="/image_moteur/31.jpg"
-                alt="Maintenance moteur 2"
-                fill
-                className="object-cover"
-              />
-            </motion.div>
-            <motion.div
-              initial={{ opacity: 0 }}
-              whileInView={{ opacity: 1 }}
-              viewport={{ once: true }}
-              transition={{ delay: 0.4 }}
-              className="relative aspect-[4/3] rounded-lg overflow-hidden"
-              style={{ borderRadius: '20px', border: '4px solid #F97316' }}
-            >
-              <Image
-                src="/image_moteur/32.jpg"
-                alt="Maintenance moteur 3"
-                fill
-                className="object-cover"
-              />
-            </motion.div>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-12">
+              {["/image_pompe/35.jpg", "/image_pompe/36.jpg", "/image_pompe/37.jpg"].map((src, index) => (
+                <motion.div
+                  key={src}
+                  initial={{ opacity: 0 }}
+                  whileInView={{ opacity: 1 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: index * 0.2 }}
+                  className="relative h-64 overflow-hidden rounded-2xl group"
+                >
+                  <Image
+                    src={src}
+                    alt={`Maintenance pompe ${index + 1}`}
+                    fill
+                    className="object-cover transition-transform duration-500 group-hover:scale-105"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-gray-900/75 to-transparent" />
+                </motion.div>
+              ))}
+            </div>
           </div>
-        </div>
-      </section>
 
-      {/* Séparateur */}
-      <div className="h-px bg-gradient-to-r from-transparent via-gray-300 to-transparent" />
-
-      {/* Service Installation d'équipements hydromécaniques */}
-      <section id="hydro" className="py-20 bg-white relative">
-        <div className="absolute inset-0 bg-gradient-to-b from-gray-900/90 to-gray-900/90">
-          <Image
-            src="/image_hydro/25.jpg"
-            alt="Background Installation Hydromécanique"
-            fill
-            className="object-cover mix-blend-overlay"
-          />
-        </div>
-        <div className="container mx-auto px-6 relative">
-          <motion.div
-            initial={fadeIn.initial}
-            whileInView={fadeIn.animate}
-            viewport={{ once: true }}
-            transition={fadeIn.transition}
-            className="mb-16 text-center"
-          >
-            <h2 className="text-6xl font-bold text-white mb-12">
-              INSTALLATION D'ÉQUIPEMENTS<br />
-              HYDROMÉCANIQUES ET RÉALISATION<br />
-              DE TRAVAUX HYDRAULIQUES
-            </h2>
-            <div className="grid grid-cols-1 gap-y-4 text-lg max-w-4xl mx-auto">
-              {typeInstallations.map((installation, index) => (
+          {/* Maintenance Moteurs */}
+          <div className="mb-16 bg-gradient-to-br from-gray-50 to-white py-12 rounded-3xl">
+            <div className="text-center mb-10">
+              <span className="text-orange-600 font-semibold text-lg mb-2 block">Services</span>
+              <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Maintenance Moteurs</h2>
+              <p className="text-lg text-gray-600 max-w-3xl mx-auto">
+                Service complet de maintenance pour tous types de moteurs électriques et thermiques.
+              </p>
+            </div>
+            <div className="grid md:grid-cols-3 gap-6 px-6">
+              {[
+                {
+                  title: "Moteurs Électriques",
+                  description: "Diagnostic, réparation et maintenance des moteurs électriques industriels."
+                },
+                {
+                  title: "Moteurs Thermiques",
+                  description: "Service complet pour moteurs diesel et essence de toutes puissances."
+                },
+                {
+                  title: "Variateurs de Vitesse",
+                  description: "Installation et maintenance des systèmes de contrôle de vitesse."
+                }
+              ].map((service, index) => (
                 <motion.div
-                  key={installation.name}
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
+                  key={index}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
                   transition={{ delay: index * 0.1 }}
-                  className="flex items-center space-x-3"
+                  className="bg-white p-6 rounded-2xl shadow-lg hover:shadow-xl transition-shadow border border-gray-100 group"
                 >
-                  <div className="w-3 h-3 rounded-full bg-red-500 flex-shrink-0"></div>
-                  <span className="text-white uppercase">{installation.name}</span>
+                  <div className="w-12 h-12 bg-orange-100 rounded-xl flex items-center justify-center mb-4 group-hover:bg-orange-600 transition-colors">
+                    <svg className="w-6 h-6 text-orange-600 group-hover:text-white transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                    </svg>
+                  </div>
+                  <h3 className="text-xl font-bold text-gray-900 mb-2">{service.title}</h3>
+                  <p className="text-gray-600">{service.description}</p>
                 </motion.div>
               ))}
             </div>
-          </motion.div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <motion.div
-              initial={{ opacity: 0 }}
-              whileInView={{ opacity: 1 }}
-              viewport={{ once: true }}
-              className="relative aspect-[4/3] rounded-lg overflow-hidden"
-              style={{ borderRadius: '20px', border: '4px solid #EF4444' }}
-            >
-              <Image
-                src="/image_hydro/25.jpg"
-                alt="Installation hydromécanique 1"
-                fill
-                className="object-cover"
-              />
-            </motion.div>
-            <motion.div
-              initial={{ opacity: 0 }}
-              whileInView={{ opacity: 1 }}
-              viewport={{ once: true }}
-              transition={{ delay: 0.2 }}
-              className="relative aspect-[4/3] rounded-lg overflow-hidden"
-              style={{ borderRadius: '20px', border: '4px solid #EF4444' }}
-            >
-              <Image
-                src="/image_hydro/26.jpg"
-                alt="Installation hydromécanique 2"
-                fill
-                className="object-cover"
-              />
-            </motion.div>
-            <motion.div
-              initial={{ opacity: 0 }}
-              whileInView={{ opacity: 1 }}
-              viewport={{ once: true }}
-              transition={{ delay: 0.4 }}
-              className="relative aspect-[4/3] rounded-lg overflow-hidden"
-              style={{ borderRadius: '20px', border: '4px solid #EF4444' }}
-            >
-              <Image
-                src="/image_hydro/27.jpg"
-                alt="Installation hydromécanique 3"
-                fill
-                className="object-cover"
-              />
-            </motion.div>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-12">
+              {["/image_moteur/30.jpg", "/image_moteur/31.jpg", "/image_moteur/32.jpg"].map((src, index) => (
+                <motion.div
+                  key={src}
+                  initial={{ opacity: 0 }}
+                  whileInView={{ opacity: 1 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: index * 0.2 }}
+                  className="relative h-64 overflow-hidden rounded-2xl group"
+                >
+                  <Image
+                    src={src}
+                    alt={`Maintenance moteur ${index + 1}`}
+                    fill
+                    className="object-cover transition-transform duration-500 group-hover:scale-105"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-gray-900/75 to-transparent" />
+                </motion.div>
+              ))}
+            </div>
           </div>
-        </div>
-      </section>
 
-      {/* Séparateur */}
-      <div className="h-px bg-gradient-to-r from-transparent via-gray-300 to-transparent" />
-
-      {/* Autres Services Spécialisés */}
-      <section id="autres" className="py-20 bg-white relative">
-        <div className="absolute inset-0 bg-gradient-to-b from-gray-900/90 to-gray-900/90">
-          <Image
-            src="/image_autres/18.jpg"
-            alt="Background Services Spécialisés"
-            fill
-            className="object-cover mix-blend-overlay"
-          />
-        </div>
-        <div className="container mx-auto px-6 relative">
-          <motion.div
-            initial={fadeIn.initial}
-            whileInView={fadeIn.animate}
-            viewport={{ once: true }}
-            transition={fadeIn.transition}
-            className="mb-16 text-center"
-          >
-            <h2 className="text-6xl font-bold text-white mb-12">
-              ALPHAS POMPES<br />
-              SERVICES
-            </h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-y-4 gap-x-16 text-lg max-w-4xl mx-auto">
-              {autresServices.map((service, index) => (
+          {/* Installation Hydromécanique */}
+          <div className="mb-16">
+            <div className="text-center mb-10">
+              <span className="text-red-600 font-semibold text-lg mb-2 block">Services</span>
+              <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Installation Hydromécanique</h2>
+              <p className="text-lg text-gray-600 max-w-3xl mx-auto">
+                Solutions complètes pour l'installation et la maintenance des systèmes hydromécaniques.
+              </p>
+            </div>
+            <div className="grid md:grid-cols-3 gap-6">
+              {[
+                {
+                  title: "Systèmes de Pompage",
+                  description: "Installation et mise en service de stations de pompage complètes."
+                },
+                {
+                  title: "Réseaux Hydrauliques",
+                  description: "Conception et installation de réseaux de distribution d'eau."
+                },
+                {
+                  title: "Automatisation",
+                  description: "Mise en place de systèmes de contrôle et d'automatisation."
+                }
+              ].map((service, index) => (
                 <motion.div
-                  key={service.name}
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
+                  key={index}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
                   transition={{ delay: index * 0.1 }}
-                  className="flex items-center space-x-3"
+                  className="bg-white p-6 rounded-2xl shadow-lg hover:shadow-xl transition-shadow border border-gray-100 group"
                 >
-                  <svg className="w-5 h-5 text-cyan-400 flex-shrink-0" viewBox="0 0 20 20" fill="currentColor">
-                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                  </svg>
-                  <span className="text-white">{service.name}</span>
+                  <div className="w-12 h-12 bg-red-100 rounded-xl flex items-center justify-center mb-4 group-hover:bg-red-600 transition-colors">
+                    <svg className="w-6 h-6 text-red-600 group-hover:text-white transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
+                    </svg>
+                  </div>
+                  <h3 className="text-xl font-bold text-gray-900 mb-2">{service.title}</h3>
+                  <p className="text-gray-600">{service.description}</p>
                 </motion.div>
               ))}
             </div>
-          </motion.div>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-12">
+              {["/image_hydro/25.jpg", "/image_hydro/26.jpg", "/image_hydro/27.jpg"].map((src, index) => (
+                <motion.div
+                  key={src}
+                  initial={{ opacity: 0 }}
+                  whileInView={{ opacity: 1 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: index * 0.2 }}
+                  className="relative h-64 overflow-hidden rounded-2xl group"
+                >
+                  <Image
+                    src={src}
+                    alt={`Installation hydromécanique ${index + 1}`}
+                    fill
+                    className="object-cover transition-transform duration-500 group-hover:scale-105"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-gray-900/75 to-transparent" />
+                </motion.div>
+              ))}
+            </div>
+          </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <motion.div
-              initial={{ opacity: 0 }}
-              whileInView={{ opacity: 1 }}
-              viewport={{ once: true }}
-              className="relative aspect-[4/3] rounded-lg overflow-hidden"
-              style={{ borderRadius: '20px', border: '4px solid #06B6D4' }}
-            >
-              <Image
-                src="/image_autres/19.jpg"
-                alt="Service spécialisé 1"
-                fill
-                className="object-cover"
-              />
-            </motion.div>
-            <motion.div
-              initial={{ opacity: 0 }}
-              whileInView={{ opacity: 1 }}
-              viewport={{ once: true }}
-              transition={{ delay: 0.2 }}
-              className="relative aspect-[4/3] rounded-lg overflow-hidden"
-              style={{ borderRadius: '20px', border: '4px solid #06B6D4' }}
-            >
-              <Image
-                src="/image_autres/20.jpg"
-                alt="Service spécialisé 2"
-                fill
-                className="object-cover"
-              />
-            </motion.div>
-            <motion.div
-              initial={{ opacity: 0 }}
-              whileInView={{ opacity: 1 }}
-              viewport={{ once: true }}
-              transition={{ delay: 0.4 }}
-              className="relative aspect-[4/3] rounded-lg overflow-hidden"
-              style={{ borderRadius: '20px', border: '4px solid #06B6D4' }}
-            >
-              <Image
-                src="/image_autres/21.jpg"
-                alt="Service spécialisé 3"
-                fill
-                className="object-cover"
-              />
-            </motion.div>
+          {/* Autres Services */}
+          <div className="bg-gradient-to-br from-gray-50 to-white py-12 rounded-3xl">
+            <div className="text-center mb-10">
+              <span className="text-purple-600 font-semibold text-lg mb-2 block">Services</span>
+              <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Autres Services</h2>
+              <p className="text-lg text-gray-600 max-w-3xl mx-auto">
+                Des services spécialisés pour répondre à tous vos besoins en pompage et maintenance.
+              </p>
+            </div>
+            <div className="grid md:grid-cols-3 gap-6 px-6">
+              {[
+                {
+                  title: "Audit Technique",
+                  description: "Évaluation complète de vos installations et recommandations d'optimisation."
+                },
+                {
+                  title: "Formation",
+                  description: "Sessions de formation pour vos équipes techniques et opérationnelles."
+                },
+                {
+                  title: "Conseil",
+                  description: "Accompagnement dans vos projets et choix d'équipements."
+                }
+              ].map((service, index) => (
+                <motion.div
+                  key={index}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: index * 0.1 }}
+                  className="bg-white p-6 rounded-2xl shadow-lg hover:shadow-xl transition-shadow border border-gray-100 group"
+                >
+                  <div className="w-12 h-12 bg-purple-100 rounded-xl flex items-center justify-center mb-4 group-hover:bg-purple-600 transition-colors">
+                    <svg className="w-6 h-6 text-purple-600 group-hover:text-white transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
+                    </svg>
+                  </div>
+                  <h3 className="text-xl font-bold text-gray-900 mb-2">{service.title}</h3>
+                  <p className="text-gray-600">{service.description}</p>
+                </motion.div>
+              ))}
+            </div>
           </div>
         </div>
       </section>

@@ -3,6 +3,7 @@
 import Image from 'next/image';
 import Timeline from '../../components/Timeline';
 import { motion } from 'framer-motion';
+import { Link as ScrollLink } from 'react-scroll';
 
 const fadeIn = {
   initial: { opacity: 0, y: 20 },
@@ -14,7 +15,7 @@ export default function ToutSurAlphas() {
   return (
     <main className="min-h-screen bg-gray-50">
       {/* Section 1 - Hero */}
-      <section className="relative h-[80vh] bg-primary text-white">
+      <section className="relative h-screen bg-primary text-white">
         <div className="absolute inset-0">
           <Image
             src="/images/banner-tout.png"
@@ -23,24 +24,28 @@ export default function ToutSurAlphas() {
             priority
             className="object-cover"
           />
-          <div className="absolute inset-0 bg-gradient-to-r from-blue-900/90 to-blue-800/80"></div>
+          <div className="absolute inset-0 bg-gradient-to-br from-blue-900/90 via-blue-900/80 to-blue-900/90"></div>
         </div>
-        <div className="container mx-auto px-6 relative z-10 h-full flex items-center">
+        <div className="container mx-auto px-6 relative z-10 h-full flex flex-col justify-center items-center text-center">
           <motion.div
             initial={fadeIn.initial}
             animate={fadeIn.animate}
             transition={fadeIn.transition}
-            className="max-w-3xl"
+            className="max-w-4xl"
           >
-            <h1 className="text-6xl font-bold mb-8">TOUT SUR ALPHAS POMPES</h1>
-            <div className="flex flex-wrap gap-4 mb-8">
+            <span className="text-blue-400 font-semibold text-lg mb-4 block">Bienvenue chez Alphas Pompes</span>
+            <h1 className="text-5xl md:text-7xl font-bold mb-8">
+              <span className="text-white">TOUT SUR</span>{' '}
+              <span className="text-blue-400">ALPHAS POMPES</span>
+            </h1>
+            <div className="flex flex-wrap gap-4 mb-8 justify-center">
               {['Positivité', 'Ambition', 'Esprit d\'équipe', 'Intégrité', 'Excellence'].map((value, index) => (
                 <motion.span
                   key={value}
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: index * 0.1 }}
-                  className="px-6 py-2 bg-white/10 rounded-full text-lg"
+                  className="px-6 py-2 bg-white/10 backdrop-blur-sm rounded-full text-lg"
                 >
                   {value}
                 </motion.span>
@@ -50,19 +55,73 @@ export default function ToutSurAlphas() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.5 }}
+              className="space-y-8"
             >
               <p className="text-3xl font-semibold mb-4 text-blue-200">+28 ans de succès & d'innovations</p>
-              <p className="text-xl text-blue-100">
+              <p className="text-xl text-blue-100 max-w-3xl">
                 ALPHAS POMPES célèbre plus de 28 ans de succès dans le domaine du pompage des fluides grâce à ses solutions de qualité.
               </p>
+              <div className="flex flex-wrap gap-4 mt-8">
+                <ScrollLink
+                  to="notre-force"
+                  smooth={true}
+                  duration={500}
+                  className="px-8 py-4 bg-white/20 hover:bg-white/30 backdrop-blur-sm rounded-full text-white cursor-pointer transition-all"
+                >
+                  Notre Force
+                </ScrollLink>
+                <ScrollLink
+                  to="innovation"
+                  smooth={true}
+                  duration={500}
+                  className="px-8 py-4 bg-blue-600 hover:bg-blue-700 rounded-full text-white cursor-pointer transition-all"
+                >
+                  Innovation
+                </ScrollLink>
+              </div>
             </motion.div>
           </motion.div>
         </div>
+        
+        {/* Scroll Indicator */}
+        <motion.div
+          initial={{ opacity: 0, y: 50 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 1 }}
+          className="absolute bottom-8 left-1/2 transform -translate-x-1/2 flex flex-col items-center"
+        >
+          <span className="text-blue-200 text-sm mb-2">Découvrir Plus</span>
+          <motion.div
+            animate={{
+              y: [0, 10, 0],
+            }}
+            transition={{
+              duration: 1.5,
+              repeat: Infinity,
+              repeatType: "reverse",
+            }}
+            className="w-6 h-6 text-blue-400"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M19 14l-7 7m0 0l-7-7m7 7V3"
+              />
+            </svg>
+          </motion.div>
+        </motion.div>
       </section>
 
       {/* Section 2 - Notre Force */}
-      <section className="py-24 bg-white relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-blue-50 to-transparent"></div>
+      <section id="notre-force" className="py-24 bg-white relative overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-br from-blue-50 to-transparent opacity-50"></div>
         <div className="container mx-auto px-6 relative">
           <motion.div
             initial={fadeIn.initial}
@@ -71,75 +130,14 @@ export default function ToutSurAlphas() {
             transition={fadeIn.transition}
             className="text-center mb-16"
           >
-            <h2 className="text-5xl font-bold text-gray-900 mb-6">Chaque Jour Plus Forts</h2>
+            <span className="text-blue-600 font-semibold text-lg mb-2 block">Notre Force</span>
+            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">Chaque Jour Plus Forts</h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
               Grâce à notre travail d'équipe, nous repoussons nos limites pour offrir le meilleur de nous-mêmes.
             </p>
           </motion.div>
 
-          <div className="grid md:grid-cols-2 gap-16">
-            <motion.div
-              initial={fadeIn.initial}
-              whileInView={fadeIn.animate}
-              viewport={{ once: true }}
-              transition={fadeIn.transition}
-              className="space-y-12"
-            >
-              <div className="bg-white p-8 rounded-2xl shadow-lg hover:shadow-xl transition-shadow">
-                <h3 className="text-2xl font-bold text-gray-900 mb-4">Une Énergie Renouvelée</h3>
-                <p className="text-gray-600 leading-relaxed">
-                  Chez ALPHAS POMPES, nous proposons une vaste gamme de solutions de pompage, comprenant une variété de modèles et de technologies. Notre catalogue diversifié nous permet de répondre précisément aux besoins de chaque application à travers les solutions distribuées ou développées et fabriquées par ALPHAS, en offrant la possibilité de personnaliser les matériaux et la conception selon les exigences spécifiques du terrain.
-                </p>
-              </div>
-              <div className="bg-white p-8 rounded-2xl shadow-lg hover:shadow-xl transition-shadow">
-                <h3 className="text-2xl font-bold text-gray-900 mb-4">Déploiement</h3>
-                <p className="text-gray-600 leading-relaxed">
-                  Chez ALPHAS POMPES, nous sommes animés par la fierté de notre présence étendue et complète à travers le territoire national, avec des interventions rapides pour servir nos clients dans tous les coins du pays (58 wilayas). Nous aspirons à étendre notre influence et notre impact au-delà des frontières nationales, tout en restant fidèles à nos valeurs fondamentales de qualité, d'innovation et de service exceptionnel à la clientèle.
-                </p>
-              </div>
-            </motion.div>
-
-            <motion.div
-              initial={fadeIn.initial}
-              whileInView={fadeIn.animate}
-              viewport={{ once: true }}
-              transition={fadeIn.transition}
-              className="bg-white p-8 rounded-2xl shadow-lg"
-            >
-              <h3 className="text-2xl font-bold text-gray-900 mb-6">Des Objectifs Et Des Ambitions</h3>
-              <p className="text-gray-600 mb-8 leading-relaxed">
-                Notre objectif est de fournir au client une solution de pompage complète avec des produits de qualité dont le prix est compétitif, livrés à temps et dont le coût du cycle de vie est le plus bas, soutenus par un service après-vente impeccable.
-              </p>
-              <ul className="space-y-6">
-                {[
-                  'Fournir des Solutions de Pompage Complètes : Notre objectif est de proposer une gamme diversifiée de produits de pompage répondant aux besoins variés de nos clients, tout en offrant des solutions sur mesure adaptées à chaque application spécifique',
-                  'Produits de Qualité à Prix Compétitif: Nous nous engageons à maintenir des normes de qualité élevées tout en veillant à ce que nos produits restent compétitifs sur le marché, offrant ainsi une valeur exceptionnelle à nos clients',
-                  'Livraison à Temps : Nous visons à garantir une livraison ponctuelle de nos produits, permettant à nos clients de planifier efficacement leurs opérations sans interruption.',
-                  'Coût du Cycle de Vie Réduit : Nous cherchons à réduire les coûts totaux de possession de nos produits en optimisant leur durabilité, leur fiabilité et leur efficacité opérationnelle, ce qui se traduit par des économies à long terme pour nos clients.',
-                  'Service Après-Vente Impeccable : Notre objectif est de fournir un service après-vente exceptionnel, offrant un support technique et une assistance rapide pour garantir la satisfaction continue de nos clients et la performance optimale de nos produits.'
-                ].map((item, index) => (
-                  <motion.li
-                    key={index}
-                    initial={{ opacity: 0, x: -20 }}
-                    whileInView={{ opacity: 1, x: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ delay: index * 0.1 }}
-                    className="flex items-start gap-4 p-4 bg-blue-50 rounded-xl"
-                  >
-                    <span className="text-blue-600 text-xl mt-1">•</span>
-                    <span className="text-gray-700">{item}</span>
-                  </motion.li>
-                ))}
-              </ul>
-            </motion.div>
-          </div>
-        </div>
-      </section>
-
-      {/* Section 3 - Innovation */}
-      <section className="py-24 bg-gradient-to-b from-gray-50 to-white">
-        <div className="container mx-auto px-6">
-          <div className="grid md:grid-cols-2 gap-16 items-center">
+          <div className="grid md:grid-cols-2 gap-8 lg:gap-16">
             <motion.div
               initial={fadeIn.initial}
               whileInView={fadeIn.animate}
@@ -147,44 +145,142 @@ export default function ToutSurAlphas() {
               transition={fadeIn.transition}
               className="space-y-8"
             >
-              <h2 className="text-5xl font-bold text-gray-900 mb-6">Innover Dans Chaque Détail</h2>
-              <p className="text-2xl text-blue-600 font-semibold mb-8">
-                Nous avançons avec assurance et détermination, car nous savons exactement où nous voulons aller.
-              </p>
-              <div className="space-y-6">
-                {[
-                  'Nous aspirons à devenir le partenaire privilégié de nos clients pour toutes leurs solutions de pompage. Nous nous engageons à être reconnus comme un leader incontesté dans le domaine des pompes hydromécaniques, en offrant des produits innovants, fiables et sur mesure qui dépassent les attentes de nos clients.',
-                  'Notre vision est de repousser les limites de l\'ingénierie et de la technologie pour créer des solutions de pompage de pointe qui répondent aux défis les plus complexes du marché. Nous visons à être à la pointe de l\'innovation, en anticipant les besoins futurs de nos clients et en développant des produits et des services qui leur permettent de prospérer dans un monde en constante évolution.',
-                  'Chez Alphas Pompes, nous croyons fermement en la valeur de l\'excellence, de l\'intégrité et de l\'engagement envers nos clients. Notre vision est de devenir le partenaire de confiance de nos clients, en les accompagnant à chaque étape de leur parcours et en les aidant à atteindre leurs objectifs avec succès.'
-                ].map((text, index) => (
-                  <motion.p
-                    key={index}
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ delay: index * 0.2 }}
-                    className="text-gray-600 leading-relaxed"
-                  >
-                    {text}
-                  </motion.p>
-                ))}
+              <div className="bg-white rounded-2xl shadow-lg hover:shadow-xl transition-shadow border border-gray-100 overflow-hidden group">
+                <div className="p-8">
+                  <div className="w-16 h-16 bg-blue-100 rounded-2xl flex items-center justify-center mb-6 group-hover:bg-blue-600 transition-colors">
+                    <svg className="w-8 h-8 text-blue-600 group-hover:text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                    </svg>
+                  </div>
+                  <h3 className="text-2xl font-bold text-gray-900 mb-4">Une Énergie Renouvelée</h3>
+                  <p className="text-gray-600 leading-relaxed">
+                    Chez ALPHAS POMPES, nous proposons une vaste gamme de solutions de pompage, comprenant une variété de modèles et de technologies. Notre catalogue diversifié nous permet de répondre précisément aux besoins de chaque application.
+                  </p>
+                </div>
+              </div>
+              <div className="bg-white rounded-2xl shadow-lg hover:shadow-xl transition-shadow border border-gray-100 overflow-hidden group">
+                <div className="p-8">
+                  <div className="w-16 h-16 bg-blue-100 rounded-2xl flex items-center justify-center mb-6 group-hover:bg-blue-600 transition-colors">
+                    <svg className="w-8 h-8 text-blue-600 group-hover:text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h.5A2.5 2.5 0 0020 5.5V3.935M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945" />
+                    </svg>
+                  </div>
+                  <h3 className="text-2xl font-bold text-gray-900 mb-4">Déploiement National</h3>
+                  <p className="text-gray-600 leading-relaxed">
+                    Notre présence étendue à travers le territoire national nous permet d'intervenir rapidement pour servir nos clients dans tous les coins du pays (58 wilayas).
+                  </p>
+                </div>
               </div>
             </motion.div>
+
             <motion.div
-              initial={{ opacity: 0, scale: 0.8 }}
-              whileInView={{ opacity: 1, scale: 1 }}
+              initial={fadeIn.initial}
+              whileInView={fadeIn.animate}
               viewport={{ once: true }}
-              transition={{ duration: 0.8 }}
-              className="relative h-[600px] rounded-2xl overflow-hidden shadow-2xl"
+              transition={fadeIn.transition}
+              className="bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden"
             >
-              <Image
-                src="/images/innovation.jpg"
-                alt="Innovation chez Alphas Pompes"
-                fill
-                className="object-cover"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-blue-900/40 to-transparent"></div>
+              <div className="p-8">
+                <div className="w-16 h-16 bg-blue-100 rounded-2xl flex items-center justify-center mb-6">
+                  <svg className="w-8 h-8 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z" />
+                  </svg>
+                </div>
+                <h3 className="text-2xl font-bold text-gray-900 mb-6">Des Objectifs Et Des Ambitions</h3>
+                <p className="text-gray-600 mb-8 leading-relaxed">
+                  Notre objectif est de fournir au client une solution de pompage complète avec des produits de qualité dont le prix est compétitif.
+                </p>
+                <ul className="space-y-4">
+                  {[
+                    'Solutions de Pompage Complètes',
+                    'Produits de Qualité à Prix Compétitif',
+                    'Livraison à Temps',
+                    'Coût du Cycle de Vie Réduit',
+                    'Service Après-Vente Impeccable'
+                  ].map((item, index) => (
+                    <motion.li
+                      key={index}
+                      initial={{ opacity: 0, x: -20 }}
+                      whileInView={{ opacity: 1, x: 0 }}
+                      viewport={{ once: true }}
+                      transition={{ delay: index * 0.1 }}
+                      className="flex items-center gap-4 p-4 bg-blue-50 rounded-xl hover:bg-blue-100 transition-colors"
+                    >
+                      <span className="w-2 h-2 bg-blue-600 rounded-full"></span>
+                      <span className="text-gray-700 font-medium">{item}</span>
+                    </motion.li>
+                  ))}
+                </ul>
+              </div>
             </motion.div>
+          </div>
+        </div>
+      </section>
+
+      {/* Section 3 - Innovation */}
+      <section id="innovation" className="py-24 bg-gradient-to-b from-white to-gray-50">
+        <div className="container mx-auto px-6">
+          <motion.div
+            initial={fadeIn.initial}
+            whileInView={fadeIn.animate}
+            viewport={{ once: true }}
+            transition={fadeIn.transition}
+            className="text-center mb-16"
+          >
+            <span className="text-blue-600 font-semibold text-lg mb-2 block">Innovation</span>
+            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">Innover Dans Chaque Détail</h2>
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+              Nous avançons avec assurance et détermination, car nous savons exactement où nous voulons aller.
+            </p>
+          </motion.div>
+
+          <div className="grid md:grid-cols-3 gap-8">
+            {[
+              {
+                title: 'Partenaire Privilégié',
+                description: 'Nous aspirons à devenir le partenaire privilégié de nos clients pour toutes leurs solutions de pompage.',
+                icon: (
+                  <svg className="w-8 h-8 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                  </svg>
+                )
+              },
+              {
+                title: 'Innovation Technologique',
+                description: 'Nous repoussons les limites de l\'ingénierie pour créer des solutions de pompage de pointe.',
+                icon: (
+                  <svg className="w-8 h-8 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+                  </svg>
+                )
+              },
+              {
+                title: 'Excellence & Intégrité',
+                description: 'Nous croyons fermement en la valeur de l\'excellence et de l\'intégrité dans tout ce que nous faisons.',
+                icon: (
+                  <svg className="w-8 h-8 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z" />
+                  </svg>
+                )
+              }
+            ].map((item, index) => (
+              <motion.div
+                key={index}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: index * 0.2 }}
+                className="bg-white p-8 rounded-2xl shadow-lg hover:shadow-xl transition-shadow border border-gray-100 group"
+              >
+                <div className="w-16 h-16 bg-blue-100 rounded-2xl flex items-center justify-center mb-6 group-hover:bg-blue-600 transition-colors">
+                  <div className="group-hover:text-white transition-colors">
+                    {item.icon}
+                  </div>
+                </div>
+                <h3 className="text-2xl font-bold text-gray-900 mb-4">{item.title}</h3>
+                <p className="text-gray-600">{item.description}</p>
+              </motion.div>
+            ))}
           </div>
         </div>
       </section>

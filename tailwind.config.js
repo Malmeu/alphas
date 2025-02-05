@@ -13,8 +13,8 @@ module.exports = {
         white: '#ffffff',
       },
       fontFamily: {
-        sans: ['Inter', 'sans-serif'],
-        display: ['Montserrat', 'sans-serif'],
+        sans: ['Helvetica', 'Arial', 'sans-serif'],
+        display: ['Helvetica', 'Arial', 'sans-serif'],
       },
       height: {
         'hero': '600px',
