@@ -2,12 +2,13 @@
 
 import { useState } from 'react';
 import { ChevronDownIcon } from '@heroicons/react/24/outline';
+import { motion, AnimatePresence } from 'framer-motion';
 import type { Marque, TypePompe, SecteurActivite } from '@/types/product';
 
-type OpenSections = {
+export type OpenSections = {
   marques: boolean;
   types: boolean;
-  secteurs: boolean;
+  domaines: boolean;
 };
 
 interface FilterProps {
@@ -20,6 +21,8 @@ interface FilterProps {
   onMarqueChange: (marque: Marque) => void;
   onTypeChange: (type: TypePompe) => void;
   onSecteurChange: (secteur: SecteurActivite) => void;
+  openSections: OpenSections;
+  setOpenSections: (sections: OpenSections) => void;
 }
 
 interface FilterSectionProps<T extends string> {
@@ -27,23 +30,63 @@ interface FilterSectionProps<T extends string> {
   items: T[];
   selectedItems: T[];
   onItemChange: (item: T) => void;
-  section: keyof OpenSections;
-  openSections: OpenSections;
-  toggleSection: (section: keyof OpenSections) => void;
+  isOpen: boolean;
+  onToggle: () => void;
 }
 
-const MARQUES: Marque[] = [
-  'OFLOW',
-  'AL DEWATERING',
-  'AL FIRE',
-  'FLUX',
-  'VERDER',
-  'SOMEFLU',
-  'FLOWSERVE',
-  'PCM'
-];
+function FilterSection<T extends string>({
+  title,
+  items,
+  selectedItems,
+  onItemChange,
+  isOpen,
+  onToggle,
+}: FilterSectionProps<T>) {
+  return (
+    <div className="border-b border-gray-200 py-4">
+      <button
+        className="flex w-full items-center justify-between text-lg font-medium text-gray-900"
+        onClick={onToggle}
+      >
+        <span>{title}</span>
+        <motion.span
+          animate={{ rotate: isOpen ? 180 : 0 }}
+          transition={{ duration: 0.3 }}
+        >
+          <ChevronDownIcon className="h-5 w-5" />
+        </motion.span>
+      </button>
+      <AnimatePresence>
+        {isOpen && (
+          <motion.div
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: 'auto', opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={{ duration: 0.3 }}
+            className="overflow-hidden"
+          >
+            <div className="mt-4 space-y-2">
+              {items.map((item) => (
+                <label key={item} className="flex items-center space-x-2">
+                  <input
+                    type="checkbox"
+                    checked={selectedItems.includes(item)}
+                    onChange={() => onItemChange(item)}
+                    className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                  />
+                  <span className="text-gray-700">{item}</span>
+                </label>
+              ))}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
+  );
+}
 
 export default function ProductFilters({
+  marques,
   typesPompe,
   secteursActivite,
   selectedMarques,
@@ -51,102 +94,104 @@ export default function ProductFilters({
   selectedSecteurs,
   onMarqueChange,
   onTypeChange,
-  onSecteurChange
+  onSecteurChange,
+  openSections,
+  setOpenSections,
 }: FilterProps) {
-  const [openSections, setOpenSections] = useState<OpenSections>({
-    marques: true,
-    types: true,
-    secteurs: true
-  });
+  const [localOpenSections, setLocalOpenSections] = useState<OpenSections>(openSections);
 
   const toggleSection = (section: keyof OpenSections) => {
-    setOpenSections(prev => ({
+    setLocalOpenSections((prev) => ({
       ...prev,
-      [section]: !prev[section]
+      [section]: !prev[section],
     }));
+    setOpenSections({
+      ...openSections,
+      [section]: !openSections[section],
+    });
   };
 
-  const FilterSection = <T extends string>({ 
-    title, 
-    items, 
-    selectedItems, 
-    onItemChange, 
-    section,
-    openSections,
-    toggleSection
-  }: FilterSectionProps<T>) => (
-    <div className="border-b border-gray-100 last:border-b-0">
-      <button
-        onClick={() => toggleSection(section)}
-        className="flex w-full items-center justify-between px-4 py-4 text-base font-medium text-gray-900 hover:bg-gray-50 transition-colors duration-200"
-      >
-        <span>{title}</span>
-        <ChevronDownIcon
-          className={`h-5 w-5 text-gray-500 transform transition-transform duration-200 ${
-            openSections[section] ? 'rotate-180' : ''
-          }`}
-        />
-      </button>
-      {openSections[section] && (
-        <div className="px-4 pb-4 space-y-3">
-          {items.map((item) => (
-            <label 
-              key={item} 
-              className="flex items-center group cursor-pointer hover:bg-gray-50 p-2 rounded-lg transition-colors duration-200"
-            >
-              <div className="relative flex items-center">
-                <input
-                  type="checkbox"
-                  checked={selectedItems.includes(item)}
-                  onChange={() => onItemChange(item)}
-                  className="peer h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary/30 transition-colors duration-200"
-                />
-                <span className="ml-3 text-sm text-gray-700 group-hover:text-gray-900 transition-colors duration-200">
-                  {item}
-                </span>
-              </div>
-            </label>
-          ))}
+  return (
+    <div className="bg-white rounded-lg shadow-md p-4">
+      <h2 className="text-xl font-semibold text-gray-900 mb-4">Filtres</h2>
+
+      <FilterSection
+        title="Marques"
+        items={marques}
+        selectedItems={selectedMarques}
+        onItemChange={onMarqueChange}
+        isOpen={localOpenSections.marques}
+        onToggle={() => toggleSection('marques')}
+      />
+
+      <FilterSection
+        title="Types de Pompes"
+        items={typesPompe}
+        selectedItems={selectedTypes}
+        onItemChange={onTypeChange}
+        isOpen={localOpenSections.types}
+        onToggle={() => toggleSection('types')}
+      />
+
+      <FilterSection
+        title="Domaines d'activité"
+        items={secteursActivite}
+        selectedItems={selectedSecteurs}
+        onItemChange={onSecteurChange}
+        isOpen={localOpenSections.domaines}
+        onToggle={() => toggleSection('domaines')}
+      />
+
+      {/* Résumé des filtres actifs */}
+      {(selectedMarques.length > 0 || selectedTypes.length > 0 || selectedSecteurs.length > 0) && (
+        <div className="mt-6 pt-4 border-t border-gray-200">
+          <h3 className="text-sm font-medium text-gray-900 mb-2">Filtres actifs :</h3>
+          <div className="flex flex-wrap gap-2">
+            {selectedMarques.map((marque) => (
+              <span
+                key={marque}
+                className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800"
+              >
+                {marque}
+                <button
+                  onClick={() => onMarqueChange(marque)}
+                  className="ml-1 hover:text-blue-600"
+                >
+                  ×
+                </button>
+              </span>
+            ))}
+            {selectedTypes.map((type) => (
+              <span
+                key={type}
+                className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800"
+              >
+                {type}
+                <button
+                  onClick={() => onTypeChange(type)}
+                  className="ml-1 hover:text-green-600"
+                >
+                  ×
+                </button>
+              </span>
+            ))}
+            {selectedSecteurs.map((secteur) => (
+              <span
+                key={secteur}
+                className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-purple-100 text-purple-800"
+              >
+                {secteur}
+                <button
+                  onClick={() => onSecteurChange(secteur)}
+                  className="ml-1 hover:text-purple-600"
+                >
+                  ×
+                </button>
+              </span>
+            ))}
+          </div>
         </div>
       )}
-    </div>
-  );
-
-  return (
-    <div className="bg-white rounded-xl shadow-sm border border-gray-100">
-      <div className="p-4 border-b border-gray-100">
-        <h2 className="text-lg font-semibold text-gray-900">Filtres</h2>
-      </div>
-
-      <div className="divide-y divide-gray-100">
-        <FilterSection
-          title="Marques"
-          items={MARQUES}
-          selectedItems={selectedMarques}
-          onItemChange={onMarqueChange}
-          section="marques"
-          openSections={openSections}
-          toggleSection={toggleSection}
-        />
-        <FilterSection
-          title="Types de pompe"
-          items={typesPompe}
-          selectedItems={selectedTypes}
-          onItemChange={onTypeChange}
-          section="types"
-          openSections={openSections}
-          toggleSection={toggleSection}
-        />
-        <FilterSection
-          title="Secteurs d'activité"
-          items={secteursActivite}
-          selectedItems={selectedSecteurs}
-          onItemChange={onSecteurChange}
-          section="secteurs"
-          openSections={openSections}
-          toggleSection={toggleSection}
-        />
-      </div>
     </div>
   );
 }

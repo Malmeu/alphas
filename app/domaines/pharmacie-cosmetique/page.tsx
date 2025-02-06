@@ -3,26 +3,60 @@
 import Image from 'next/image';
 import { useState, useEffect } from 'react';
 import ProductCard from '@/components/ProductCard';
-import { Product, TypePompe } from '@/types/product';
+import DomainFilters from '@/components/DomainFilters';
+import { Product, Marque, TypePompe } from '@/types/product';
 import { createClient } from '@/lib/supabase/client';
 
+const MARQUES: Marque[] = [
+  'OFLOW',
+  'AL DEWATERING',
+  'AL FIRE',
+  'FLUX',
+  'VERDER',
+  'SOMEFLU',
+  'FLOWSERVE',
+  'PCM'
+];
+
+const TYPES_POMPE: TypePompe[] = [
+  'Pompes Centrifuges',
+  'Pompes Volumetriques',
+  'Pompes vide-fut',
+  'Anti-incendie',
+  'Moto-pompes',
+  'Anti-belier',
+  'Station de relevage',
+  "Stations d'épuration"
+];
+
 export default function PharmacieCosmetique() {
-  const [selectedCategory, setSelectedCategory] = useState('all');
+  const [selectedMarques, setSelectedMarques] = useState<Marque[]>([]);
+  const [selectedTypes, setSelectedTypes] = useState<TypePompe[]>([]);
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
   const supabase = createClient();
 
   useEffect(() => {
     fetchProducts();
-  }, []);
+  }, [selectedMarques, selectedTypes]);
 
   const fetchProducts = async () => {
     try {
       setLoading(true);
-      const { data, error } = await supabase
+      let query = supabase
         .from('products')
         .select('*')
         .contains('secteurs_activite', ['Pharmacies & Cosmetique']);
+
+      if (selectedMarques.length > 0) {
+        query = query.in('marque', selectedMarques);
+      }
+
+      if (selectedTypes.length > 0) {
+        query = query.in('type_produit', selectedTypes);
+      }
+
+      const { data, error } = await query;
 
       if (error) {
         console.error('Erreur lors de la récupération des produits:', error);
@@ -37,93 +71,80 @@ export default function PharmacieCosmetique() {
     }
   };
 
-  const categories = ['all', ...Array.from(new Set(products.map(product => product.type_produit)))];
-  const filteredProducts = selectedCategory === 'all' 
-    ? products 
-    : products.filter(product => product.type_produit === selectedCategory);
+  const handleMarqueChange = (marque: Marque) => {
+    setSelectedMarques(prev => 
+      prev.includes(marque)
+        ? prev.filter(m => m !== marque)
+        : [...prev, marque]
+    );
+  };
+
+  const handleTypeChange = (type: TypePompe) => {
+    setSelectedTypes(prev => 
+      prev.includes(type)
+        ? prev.filter(t => t !== type)
+        : [...prev, type]
+    );
+  };
 
   return (
     <main className="min-h-screen">
       {/* Banner Hero */}
       <div className="relative h-[400px] w-full">
         <Image
-          src="/image_domaine/pharmacie.png"
+          src="/image_domaine/pharma.png"
           alt="Pharmacie et Cosmétique"
           fill
-          className="object-cover"
           priority
+          className="object-cover"
         />
-        <div className="absolute inset-0 bg-gradient-to-r from-black/0 to-black/0">
-          <div className="max-w-7xl mx-auto px-6 h-full flex items-center justify-center">
-            <div className="text-white text-center">
-              <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold">
-                
-              </h1>
-            </div>
+        <div className="absolute inset-0 bg-gradient-to-r from-blue-900/90 to-blue-900/75 flex items-center">
+          <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white mb-4">
+              Pharmacie & Cosmétique
+            </h1>
+            <p className="text-xl text-blue-100 max-w-2xl">
+              Solutions de pompage de précision pour l'industrie pharmaceutique et cosmétique.
+            </p>
           </div>
         </div>
       </div>
 
-      {/* Description Section */}
-      <section className="py-16 bg-white">
-        <div className="max-w-7xl mx-auto px-6">
-          <div className="max-w-3xl mx-auto text-center">
-            <h2 className="text-3xl font-bold text-gray-900">
-              Excellence et Précision pour vos Applications
-            </h2>
-            <p className="mt-6 text-lg text-gray-600">
-              Dans les industries pharmaceutique et cosmétique, la précision et la qualité sont primordiales. 
-              Nos solutions de pompage répondent aux normes les plus strictes et garantissent une manipulation 
-              sûre et précise des fluides sensibles. Nos équipements sont conçus pour maintenir la stérilité 
-              et respecter les normes GMP (Good Manufacturing Practice).
-            </p>
+      {/* Contenu Principal */}
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <div className="flex flex-col md:flex-row gap-8">
+          {/* Sidebar Filtres */}
+          <div className="w-full md:w-64 flex-shrink-0">
+            <DomainFilters
+              marques={MARQUES}
+              typesPompe={TYPES_POMPE}
+              selectedMarques={selectedMarques}
+              selectedTypes={selectedTypes}
+              onMarqueChange={handleMarqueChange}
+              onTypeChange={handleTypeChange}
+            />
           </div>
-        </div>
-      </section>
 
-      {/* Products Section */}
-      <section className="py-16 bg-gray-50">
-        <div className="max-w-7xl mx-auto px-6">
-          <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-12">
-            <h2 className="text-2xl font-bold text-gray-900">
-              Nos Solutions pour l'Industrie Pharmaceutique et Cosmétique
-            </h2>
-            
-            {/* Filter */}
-            <div className="flex items-center gap-4">
-              <span className="text-gray-700">Filtrer par :</span>
-              <select
-                value={selectedCategory}
-                onChange={(e) => setSelectedCategory(e.target.value)}
-                className="rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary"
-              >
-                <option value="all">Toutes les catégories</option>
-                {categories.filter(cat => cat !== 'all').map((category) => (
-                  <option key={category} value={category}>
-                    {category}
-                  </option>
+          {/* Liste des Produits */}
+          <div className="flex-1">
+            {loading ? (
+              <div className="flex justify-center items-center h-64">
+                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+              </div>
+            ) : products.length > 0 ? (
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                {products.map((product) => (
+                  <ProductCard key={product.id} product={product} />
                 ))}
-              </select>
-            </div>
+              </div>
+            ) : (
+              <div className="text-center py-12">
+                <p className="text-gray-500 text-lg">Aucun produit trouvé avec les filtres sélectionnés.</p>
+              </div>
+            )}
           </div>
-
-          {/* Products Grid */}
-          {loading ? (
-            <div className="flex justify-center items-center min-h-[400px]">
-              <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
-            </div>
-          ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {filteredProducts.map((product) => (
-                <ProductCard
-                  key={product.id}
-                  product={product}
-                />
-              ))}
-            </div>
-          )}
         </div>
-      </section>
+      </div>
     </main>
   );
 }

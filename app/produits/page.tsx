@@ -4,7 +4,7 @@ import { useState, useEffect, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { createClient } from '@/lib/supabase/client';
 import { MagnifyingGlassIcon } from '@heroicons/react/24/outline';
-import ProductFilters from '@/components/ProductFilters';
+import ProductFilters, { OpenSections } from '@/components/ProductFilters';
 import ProductCard from '@/components/ProductCard';
 
 import type { Product, Marque, TypePompe, SecteurActivite } from '@/types/product';
@@ -32,16 +32,15 @@ const TYPES_POMPE: TypePompe[] = [
 ];
 
 const SECTEURS_ACTIVITE: SecteurActivite[] = [
-  'Industrie',
-  'Pharmacies & Cosmetique',
-  'Anti-incendie',
-  'Agroalimentaire',
-  'Agriculture & Irrigation',
   'Eau & Environnement',
-  'Mines & Carriere',
+  'Industrie',
+  'Agriculture & Irrigation',
   'Batiment & TP',
-  'Gaz & Oil',
-  'Service Après-Vente'
+  'Mines & Carriere',
+  'Pharmacies & Cosmetique',
+  'Agroalimentaire',
+  'Anti-incendie',
+  'Gaz & Oil'
 ];
 
 const SEARCH_SUGGESTIONS = [
@@ -56,6 +55,11 @@ const SEARCH_SUGGESTIONS = [
 export default function ProduitsPage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [currentPlaceholder, setCurrentPlaceholder] = useState(SEARCH_SUGGESTIONS[0]);
+  const [openSections, setOpenSections] = useState<OpenSections>({
+    marques: false,
+    types: false,
+    domaines: false,
+  });
 
   useEffect(() => {
     let currentIndex = 0;
@@ -131,7 +135,7 @@ export default function ProduitsPage() {
       </div>
 
       <Suspense fallback={<div className="min-h-screen bg-gray-50 animate-pulse" />}>
-        <ProductList searchQuery={searchQuery} />
+        <ProductList searchQuery={searchQuery} openSections={openSections} setOpenSections={setOpenSections} />
       </Suspense>
     </div>
   );
@@ -139,9 +143,11 @@ export default function ProduitsPage() {
 
 interface ProductListProps {
   searchQuery: string;
+  openSections: OpenSections;
+  setOpenSections: (openSections: OpenSections) => void;
 }
 
-function ProductList({ searchQuery }: ProductListProps) {
+function ProductList({ searchQuery, openSections, setOpenSections }: ProductListProps) {
   const supabase = createClient();
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
@@ -156,6 +162,7 @@ function ProductList({ searchQuery }: ProductListProps) {
 
   const fetchProducts = async () => {
     try {
+      setLoading(true);
       let query = supabase
         .from('products')
         .select('*');
@@ -172,7 +179,11 @@ function ProductList({ searchQuery }: ProductListProps) {
 
       // Filtrage par secteur d'activité
       if (selectedSecteurs.length > 0) {
-        query = query.overlaps('secteurs_activite', selectedSecteurs);
+        // Pour chaque secteur sélectionné, on veut les produits qui contiennent ce secteur
+        const secteurQueries = selectedSecteurs.map(secteur => 
+          `secteurs_activite.cs.{${secteur}}`
+        );
+        query = query.or(secteurQueries.join(','));
       }
 
       // Recherche textuelle
@@ -237,6 +248,8 @@ function ProductList({ searchQuery }: ProductListProps) {
               onMarqueChange={handleMarqueChange}
               onTypeChange={handleTypeChange}
               onSecteurChange={handleSecteurChange}
+              openSections={openSections}
+              setOpenSections={setOpenSections}
             />
           </div>
 
