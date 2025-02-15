@@ -27,14 +27,14 @@ export default function Partners() {
         </div>
 
         <div className="max-w-6xl mx-auto">
-          <div className="flex justify-center items-center gap-12">
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-7 gap-6 justify-items-center">
             {partners.map((partner) => (
               <motion.div
                 key={partner.name}
-                className="bg-white rounded-lg shadow-sm p-3 flex items-center justify-center group h-16 w-32 hover:shadow-md transition-all duration-300"
+                className="bg-white rounded-lg shadow-sm p-3 flex items-center justify-center group hover:shadow-md transition-all duration-300 w-full max-w-[140px]"
                 whileHover={{ scale: 1.05 }}
               >
-                <div className="relative w-28 h-12">
+                <div className="relative w-full aspect-[4/3]">
                   <Image
                     src={partner.image}
                     alt={partner.name}
