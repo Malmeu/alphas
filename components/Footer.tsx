@@ -17,7 +17,7 @@ export default function Footer() {
           <div>
             <div className="relative w-32 h-12">
               <Image
-                src="/images/logo-alphas.png"
+                src="/images/logo-alphas-white.png"
                 alt="Logo ALPHAS POMPES"
                 fill
                 sizes="(max-width: 768px) 100px, 128px"
