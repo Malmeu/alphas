@@ -1,7 +1,6 @@
 'use client';
 
 import Image from 'next/image';
-import { IconBuildingFactory2, IconGasStation, IconBuilding, IconTruck, IconDroplet } from '@tabler/icons-react';
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 import { useState, useEffect } from 'react';
 
@@ -27,14 +26,6 @@ interface ProductPageProps {
     domaines_application: string[];
   }[];
 }
-
-const sectorIcons = {
-  'Industrie': <IconBuildingFactory2 className="w-8 h-8 text-white" />,
-  'Oil & Gaz': <IconGasStation className="w-8 h-8 text-white" />,
-  'Bâtiment et TP': <IconBuilding className="w-8 h-8 text-white" />,
-  'Mine & Carrière': <IconTruck className="w-8 h-8 text-white" />,
-  'Eau & Environnement': <IconDroplet className="w-8 h-8 text-white" />
-};
 
 export default function ProductPage({ title, description, bannerImage, products }: ProductPageProps) {
   const supabase = createClientComponentClient();
@@ -178,33 +169,33 @@ export default function ProductPage({ title, description, bannerImage, products 
 
             {/* Section Caractéristiques */}
             <div className="bg-white p-6 rounded-lg shadow-md mb-8">
-              <h2 className="text-2xl font-bold mb-6">Caractéristiques Techniques</h2>
+              <h2 className="text-xl font-bold text-gray-900 mb-4">Caractéristiques Techniques</h2>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {/* Colonne de gauche avec toutes les caractéristiques */}
                 <div>
                   {/* Caractéristiques de base */}
                   {product.debit && (
                     <div className="mb-4">
-                      <h3 className="text-lg font-semibold mb-2">Débit</h3>
-                      <p>{product.debit}</p>
+                      <h3 className="text-lg font-semibold text-gray-800 mb-2">Débit</h3>
+                      <p className="text-gray-700">{product.debit}</p>
                     </div>
                   )}
                   {product.hauteur && (
                     <div className="mb-4">
-                      <h3 className="text-lg font-semibold mb-2">Hauteur de refoulement</h3>
-                      <p>{product.hauteur}</p>
+                      <h3 className="text-lg font-semibold text-gray-800 mb-2">Hauteur de refoulement</h3>
+                      <p className="text-gray-700">{product.hauteur}</p>
                     </div>
                   )}
                   {product.viscosite && (
                     <div className="mb-4">
-                      <h3 className="text-lg font-semibold mb-2">Viscosité</h3>
-                      <p>{product.viscosite}</p>
+                      <h3 className="text-lg font-semibold text-gray-800 mb-2">Viscosité</h3>
+                      <p className="text-gray-700">{product.viscosite}</p>
                     </div>
                   )}
                   {product.entrainement && (
                     <div className="mb-4">
-                      <h3 className="text-lg font-semibold mb-2">Type d'entrainement</h3>
-                      <p>{product.entrainement}</p>
+                      <h3 className="text-lg font-semibold text-gray-800 mb-2">Type d'entrainement</h3>
+                      <p className="text-gray-700">{product.entrainement}</p>
                     </div>
                   )}
                 </div>
@@ -220,33 +211,30 @@ export default function ProductPage({ title, description, bannerImage, products 
           {/* Colonne droite - Informations */}
           <div>
             {/* Titre du produit */}
-            <h1 className="text-2xl font-bold mb-6">
+            <h1 className="text-2xl font-bold text-gray-900 mb-4">
               {product.titre}
             </h1>
 
             {/* Description */}
-            <div className="mb-8">
+            <div className="mb-6">
               <p className="text-gray-700">{product.description}</p>
             </div>
 
             {/* Secteurs d'activité */}
-            <div className="mb-8">
-              <h2 className="text-xl font-bold mb-4">Secteurs d'activité :</h2>
-              <div className="flex flex-wrap gap-8">
-                {product.domaines?.map((domaine) => (
-                  <div key={domaine} className="flex flex-col items-center">
-                    <div className="bg-[#007CC3] p-3 rounded-full mb-2">
-                      {sectorIcons[domaine as keyof typeof sectorIcons]}
-                    </div>
-                    <span className="text-sm text-center">{domaine}</span>
-                  </div>
+            <div className="mb-6">
+              <h2 className="text-xl font-bold text-gray-900 mb-4">Secteurs d'activité</h2>
+              <ul className="list-disc pl-5 space-y-2">
+                {product.domaines?.map((domaine, index) => (
+                  <li key={index} className="text-gray-600">
+                    {domaine}
+                  </li>
                 ))}
-              </div>
+              </ul>
             </div>
 
             {/* Domaines d'applications */}
-            <div className="mb-8">
-              <h2 className="text-2xl font-bold text-gray-900 mb-4">Domaines d'applications :</h2>
+            <div className="mb-6">
+              <h2 className="text-xl font-bold text-gray-900 mb-4">Domaines d'applications</h2>
               <ul className="list-disc pl-5 space-y-2">
                 {product.domaines_application?.map((domaine, index) => (
                   <li key={index} className="text-gray-600">
@@ -258,7 +246,7 @@ export default function ProductPage({ title, description, bannerImage, products 
 
             {/* Avantages */}
             <div>
-              <h2 className="text-2xl font-bold text-gray-900 mb-4">Avantages :</h2>
+              <h2 className="text-xl font-bold text-gray-900 mb-4">Avantages</h2>
               <ul className="list-disc pl-5 space-y-2">
                 {product.avantages?.map((avantage, index) => (
                   <li key={index} className="text-gray-600">

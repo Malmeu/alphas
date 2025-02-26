@@ -120,7 +120,7 @@ export default function Home() {
 
             {/* Contenu Hero */}
             <div className="relative h-full">
-              <div className="mx-auto max-w-7xl px-6 py-24 sm:py-32 lg:py-40 h-full flex flex-col justify-center">
+              <div className="mx-auto max-w-7xl px-6 py-16 sm:py-20 lg:py-24 h-full flex flex-col justify-center">
                 <motion.div
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
@@ -182,7 +182,7 @@ export default function Home() {
           </Suspense>
 
           {/* Section Domaines d'activité */}
-          <section className="bg-gradient-to-b from-white to-gray-50 py-24 sm:py-32">
+          <section className="bg-gradient-to-b from-white to-gray-50 py-16 sm:py-20">
             <div className="mx-auto max-w-7xl px-6 lg:px-8">
               <motion.div
                 initial={fadeIn.initial}
@@ -234,7 +234,7 @@ export default function Home() {
           </section>
 
           {/* Section Marques */}
-          <section className="bg-white py-24">
+          <section className="bg-white py-16">
             <motion.div
               initial={fadeIn.initial}
               whileInView={fadeIn.whileInView}
@@ -263,7 +263,7 @@ export default function Home() {
           <Partners />
 
           {/* Bannière Devis */}
-          <section className="bg-gradient-to-r from-blue-900 to-blue-800 py-20">
+          <section className="bg-gradient-to-r from-blue-900 to-blue-800 py-12">
             <div className="max-w-7xl mx-auto px-6">
               <div className="flex flex-col md:flex-row items-center justify-between gap-12">
                 <div className="text-white text-center md:text-left">
