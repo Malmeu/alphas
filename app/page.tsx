@@ -136,22 +136,18 @@ export default function Home() {
                     avec une expertise technique inégalée et un service client de qualité.
                   </p>
                   <div className="mt-12 flex gap-x-6 justify-center">
-                    <motion.a
+                    <a
                       href="/contact"
-                      whileHover={{ scale: 1.05 }}
-                      whileTap={{ scale: 0.95 }}
-                      className="rounded-full bg-white px-8 py-4 text-lg font-semibold text-blue-900 shadow-lg hover:bg-blue-50 transition-colors duration-300"
+                      className="rounded-md bg-white px-6 py-3 text-base font-medium text-blue-900 shadow hover:bg-blue-50 transition-colors"
                     >
                       Contactez-nous
-                    </motion.a>
-                    <motion.a
+                    </a>
+                    <a
                       href="/tout-sur-alphas"
-                      whileHover={{ scale: 1.05 }}
-                      whileTap={{ scale: 0.95 }}
-                      className="rounded-full bg-blue-700/30 backdrop-blur-sm px-8 py-4 text-lg font-semibold text-white hover:bg-blue-700/40 transition-colors duration-300"
+                      className="rounded-md bg-blue-700/30 px-6 py-3 text-base font-medium text-white hover:bg-blue-700/40 transition-colors"
                     >
                       En savoir plus
-                    </motion.a>
+                    </a>
                   </div>
                 </motion.div>
               </div>
@@ -163,15 +159,7 @@ export default function Home() {
                 transition={{ delay: 1, duration: 0.8 }}
                 className="absolute bottom-8 left-1/2 transform -translate-x-1/2 flex flex-col items-center"
               >
-                <motion.div
-                  animate={{ y: [0, 10, 0] }}
-                  transition={{ repeat: Infinity, duration: 2 }}
-                >
-                  <span className="text-blue-200 text-sm mb-2">Découvrir</span>
-                  <svg className="w-6 h-6 text-blue-200" fill="none" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" viewBox="0 0 24 24" stroke="currentColor">
-                    <path d="M19 14l-7 7m0 0l-7-7m7 7V3"></path>
-                  </svg>
-                </motion.div>
+                
               </motion.div>
             </div>
           </section>
