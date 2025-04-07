@@ -4,6 +4,7 @@ import Image from 'next/image';
 import Timeline from '../../components/Timeline';
 import { motion } from 'framer-motion';
 import { Link as ScrollLink } from 'react-scroll';
+import Link from 'next/link';
 
 const fadeIn = {
   initial: { opacity: 0, y: 20 },
@@ -306,43 +307,117 @@ export default function ToutSurAlphas() {
         </div>
       </section>
 
+      {/* Section Certifications */}
+      <section className="py-16 sm:py-24 bg-gradient-to-b from-gray-50 to-white">
+        <div className="container mx-auto px-4 sm:px-6">
+          <motion.div
+            initial={fadeIn.initial}
+            whileInView={fadeIn.animate}
+            viewport={{ once: true }}
+            transition={fadeIn.transition}
+            className="text-center mb-8 sm:mb-16"
+          >
+            <span className="text-blue-600 font-semibold text-base sm:text-lg mb-2 block">Excellence reconnue</span>
+            <h2 className="text-3xl sm:text-5xl font-bold text-gray-900 mb-4 sm:mb-6">Nos Certifications</h2>
+            <p className="text-base sm:text-xl text-gray-600 max-w-3xl mx-auto px-4 sm:px-0">
+              Des normes strictes et des certifications internationales qui garantissent la qualité de nos produits et services
+            </p>
+          </motion.div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">
+            {[
+              { name: 'ISO 9001:2015', description: 'Système de management de la qualité', icon: '🏆' },
+              { name: 'ISO 14001:2015', description: 'Management environnemental', icon: '🌱' },
+              { name: 'ISO 45001:2018', description: 'Santé et sécurité au travail', icon: '⚕️' },
+              { name: 'API 610', description: 'Pompes centrifuges pour l\'industrie pétrolière', icon: '⛽' },
+              { name: 'ATEX', description: 'Équipements pour atmosphères explosibles', icon: '💥' },
+              { name: 'CE', description: 'Conformité Européenne', icon: '🇪🇺' },
+              { name: 'UL Listed', description: 'Sécurité des produits', icon: '🔒' },
+              { name: 'NSF/ANSI 61', description: 'Sécurité de l\'eau potable', icon: '💧' }
+            ].map((cert, index) => (
+              <motion.div
+                key={cert.name}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: index * 0.1 }}
+                className="bg-white rounded-xl shadow-md hover:shadow-lg transition-all duration-300 overflow-hidden group border border-gray-100"
+              >
+                <div className="p-6">
+                  <div className="flex items-center justify-center w-16 h-16 mx-auto mb-4 rounded-full bg-blue-50 text-3xl group-hover:bg-blue-100 transition-colors">
+                    {cert.icon}
+                  </div>
+                  <h3 className="text-xl font-bold text-center text-gray-900 mb-2">{cert.name}</h3>
+                  <p className="text-sm text-center text-gray-600">{cert.description}</p>
+                </div>
+                <div className="h-2 bg-blue-600"></div>
+              </motion.div>
+            ))}
+          </div>
+
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.5 }}
+            className="mt-12 text-center"
+          >
+            <p className="text-gray-700 italic">
+              "Nos certifications témoignent de notre engagement envers l'excellence et la qualité dans tous nos processus."
+            </p>
+            <div className="mt-6">
+              <Link 
+                href="/media" 
+                className="inline-flex items-center text-blue-600 hover:text-blue-800 transition-colors"
+              >
+                Voir notre médiathèque complète
+                <svg className="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                </svg>
+              </Link>
+            </div>
+          </motion.div>
+        </div>
+      </section>
+
       {/* Section Téléchargement Brochure */}
       <section className="bg-gradient-to-r from-blue-900 to-blue-700 py-12 sm:py-16">
         <div className="container mx-auto px-4 sm:px-6">
           <div className="flex flex-col sm:flex-row items-center justify-between">
             <div className="mb-4 sm:mb-0 text-center sm:text-left">
               <h2 className="text-2xl sm:text-3xl font-bold text-white mb-2 sm:mb-4">
-                Téléchargez notre brochure
+                Accédez à nos ressources
               </h2>
               <p className="text-blue-100 text-sm sm:text-base">
-                Découvrez en détail notre histoire, nos valeurs et notre expertise
+                Brochures, fiches techniques, catalogues et galerie photo
               </p>
             </div>
-            <motion.div
-              whileHover={{ scale: 1.05 }}
-              className="flex items-center"
-            >
-              <a
-                href="/alphas-services.pdf"
-                download
-                className="inline-flex items-center px-6 sm:px-8 py-2 sm:py-3 bg-white text-blue-900 rounded-full font-semibold hover:bg-blue-50 transition-colors duration-300 text-sm sm:text-base"
+            <div className="flex flex-col sm:flex-row gap-3">
+              <motion.div
+                whileHover={{ scale: 1.05 }}
+                className="flex items-center"
               >
-                <svg
-                  className="w-5 h-5 sm:w-6 sm:h-6 mr-2 sm:mr-3"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
+                <Link
+                  href="/media"
+                  className="inline-flex items-center px-6 sm:px-8 py-2 sm:py-3 bg-white text-blue-900 rounded-full font-semibold hover:bg-blue-50 transition-colors duration-300 text-sm sm:text-base"
                 >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"
-                  />
-                </svg>
-                Télécharger la brochure
-              </a>
-            </motion.div>
+                  <svg
+                    className="w-5 h-5 sm:w-6 sm:h-6 mr-2 sm:mr-3"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
+                    />
+                  </svg>
+                  Voir notre médiathèque
+                </Link>
+              </motion.div>
+            </div>
           </div>
         </div>
       </section>

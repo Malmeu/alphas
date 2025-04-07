@@ -18,7 +18,8 @@ export type Marque =
   | 'VERDER'
   | 'SOMEFLU'
   | 'FLOWSERVE'
-  | 'PCM';
+  | 'PCM'
+  | 'OREX';
 
 export type TypePompe =
   | 'Pompes Centrifuges'

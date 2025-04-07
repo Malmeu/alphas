@@ -11,13 +11,6 @@ export default function ProductCard({ product }: ProductCardProps) {
   return (
     <Link href={`/produits/${product.id}`}>
       <div className="group relative bg-white rounded-xl shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden border border-gray-100">
-        {/* Badge Marque */}
-        <div className="absolute top-4 left-4 z-10">
-          <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-white shadow-md text-primary">
-            {product.marque}
-          </span>
-        </div>
-
         {/* Image avec overlay au hover */}
         <div className="relative aspect-w-4 aspect-h-3">
           {product.image_principale ? (

@@ -24,7 +24,8 @@ const MARQUES: Marque[] = [
   'VERDER',
   'SOMEFLU',
   'FLOWSERVE',
-  'PCM'
+  'PCM',
+  'OREX'
 ];
 
 const compressImage = async (file: File) => {

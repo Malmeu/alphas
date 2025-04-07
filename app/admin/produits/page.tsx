@@ -28,7 +28,8 @@ const MARQUES: Marque[] = [
   'VERDER',
   'SOMEFLU',
   'FLOWSERVE',
-  'PCM'
+  'PCM',
+  'OREX'
 ];
 
 const SECTEURS_ACTIVITE: SecteurActivite[] = [

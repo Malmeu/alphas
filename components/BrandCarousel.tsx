@@ -14,6 +14,7 @@ const brands = [
   { name: 'Marque 6', image: '/image_marques/oflow.png', href: '/marques/oflow' },
   { name: 'Marque 7', image: '/image_marques/al dewatering.png', href: '/marques/al-dewatering' },
   { name: 'Marque 8', image: '/image_marques/al fire.png', href: '/marques/al-fire' },
+  { name: 'Marque 9', image: '/image_marques/orex.png', href: '/marques/orex' },
 ];
 
 export default function BrandCarousel() {

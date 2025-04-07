@@ -17,7 +17,8 @@ const MARQUES: Marque[] = [
   'VERDER',
   'SOMEFLU',
   'FLOWSERVE',
-  'PCM'
+  'PCM',
+  'OREX'
 ];
 
 const TYPES_POMPE: TypePompe[] = [

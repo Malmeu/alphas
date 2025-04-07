@@ -221,6 +221,52 @@ export default function Home() {
             </div>
           </section>
 
+          {/* Section Statistiques */}
+          <section className="bg-gray-50 py-20">
+            <div className="max-w-7xl mx-auto px-6 lg:px-8">
+              <motion.div
+                initial={fadeIn.initial}
+                whileInView={fadeIn.whileInView}
+                viewport={{ once: true }}
+                transition={fadeIn.transition}
+                className="mx-auto max-w-2xl lg:text-center mb-16"
+              >
+                <h2 className="text-base font-semibold text-blue-600 uppercase tracking-wide">Notre impact</h2>
+                <p className="mt-2 text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl lg:text-5xl">
+                  ALPHAS POMPES en chiffres
+                </p>
+                <p className="mt-6 text-xl leading-8 text-gray-600">
+                  Découvrez l'étendue de notre expertise et notre impact dans le secteur des solutions de pompage industriel
+                </p>
+              </motion.div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+                {[
+                  { value: '25+', label: 'Années d\'expérience', description: 'Au service de l\'industrie' },
+                  { value: '1500+', label: 'Projets réalisés', description: 'À travers le monde entier' },
+                  { value: '98%', label: 'Clients satisfaits', description: 'Témoignages positifs' },
+                  { value: '24/7', label: 'Service client', description: 'Support technique disponible' }
+                ].map((stat, index) => (
+                  <motion.div
+                    key={stat.label}
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: index * 0.1 }}
+                    className="bg-white rounded-2xl shadow-lg p-8 text-center hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1"
+                  >
+                    <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-blue-100 text-blue-600 mb-6 mx-auto">
+                      <span className="text-2xl font-bold">{index + 1}</span>
+                    </div>
+                    <h3 className="text-4xl font-bold text-blue-600 mb-2">{stat.value}</h3>
+                    <p className="text-xl font-semibold text-gray-800 mb-2">{stat.label}</p>
+                    <p className="text-gray-500">{stat.description}</p>
+                  </motion.div>
+                ))}
+              </div>
+            </div>
+          </section>
+
           {/* Section Marques */}
           <section className="bg-white py-16">
             <motion.div
@@ -273,21 +319,41 @@ export default function Home() {
                     Notre équipe d'experts est là pour vous accompagner dans votre projet
                   </motion.p>
                 </div>
-                <motion.div
-                  initial={{ opacity: 0, scale: 0.9 }}
-                  whileInView={{ opacity: 1, scale: 1 }}
-                  viewport={{ once: true }}
-                  whileHover={{ scale: 1.05 }}
-                  className="flex-shrink-0"
-                >
-                  <Link
-                    href="/contact"
-                    className="inline-flex items-center px-8 py-4 bg-white text-blue-900 rounded-full text-lg font-semibold hover:bg-blue-50 transition-colors duration-300"
+                <div className="flex flex-col sm:flex-row gap-4">
+                  <motion.div
+                    initial={{ opacity: 0, scale: 0.9 }}
+                    whileInView={{ opacity: 1, scale: 1 }}
+                    viewport={{ once: true }}
+                    whileHover={{ scale: 1.05 }}
+                    className="flex-shrink-0"
                   >
-                    Demander un devis
-                    <ArrowRightIcon className="ml-2 h-5 w-5" />
-                  </Link>
-                </motion.div>
+                    <Link
+                      href="/contact"
+                      className="inline-flex items-center px-8 py-4 bg-white text-blue-900 rounded-full text-lg font-semibold hover:bg-blue-50 transition-colors duration-300"
+                    >
+                      Demander un devis
+                      <ArrowRightIcon className="ml-2 h-5 w-5" />
+                    </Link>
+                  </motion.div>
+                  <motion.div
+                    initial={{ opacity: 0, scale: 0.9 }}
+                    whileInView={{ opacity: 1, scale: 1 }}
+                    viewport={{ once: true }}
+                    whileHover={{ scale: 1.05 }}
+                    transition={{ delay: 0.1 }}
+                    className="flex-shrink-0"
+                  >
+                    <Link
+                      href="/media"
+                      className="inline-flex items-center px-8 py-4 bg-blue-700 text-white rounded-full text-lg font-semibold hover:bg-blue-600 transition-colors duration-300"
+                    >
+                      Voir notre médiathèque
+                      <svg className="ml-2 h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                      </svg>
+                    </Link>
+                  </motion.div>
+                </div>
               </div>
             </div>
           </section>

@@ -35,7 +35,8 @@ const menuItems: MenuItem[] = [
       { name: 'Verder', href: '/marques/verder' },
       { name: 'Someflu', href: '/marques/someflu' },
       { name: 'Flowserve', href: '/marques/flowserve' },
-      { name: 'PCM', href: '/marques/pcm' }
+      { name: 'PCM', href: '/marques/pcm' },
+      { name: 'Orex', href: '/marques/orex' }
     ]
   },
   {
@@ -75,7 +76,7 @@ export default function Header() {
   return (
     <header className="bg-white shadow-sm fixed w-full top-0 z-50">
       <nav className="mx-auto flex max-w-7xl items-center justify-between p-4 lg:px-8" aria-label="Global">
-        <div className="flex lg:flex-1">
+        <div className="flex lg:flex-1 items-center">
           <Link href="/" className="-m-1.5 p-1.5">
             <span className="sr-only">Alphas</span>
             <div className="relative w-[180px] h-[60px]">
@@ -88,6 +89,14 @@ export default function Header() {
               />
             </div>
           </Link>
+          <div className="relative w-10 h-8 ml-2">
+            <Image
+              src="/algeria_flag.png"
+              alt="Drapeau Algérien"
+              fill
+              className="object-contain"
+            />
+          </div>
         </div>
 
         <div className="flex lg:hidden">
