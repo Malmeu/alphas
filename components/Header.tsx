@@ -32,11 +32,7 @@ const menuItems: MenuItem[] = [
       { name: 'Al dewatering', href: '/marques/al-dewatering' },
       { name: 'Al fire', href: '/marques/al-fire' },
       { name: 'Flux', href: '/marques/flux' },
-      { name: 'Verder', href: '/marques/verder' },
-      { name: 'Someflu', href: '/marques/someflu' },
-      { name: 'Flowserve', href: '/marques/flowserve' },
-      { name: 'PCM', href: '/marques/pcm' },
-      { name: 'Orex', href: '/marques/orex' }
+      
     ]
   },
   {
