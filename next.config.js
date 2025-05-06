@@ -1,5 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  // Configuration pour l'hébergement mutualisé
+  trailingSlash: true,
   images: {
     domains: ['wjyadfujajdeuojxtzar.supabase.co', 'lunatech.supabase.co'],
     remotePatterns: [
@@ -10,6 +12,7 @@ const nextConfig = {
         pathname: '/storage/v1/object/public/**',
       },
     ],
+    unoptimized: true,
   },
 }
 

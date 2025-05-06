@@ -77,8 +77,7 @@ export default function DivisionalStructure() {
               <div className="absolute -inset-px bg-gradient-to-r from-primary to-blue-600 rounded-2xl opacity-75 group-hover:opacity-100 transition-opacity blur-sm group-hover:blur"></div>
               <div className="relative h-full bg-white p-6 rounded-2xl shadow-sm border border-gray-200 hover:border-transparent transition-colors">
                 <div className="flex items-center justify-between mb-4">
-                  <span className="text-5xl font-bold text-primary">{division.number}</span>
-                  <span className="text-sm text-gray-500">{division.number} step</span>
+                  
                 </div>
                 <h3 className="text-xl font-semibold text-gray-900 mb-4">
                   {division.title}
