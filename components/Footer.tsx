@@ -109,8 +109,8 @@ export default function Footer() {
               </li>
               <li className="flex items-center space-x-3">
                 <FaEnvelope className="text-primary" />
-                <a href="mailto:contact@alphaspompes.ma" className="hover:text-primary transition-colors">
-                 contact@alphas-pompes.com
+                <a href="mailto:contact@alphaspompes.com" className="hover:text-primary transition-colors">
+                 contact@alphaspompes.com
                 </a>
               </li>
               <li className="flex items-start space-x-3">
