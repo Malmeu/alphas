@@ -32,52 +32,52 @@ const domains = [
   {
     name: 'Industrie',
     href: '/domaines/industrie',
-    icon: '🏭',
+    icon: '/icons/industrie.png',
   },
   {
     name: 'Pharmacies & Cosmetique',
     href: '/domaines/pharmacie-cosmetique',
-    icon: '💊',
+    icon: '/icons/pharmacie-cosmetique.png',
   },
   {
     name: 'Anti-incendie',
     href: '/domaines/anti-incendie',
-    icon: '🧯',
+    icon: '/icons/incendie.png',
   },
   {
     name: 'Agroalimentaire',
     href: '/domaines/agroalimentaire',
-    icon: '🍃',
+    icon: '/icons/agro.png',
   },
   {
     name: 'Agriculture & Irrigation',
     href: '/domaines/agriculture-et-irrigation',
-    icon: '🌾',
+    icon: '/icons/erigation.png',
   },
   {
     name: 'Eau & Environnement',
     href: '/domaines/eau-et-environnement',
-    icon: '💧',
+    icon: '/icons/environement.png',
   },
   {
     name: 'Mines & Carriere',
     href: '/domaines/mine-et-carriere',
-    icon: '⛏️',
+    icon: '/icons/mine.png',
   },
   {
     name: 'Batiment & TP',
     href: '/domaines/batiment-et-tp',
-    icon: '🏗️',
+    icon: '/icons/batiment.png',
   },
   {
     name: 'Gaz & Oil',
     href: '/domaines/gaz-et-oil',
-    icon: '⛽',
+    icon: '/icons/gaz_oil.png',
   },
   {
     name: 'Service Après-Vente',
     href: '/alphas-service',
-    icon: '🔧',
+    icon: '/icons/sav.png',
   }
 ]
 
@@ -206,7 +206,7 @@ export default function Home() {
                         <div className="flex flex-col items-center text-center h-full justify-between">
                           <div className="w-20 h-20 bg-blue-50 rounded-xl text-blue-600 flex items-center justify-center mb-4 group-hover:scale-110 group-hover:bg-blue-100 transition-all duration-300">
                             <div className="w-12 h-12 flex items-center justify-center">
-                              <span className="text-[40px] leading-none">{domain.icon}</span>
+                              <Image src={domain.icon} alt={domain.name} width={40} height={40} />
                             </div>
                           </div>
                           <h3 className="text-lg font-semibold text-gray-900 group-hover:text-blue-600 transition-colors duration-300">

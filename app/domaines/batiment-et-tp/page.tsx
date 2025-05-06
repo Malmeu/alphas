@@ -98,7 +98,7 @@ export default function BatimentEtTP() {
           priority
           className="object-cover"
         />
-        <div className="absolute inset-0 bg-gradient-to-r from-blue-900/90 to-blue-900/75 flex items-center">
+       {/* <div className="absolute inset-0 bg-gradient-to-r from-blue-900/90 to-blue-900/75 flex items-center">
           <div className="container mx-auto px-4 sm:px-6 lg:px-8">
             <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white mb-4">
               Bâtiment & Travaux Publics
@@ -107,7 +107,7 @@ export default function BatimentEtTP() {
               Solutions de pompage pour le secteur du BTP et de la construction.
             </p>
           </div>
-        </div>
+        </div>*/}
       </div>
 
       {/* Contenu Principal */}

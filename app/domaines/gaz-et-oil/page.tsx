@@ -92,13 +92,13 @@ export default function GazEtOil() {
       {/* Banner Hero */}
       <div className="relative h-[400px] w-full">
         <Image
-          src="/image_domaine/oil.png"
+          src="/image_domaine/gaz.png"
           alt="Gaz et Oil"
           fill
           priority
           className="object-cover"
         />
-        <div className="absolute inset-0 bg-gradient-to-r from-blue-900/90 to-blue-900/75 flex items-center">
+       {/* <div className="absolute inset-0 bg-gradient-to-r from-blue-900/90 to-blue-900/75 flex items-center">
           <div className="container mx-auto px-4 sm:px-6 lg:px-8">
             <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white mb-4">
               Gaz & Oil
@@ -107,7 +107,7 @@ export default function GazEtOil() {
               Solutions de pompage haute performance pour l'industrie pétrolière et gazière.
             </p>
           </div>
-        </div>
+        </div>*/}
       </div>
 
       {/* Contenu Principal */}
